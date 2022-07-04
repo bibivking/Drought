@@ -5,6 +5,7 @@ import netCDF4 as nc
 import numpy as np
 import matplotlib.colors as colors
 from datetime import datetime, timedelta
+from scipy.interpolate import griddata
 from wrf import (getvar, interplevel, get_cartopy, cartopy_xlim,
                  cartopy_ylim, to_np, latlon_coords, ALL_TIMES)
 
@@ -535,3 +536,44 @@ def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
         'trunc({n},{a:.2f},{b:.2f})'.format(n=cmap.name, a=minval, b=maxval),
         cmap(np.linspace(minval, maxval, n)))
     return new_cmap
+
+# =============================== Regrid ================================
+def regrid_data(lat_in, lon_in, lat_out, lon_out, input_data):
+    
+    if len(np.shape(lat_in)) == 1:
+        lon_in_2D, lat_in_2D = np.meshgrid(lon_in,lat_in)
+        lon_in_1D            = np.reshape(lon_in_2D,-1)
+        lat_in_1D            = np.reshape(lat_in_2D,-1)
+    elif len(np.shape(lat_in)) == 2:
+        lon_in_1D            = np.reshape(lon_in,-1)
+        lat_in_1D            = np.reshape(lat_in,-1)
+    else:
+        print("ERROR: lon_in has ", len(np.shape(lat_in)), "dimensions")
+
+    if len(np.shape(lat_out)) == 1:
+        lon_out_2D, lat_out_2D = np.meshgrid(lon_out,lat_out)
+    elif len(np.shape(lat_out)) == 2:
+        lon_out_2D            = lon_out
+        lat_out_2D            = lat_out
+    else:
+        print("ERROR: lon_out has ", len(np.shape(lat_in)), "dimensions")
+        
+    print("np.shape(input_data) ",np.shape(input_data))
+    print("np.shape(lon_out_2D) ",np.shape(lon_out_2D))
+    print("np.shape(lat_out_2D) ",np.shape(lat_out_2D))
+        
+    value = np.reshape(input_data,-1)
+    value = np.where(value == np.nan, -999999999., value)
+    print(value)
+
+    print("np.shape(lat_in_1D) ", np.shape(lat_in_1D))
+    print("np.shape(lon_in_1D) ", np.shape(lon_in_1D))
+    print("np.shape(value) ", np.shape(value))
+    Value = griddata((lon_in_1D, lat_in_1D), value, (lon_out_2D, lat_out_2D), method="nearest")
+    Value = np.where(Value == -999999999., np.nan, Value)
+    
+    return Value
+
+# def clip_to_new(input_data,output_demo):
+    
+    

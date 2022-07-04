@@ -21,51 +21,98 @@ from wrf import (getvar, interplevel, get_cartopy, cartopy_xlim,
 from common_utils import *
 # from spatial_wrf_hgt_var import plot_spatial_map_hgt
 
-def plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=None, loc_lon=None, lat_names=None, lon_names=None, message=None):
+def plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=None, loc_lon=None, lat_names=None, lon_names=None, message=None, diff=False):
 
     print("======== In plot_spital_map =========")
     print(var_names)
-    # Open the NetCDF4 file (add a directory path if necessary) for reading:
-    time1, Var1  = read_var(file_paths[0], var_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
-    print(time1)
-    print("The number of pixels are Nan: ", np.count_nonzero(np.isnan(Var1)))
-    time1, lats1 = read_var(file_paths[0], lat_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
-    time1, lons1 = read_var(file_paths[0], lon_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
+    if diff == False:
+        # Open the NetCDF4 file (add a directory path if necessary) for reading:
+        time1, Var1  = read_var(file_paths[0], var_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
+        print(time1)
+        print("The number of pixels are Nan: ", np.count_nonzero(np.isnan(Var1)))
+        time1, lats1 = read_var(file_paths[0], lat_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
+        time1, lons1 = read_var(file_paths[0], lon_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
 
-    if var_names[0] in ['tas','Tair','Tair_f_inst']:
-        var1         = spital_var(time1,Var1,time_s,time_e)-273.15
-        print(var1)    
-    elif var_names[0] in ['tp']:
-        scale        = get_scale(var_names[0])
-        var1         = spital_ERAI_tp(time1,Var1,time_s,time_e)*scale
-    elif var_names[0] in ['Rainf','Rainf_tavg']:
-        var1         = spital_var(time1,Var1,time_s,time_e)*24*60*60.    
-        print(var1)    
-    else:
-        scale        = get_scale(var_names[0])
-        var1         = spital_var(time1,Var1,time_s,time_e)*scale
+        if var_names[0] in ['tas','Tair','Tair_f_inst']:
+            var1         = spital_var(time1,Var1,time_s,time_e)-273.15
+            print(var1)
+        elif var_names[0] in ['tp']:
+            scale        = get_scale(var_names[0])
+            var1         = spital_ERAI_tp(time1,Var1,time_s,time_e)*scale
+        elif var_names[0] in ['Rainf','Rainf_tavg']:
+            var1         = spital_var(time1,Var1,time_s,time_e)*24*60*60.
+            print(var1)
+        elif var_names[0] in ['Wind']:
+            # !!!!!!!!! Note that !!!!!!!!!!!
+            # Wind speeds is at 2 meter height in AWAP while 10 meters in WRF-CABLE
+            # So here converting AWAP 2m wind speed to 10m wind speed by multipling 2
+            var1         = spital_var(time1,Var1,time_s,time_e)*2.
+            print(var1)
+        else:
+            scale        = get_scale(var_names[0])
+            var1         = spital_var(time1,Var1,time_s,time_e)*scale
 
-    if len(file_paths) > 1:
+        if len(file_paths) > 1:
+            time2, Var2  = read_var(file_paths[1], var_names[1], loc_lat, loc_lon, lat_names[1], lon_names[1])
+            time2, lats2 = read_var(file_paths[1], lat_names[1], loc_lat, loc_lon, lat_names[1], lon_names[1])
+            time2, lons2 = read_var(file_paths[1], lon_names[1], loc_lat, loc_lon, lat_names[1], lon_names[1])
+            scale        = get_scale(var_names[1])
+            var2         = spital_var(time2,Var2,time_s,time_e)*scale
+
+        if len(file_paths) > 2:
+            time3, Var3  = read_var(file_paths[2], var_names[2], loc_lat, loc_lon, lat_names[2], lon_names[2])
+            time3, lats3 = read_var(file_paths[2], lat_names[2], loc_lat, loc_lon, lat_names[2], lon_names[2])
+            time3, lons3 = read_var(file_paths[2], lon_names[2], loc_lat, loc_lon, lat_names[2], lon_names[2])
+            scale        = get_scale(var_names[2])
+            var3         = spital_var(time3,Var3,time_s,time_e)*scale
+
+        if len(file_paths) > 3:
+            time4, Var4  = read_var(file_paths[3], var_names[3], loc_lat, loc_lon, lat_names[3], lon_names[3])
+            time4, lats4 = read_var(file_paths[3], lat_names[3], loc_lat, loc_lon, lat_names[3], lon_names[3])
+            time4, lons4 = read_var(file_paths[3], lon_names[3], loc_lat, loc_lon, lat_names[3], lon_names[3])
+            scale        = get_scale(var_names[3])
+            var4         = spital_var(time4,Var4,time_s,time_e)*scale
+
+    elif diff == True:
+        time1, Var1  = read_var(file_paths[0], var_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
+        time1, lats1 = read_var(file_paths[0], lat_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
+        time1, lons1 = read_var(file_paths[0], lon_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
+
         time2, Var2  = read_var(file_paths[1], var_names[1], loc_lat, loc_lon, lat_names[1], lon_names[1])
         time2, lats2 = read_var(file_paths[1], lat_names[1], loc_lat, loc_lon, lat_names[1], lon_names[1])
         time2, lons2 = read_var(file_paths[1], lon_names[1], loc_lat, loc_lon, lat_names[1], lon_names[1])
-        scale        = get_scale(var_names[1])
-        var2         = spital_var(time2,Var2,time_s,time_e)*scale
 
-    if len(file_paths) > 2:
-        time3, Var3  = read_var(file_paths[2], var_names[2], loc_lat, loc_lon, lat_names[2], lon_names[2])
-        time3, lats3 = read_var(file_paths[2], lat_names[2], loc_lat, loc_lon, lat_names[2], lon_names[2])
-        time3, lons3 = read_var(file_paths[2], lon_names[2], loc_lat, loc_lon, lat_names[2], lon_names[2])
-        scale        = get_scale(var_names[2])
-        var3         = spital_var(time3,Var3,time_s,time_e)*scale
+        print("np.shape(Var1) ", np.shape(Var1))
+        print("np.shape(Var2) ", np.shape(Var2))
 
-    if len(file_paths) > 3:
-        time4, Var4  = read_var(file_paths[3], var_names[3], loc_lat, loc_lon, lat_names[3], lon_names[3])
-        time4, lats4 = read_var(file_paths[3], lat_names[3], loc_lat, loc_lon, lat_names[3], lon_names[3])
-        time4, lons4 = read_var(file_paths[3], lon_names[3], loc_lat, loc_lon, lat_names[3], lon_names[3])
-        scale        = get_scale(var_names[3])
-        var4         = spital_var(time4,Var4,time_s,time_e)*scale
+        if var_names[0] in ['tas','Tair','Tair_f_inst']:
+            var1         = spital_var(time1,Var1,time_s,time_e)-273.15 # AWAP
+            var2         = spital_var(time2,Var2,time_s,time_e)-273.15 # WRF
+            # regrid_data(lat_in, lon_in, lat_out, lon_out, input_data)
+            var1_regrid  = regrid_data(lats1, lons1, lats2, lons2, var1)
+            var1         = var2 - var1_regrid
+        elif var_names[0] in ['tp']:
+            scale        = get_scale(var_names[0])
+            var1         = spital_ERAI_tp(time1,Var1,time_s,time_e)*scale
+            var2         = spital_ERAI_tp(time2,Var2,time_s,time_e)*scale
+            # regrid_data(lat_in, lon_in, lat_out, lon_out, input_data)
+            var1_regrid  = regrid_data(lats1, lons1, lats2, lons2, var1)
+            var1         = var2 - var1_regrid
+        elif var_names[0] in ['Rainf','Rainf_tavg']:
+            var1         = spital_var(time1,Var1,time_s,time_e)*24*60*60.
+            var2         = spital_var(time2,Var2,time_s,time_e)*24*60*60.
+            # regrid_data(lat_in, lon_in, lat_out, lon_out, input_data)
+            var1_regrid  = regrid_data(lats1, lons1, lats2, lons2, var1)
+            var1         = var2 - var1_regrid
+        else:
+            scale        = get_scale(var_names[0])
+            var1         = spital_var(time1,Var1,time_s,time_e)*scale
+            var2         = spital_var(time2,Var2,time_s,time_e)*scale
+            # regrid_data(lat_in, lon_in, lat_out, lon_out, input_data)
+            var1_regrid  = regrid_data(lats1, lons1, lats2, lons2, var1)
+            var1         = var2 - var1_regrid
 
+    # ================== Start Plotting =================
     fig = plt.figure(figsize=(6,5))
     ax = plt.axes(projection=ccrs.PlateCarree())
 
@@ -101,11 +148,21 @@ def plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=None, loc_lon
 
     # plot Var1
     if var_names[0] in ['tas','Tair','Tair_f_inst']:
-        clevs = np.arange( 20.,44.,2.) #np.linspace( 15.,45., num=31)
-        cmap  = plt.cm.hot_r
+        clevs = np.arange( 15.,40.,1.) #np.linspace( 15.,45., num=31)
+        cmap  = plt.cm.RdYlBu_r
     elif var_names[0] in ['Rainf','Rainf_tavg']:
-        clevs = np.arange( 0.,20.,2.) #np.linspace( 15.,45., num=31)
+        clevs = np.arange( 0.,22.,2.) #np.linspace( 15.,45., num=31)
         cmap  = plt.cm.Blues
+    elif var_names[0] in ['Wind','Wind_f_inst']:
+        clevs = np.arange( 0,10.,0.5) #np.linspace( 15.,45., num=31)
+        cmap  = plt.cm.Blues
+    elif var_names[0] in ['LWdown','LWdown_f_inst','SWdown','SWdown_f_inst']:
+        clevs = np.arange( 80.,500.,20.) #np.linspace( 15.,45., num=31)
+        cmap  = plt.cm.RdYlBu_r
+    elif var_names[0] in ['Qair','Qair_f_inst']:
+        # kg kg-1
+        clevs = np.arange( 0.,0.02, 0.001) #np.linspace( 15.,45., num=31)
+        cmap  = plt.cm.RdYlBu_r
     else:
         # clevs = np.linspace( 0.,120., num=13)
         clevs = np.linspace( 0.,5., num=11)
@@ -133,7 +190,154 @@ def plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=None, loc_lon
         message = var_names[0]
     else:
         message = message + "_" + var_names[0]
+    if diff:
+        message = message + "_diff"
     plt.savefig('./plots/weather/spatial_map_weather_analysis_'+message+'.png',dpi=300)
+
+def plot_spital_map_multi(file_paths, var_names, time_s, time_e, loc_lat=None, loc_lon=None, lat_names=None, lon_names=None, message=None):
+
+    print("======== In plot_spital_map_multi =========")
+
+    # ================== Plot setting ==================
+    case_sum = np.shape(file_paths)[0]
+    print(case_sum)
+    fig, ax = plt.subplots( nrows=(case_sum // 2)+1, ncols=2, figsize=[10,12],sharex=True, sharey=True, squeeze=True,
+                            subplot_kw={'projection': ccrs.PlateCarree()})
+    plt.subplots_adjust(wspace=0, hspace=0) # left=0.15,right=0.95,top=0.85,bottom=0.05,
+
+    plt.rcParams['text.usetex']     = False
+    plt.rcParams['font.family']     = "sans-serif"
+    plt.rcParams['font.serif']      = "Helvetica"
+    plt.rcParams['axes.linewidth']  = 1.5
+    plt.rcParams['axes.labelsize']  = 14
+    plt.rcParams['font.size']       = 14
+    plt.rcParams['legend.fontsize'] = 10
+    plt.rcParams['xtick.labelsize'] = 14
+    plt.rcParams['ytick.labelsize'] = 14
+
+    almost_black = '#262626'
+    # change the tick colors also to the almost black
+    plt.rcParams['ytick.color']     = almost_black
+    plt.rcParams['xtick.color']     = almost_black
+
+    # change the text colors also to the almost black
+    plt.rcParams['text.color']      = almost_black
+
+    # Change the default axis colors from black to a slightly lighter black,
+    # and a little thinner (0.5 instead of 1)
+    plt.rcParams['axes.edgecolor']  = almost_black
+    plt.rcParams['axes.labelcolor'] = almost_black
+
+    for i, file_path in enumerate(file_paths):
+
+        row = i // 2
+        col = i % 2
+
+        # ================== Reading data =================
+        time, Var  = read_var(file_path, var_names[i], loc_lat, loc_lon, lat_names[i], lon_names[i])
+        time, lats = read_var(file_path, lat_names[i], loc_lat, loc_lon, lat_names[i], lon_names[i])
+        time, lons = read_var(file_path, lon_names[i], loc_lat, loc_lon, lat_names[i], lon_names[i])
+
+        if var_names[i] in ['tas','Tair','Tair_f_inst']:
+            if i == 0:
+                clevs    = np.arange( 15.,40.,1.) #np.linspace( 15.,45., num=31)
+            else:
+                clevs    = np.arange( -15.,15,1.)
+            cmap     = plt.cm.RdYlBu_r
+            var      = spital_var(time,Var,time_s,time_e)-273.15
+        elif var_names[i] in ['Rainf','Rainf_tavg']:
+            if i == 0:
+                clevs    = np.arange( 0.,22.,2.) #np.linspace( 15.,45., num=31)
+            else:
+                clevs    = np.arange( -10.,10,1.)
+            cmap     = plt.cm.Blues
+            var      = spital_var(time,Var,time_s,time_e)*24*60*60.
+        elif var_names[i] in ['LWdown','LWdown_f_inst','SWdown','SWdown_f_inst']:
+            if i == 0:
+                clevs = np.arange( 80.,500.,20.) #np.linspace( 15.,45., num=31)
+            else:
+                clevs = np.arange( -100.,100.,20.)
+            cmap  = plt.cm.RdYlBu_r
+            scale = get_scale(var_names[i])
+            var   = spital_var(time,Var,time_s,time_e)*scale
+        elif var_names[i] in ['Wind','Wind_f_inst']:
+            if i == 0:
+                clevs = np.arange( 0,10.,0.5) #np.linspace( 15.,45., num=31)
+            else:
+                clevs = np.arange( -5,5.,0.5)
+            cmap  = plt.cm.Blues
+            scale = get_scale(var_names[i])
+            var   = spital_var(time,Var,time_s,time_e)*scale
+        elif var_names[i] in ['Qair','Qair_f_inst']:
+            # kg kg-1
+            if i == 0:
+                clevs = np.arange( 0.,0.02, 0.001) #np.linspace( 15.,45., num=31)
+            else:
+                clevs = np.arange( -0.01,0.01, 0.001)
+            cmap  = plt.cm.RdYlBu_r
+            scale = get_scale(var_names[i])
+            var   = spital_var(time,Var,time_s,time_e)*scale
+        else:
+            if i == 0:
+                clevs = np.linspace( 0.,5., num=11)
+            else:
+                clevs = np.linspace( -5.,5., num=11)
+            cmap  = plt.cm.GnBu # BrBG
+            scale = get_scale(var_names[i])
+            var   = spital_var(time,Var,time_s,time_e)*scale
+
+        if i == 0:
+            # save AWAP dataset
+            lat_AWAP   = lats
+            lon_AWAP   = lons
+            var_AWAP   = var
+        elif i == 1:
+            AWAP_regrid  = regrid_data(lat_AWAP, lon_AWAP, lats, lons, var_AWAP)
+            var          = var - AWAP_regrid
+        else:
+            var          = var - AWAP_regrid
+
+        # =============== setting plots ===============
+        if loc_lat == None:
+            # ax.set_extent([140,154,-40,-28])
+            ax[row,col].set_extent([135,155,-40,-25])
+        else:
+            ax[row,col].set_extent([loc_lon[0],loc_lon[1],loc_lat[0],loc_lat[1]])
+
+        ax[row,col].coastlines(resolution="50m",linewidth=1)
+
+        # Add gridlines
+        gl               = ax[row,col].gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=1, color='black', linestyle='--')
+        gl.xlabels_top   = False
+        gl.ylabels_right = False
+        gl.xlines        = True
+
+        if loc_lat == None:
+            gl.xlocator = mticker.FixedLocator([135,140,145,150,155])
+            gl.ylocator = mticker.FixedLocator([-40,-35,-30,-25])
+        else:
+            gl.xlocator = mticker.FixedLocator(loc_lon)
+            gl.ylocator = mticker.FixedLocator(loc_lat)
+
+        gl.xformatter = LONGITUDE_FORMATTER
+        gl.yformatter = LATITUDE_FORMATTER
+        gl.xlabel_style = {'size':10, 'color':'black'}
+        gl.ylabel_style = {'size':10, 'color':'black'}
+
+        plot1 = ax[row, col].contourf(lons, lats, var, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #,#bwr)#coolwarm)#cm.BrBG) # clevs,
+        cb    = plt.colorbar(plot1, ax=ax[row, col], orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
+        cb.ax.tick_params(labelsize=10)
+
+
+    plt.title(var_names[0], size=16)
+    # cb.set_label(units,size=14,rotation=270,labelpad=15)
+
+    if message == None:
+        message = var_names[0]
+    else:
+        message = message + "_" + var_names[0]
+
+    plt.savefig('./plots/weather/spatial_map_weather_analysis_'+message+'_multi.png',dpi=300)
 
 
 if __name__ == "__main__":
@@ -153,10 +357,10 @@ if __name__ == "__main__":
     AWAP_path    = '/g/data/w97//W35_GDATA_MOVED/Shared_data/AWAP_3h_v1'
     AWAP_T_file  = AWAP_path + '/Tair/AWAP.Tair.3hr.2017.nc'     # air temperature
     AWAP_R_file  = AWAP_path + '/Rainf/AWAP.Rainf.3hr.2017.nc'   # Daily rainfall
-    AWAP_LW_file = AWAP_path + '/Tair/AWAP.LWdown.3hr.2017.nc'   # Downward Longwave Radiation 
-    AWAP_SW_file = AWAP_path + '/Rainf/AWAP.SWdown.3hr.2017.nc'  # Downward Shortwave Radiation
-    AWAP_W_file  = AWAP_path + '/Tair/AWAP.Wind.3hr.2017.nc'     # Near surface wind speed
-    AWAP_Q_file  = AWAP_path + '/Rainf/AWAP.Qair.3hr.2017.nc'    # Near surface specific humidity
+    AWAP_LW_file = AWAP_path + '/LWdown/AWAP.LWdown.3hr.2017.nc'   # Downward Longwave Radiation
+    AWAP_SW_file = AWAP_path + '/SWdown/AWAP.SWdown.3hr.2017.nc'  # Downward Shortwave Radiation
+    AWAP_W_file  = AWAP_path + '/Wind/AWAP.Wind.3hr.2017.nc'     # Near surface wind speed
+    AWAP_Q_file  = AWAP_path + '/Qair/AWAP.Qair.3hr.2017.nc'    # Near surface specific humidity
 
     cpl_land_path  = '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/hw2013_15Oct/gw_jan2019/LIS_output'
     cpl_land_file  = cpl_land_path + '/LIS.CABLE.201901-201901.d01.nc'  # land output of wrf-cable run
@@ -185,7 +389,222 @@ if __name__ == "__main__":
         loc_lon    = [89.25,180]
 
 
-    # =================== Opreation ====================
+    # # =================== Opreation ====================
+
+    # # #################################
+    # # Plot AWAP
+    # # #################################
+
+
+    # # Plot AWAP Tair
+    # file_paths  = [AWAP_T_file]
+
+    # var_names   = ['Tair']
+    # lat_names   = ["lat"]
+    # lon_names   = ["lon"]
+
+    # # for i in np.arange(0,30):
+    # time_s = datetime(2017,1,2,0,0,0,0) #+ timedelta(days=int(i))
+    # time_e = datetime(2017,1,31,23,59,0,0) #+ timedelta(days=int(i))
+    # message = "AWAP_2017-01"#+str(i+2)
+    # plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+    #                 lon_names=lon_names,message=message)
+
+    # # Plot AWAP rainfall
+    # file_paths  = [AWAP_R_file]
+
+    # var_names   = ['Rainf']
+    # lat_names   = ["lat"]
+    # lon_names   = ["lon"]
+
+    # # for i in np.arange(0,30):
+    # time_s = datetime(2017,1,2,0,0,0,0) #+ timedelta(days=int(i))
+    # time_e = datetime(2017,1,31,23,59,0,0) #+ timedelta(days=int(i))
+    # message = "AWAP_2017-01"#+str(i+2)
+    # plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+    #                 lon_names=lon_names,message=message)
+
+    # '''
+    # Plot AWAP Near surface specific humidity
+    # '''
+
+    # file_paths  = [AWAP_Q_file]
+
+    # var_names   = ['Qair']
+    # lat_names   = ["lat"]
+    # lon_names   = ["lon"]
+
+    # # for i in np.arange(0,30):
+    # time_s = datetime(2017,1,2,0,0,0,0) #+ timedelta(days=int(i))
+    # time_e = datetime(2017,1,31,23,59,0,0) #+ timedelta(days=int(i))
+    # message = "AWAP_2017-01"#+str(i+2)
+    # plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+    #                 lon_names=lon_names,message=message)
+
+
+    # '''
+    # Plot AWAP Wind
+    # '''
+
+    # file_paths  = [AWAP_W_file]
+
+    # var_names   = ['Wind']
+    # lat_names   = ["lat"]
+    # lon_names   = ["lon"]
+
+    # # for i in np.arange(0,30):
+    # time_s = datetime(2017,1,2,0,0,0,0) #+ timedelta(days=int(i))
+    # time_e = datetime(2017,1,31,23,59,0,0) #+ timedelta(days=int(i))
+    # message = "AWAP_2017-01"#+str(i+2)
+    # plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+    #                 lon_names=lon_names,message=message)
+
+    # '''
+    # Plot AWAP LWdown
+    # '''
+
+    # file_paths  = [AWAP_LW_file]
+
+    # var_names   = ['LWdown']
+    # lat_names   = ["lat"]
+    # lon_names   = ["lon"]
+
+    # # for i in np.arange(0,30):
+    # time_s = datetime(2017,1,2,0,0,0,0) #+ timedelta(days=int(i))
+    # time_e = datetime(2017,1,31,23,59,0,0) #+ timedelta(days=int(i))
+    # message = "AWAP_2017-01"#+str(i+2)
+    # plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+    #                 lon_names=lon_names,message=message)
+
+    # # Plot AWAP SWdown
+    # file_paths  = [AWAP_SW_file]
+
+    # var_names   = ['SWdown']
+    # lat_names   = ["lat"]
+    # lon_names   = ["lon"]
+
+    # # for i in np.arange(0,30):
+    # time_s = datetime(2017,1,2,0,0,0,0) #+ timedelta(days=int(i))
+    # time_e = datetime(2017,1,31,23,59,0,0) #+ timedelta(days=int(i))
+    # message = "AWAP_2017-01"#+str(i+2)
+    # plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+    #                 lon_names=lon_names,message=message)
+
+
+    # # #################################
+    # # Plot WRF-CABLE land var
+    # # #################################
+    # case_names     = [
+    #                   "drght_2017_2019_bl_pbl5_mp6_sf_sfclay1",
+    #                   "drght_2017_2019_bl_pbl7_mp8_sf_sfclay1" ]
+    #                 #   "drght_2017_2019_bl_pbl5_mp8_sf_sfclay1",
+    #                 # "drght_2017_2019",
+    #                 #   "drght_2017_2019_bl_pbl1_mp6_sf_sfclay1",
+    #     # "drght_2017_2019",
+    # for case_name in case_names:
+    #     # case_name      = "drght_2017_2019"
+    #     cpl_land_path  = '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/'+case_name+'/LIS_output'
+    #     cpl_land_file  = cpl_land_path + '/LIS.CABLE.201701-201701.d01.nc'  # land output of wrf-cable run
+
+    #     file_paths  = [cpl_land_file]
+
+    #     # var_names   = ['Rainf_tavg'] # ,'Qair_f_inst','Rainf_tavg','Tair_f_inst'
+    #     lat_names   = ["lat"]
+    #     lon_names   = ["lon"]
+
+    #     # for i in np.arange(0,30):
+    #     time_s = datetime(2017,1,2,0,0,0,0) #+ timedelta(days=int(i))
+    #     time_e = datetime(2017,1,31,23,59,0,0) #+ timedelta(days=int(i))
+    #     print(time_s)
+    #     message     = case_name+"_2017-01"
+    #     var_names   = ['Rainf_tavg']
+    #     plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+    #                     lon_names=lon_names,message=message)
+    #     var_names   = ['Tair_f_inst']
+    #     plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+    #                     lon_names=lon_names,message=message)
+
+    #     var_names   = ['Qair_f_inst']
+    #     plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+    #                     lon_names=lon_names,message=message)
+
+    #     var_names   = ['SWdown_f_inst']
+    #     plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+    #                     lon_names=lon_names,message=message)
+
+    #     var_names   = ['LWdown_f_inst']
+    #     plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+    #                     lon_names=lon_names,message=message)
+
+    #     var_names   = ['Wind_f_inst']
+    #     plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+    #                     lon_names=lon_names,message=message)
+
+
+    # #################################
+    # Plot WRF-CABLE - AWAP
+    # #################################
+    message    = "WRF-AWAP_2017-01"
+    case_names = ["drght_2017_2019",
+                  "drght_2017_2019_bl_pbl1_mp6_sf_sfclay1",
+                  "drght_2017_2019_bl_pbl5_mp6_sf_sfclay1",
+                  "drght_2017_2019",
+                  "drght_2017_2019_bl_pbl7_mp8_sf_sfclay1"]
+                  # "drght_2017_2019_bl_pbl5_mp8_sf_sfclay1",
+    time_s     = datetime(2017,1,2,0,0,0,0) #+ timedelta(days=int(i))
+    time_e     = datetime(2017,1,31,23,59,0,0) #+ timedelta(days=int(i))
+
+    # ============= Tair =============
+    file_paths  = [ AWAP_T_file]
+    var_names   = ['Tair']
+    lat_names   = ['lat']
+    lon_names   = ['lon']
+    for case_name in case_names:
+        file_paths.append("/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201701-201701.d01.nc")
+        var_names.append('Tair_f_inst')
+        lat_names.append('lat')
+        lon_names.append('lon')
+        print(file_paths)
+
+    plot_spital_map_multi(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+                          lon_names=lon_names,message=message)
+
+    # ============= Rainf =============
+    file_paths  = [ AWAP_R_file]
+    var_names   = ['Rainf']
+    lat_names   = ['lat']
+    lon_names   = ['lon']
+    for case_name in case_names:
+        file_paths.append("/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201701-201701.d01.nc")
+        var_names.append('Rainf_tavg')
+        lat_names.append('lat')
+        lon_names.append('lon')
+
+    plot_spital_map_multi(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+                    lon_names=lon_names,message=message)
+
+    # # #################################
+    # # Plot WRF-CABLE atmo var
+    # # #################################
+    #
+    # file_paths  = [cpl_atmo_file_fd, cpl_atmo_file_gw]
+    #
+    # var_name    = "temp"
+    # var_unit    = "degC"
+    # height      = 1000
+    # lat_names   = ["lat"]
+    # lon_names   = ["lon"]
+    #
+    # time_s = datetime(2009,1,22,0,0,0,0)
+    # time_e = datetime(2009,2,14,0,0,0,0)
+    #
+    # for i in np.arange(0,23):
+    #
+    #     time_s = datetime(2009,1,22,0,0,0,0) + timedelta(days=int(i))
+    #     time_e = datetime(2009,1,22,23,59,0,0) + timedelta(days=int(i))
+    #     message = "Couple_GW-FD"+str(time_s)
+    #     plot_spatial_map_hgt(file_paths, var_name, var_unit, height, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lat, message=message)
+
 
     # ##################################
     # # Plot ERAI air temp + 10 m wind speed + pressure
@@ -302,114 +721,3 @@ if __name__ == "__main__":
     #
     # plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
     #                 lon_names=lon_names,message=message)
-
-    # #################################
-    # Plot AWAP Tair
-    # #################################
-
-    file_paths  = [AWAP_T_file]
-
-    var_names   = ['Tair']
-    lat_names   = ["lat"]
-    lon_names   = ["lon"]
-
-    # for i in np.arange(0,30):
-    time_s = datetime(2017,1,2,0,0,0,0) #+ timedelta(days=int(i))
-    time_e = datetime(2017,1,31,23,59,0,0) #+ timedelta(days=int(i))
-    message = "AWAP_2017-01"#+str(i+2)
-    plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
-                    lon_names=lon_names,message=message)
-
-    '''
-    Plot AWAP rainfall
-    '''
-
-    file_paths  = [AWAP_R_file]
-
-    var_names   = ['Rainf']
-    lat_names   = ["lat"]
-    lon_names   = ["lon"]
-
-    # for i in np.arange(0,30):
-    time_s = datetime(2017,1,2,0,0,0,0) #+ timedelta(days=int(i))
-    time_e = datetime(2017,1,31,23,59,0,0) #+ timedelta(days=int(i))
-    message = "AWAP_2017-01"#+str(i+2)
-    plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
-                    lon_names=lon_names,message=message)
-
-
-    # #################################
-    # Plot WRF-CABLE land var
-    # #################################
-    case_name      = "drght_2017_2019"
-    cpl_land_path  = '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/'+case_name+'/LIS_output'
-    cpl_land_file  = cpl_land_path + '/LIS.CABLE.201701-201701.d01.nc'  # land output of wrf-cable run
-
-    file_paths  = [cpl_land_file]
-
-    # var_names   = ['Rainf_tavg'] # ,'Qair_f_inst','Rainf_tavg','Tair_f_inst'
-    lat_names   = ["lat"]
-    lon_names   = ["lon"]
-
-    # for i in np.arange(0,30):
-    time_s = datetime(2017,1,2,0,0,0,0) #+ timedelta(days=int(i))
-    time_e = datetime(2017,1,31,23,59,0,0) #+ timedelta(days=int(i))
-    print(time_s)
-    message     = case_name+"_2017-01"
-    var_names   = ['Rainf_tavg']
-    plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
-                    lon_names=lon_names,message=message)
-    var_names   = ['Tair_f_inst']
-    plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
-                    lon_names=lon_names,message=message)
-    
-    # time_s = datetime(2009,1,22,0,0,0,0)
-    # time_e = datetime(2009,2,14,0,0,0,0)
-    # message = "Couple_gw_"+str(time_s)+"-"+str(time_e)
-    # plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
-    #                 lon_names=lon_names,message=message)
-
-    # cpl_land_path  = '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/hw2009_15Oct/ensemble_avg'
-    # cpl_land_file  = cpl_land_path + '/LIS.CABLE.20090122-20090213_fd.nc'  # land output of wrf-cable run
-
-    # file_paths  = [cpl_land_file]
-
-    # var_names   = ['Rainf_tavg'] #'Rainf_tavg','Tair_f_inst','Qair_f_inst','Psurf_f_inst']
-    # lat_names   = ["lat"]
-    # lon_names   = ["lon"]
-
-    # # for i in np.arange(0,22):
-    # #     time_s = datetime(2009,1,22,0,0,0,0) + timedelta(days=int(i))
-    # #     time_e = datetime(2009,1,23,0,0,0,0) + timedelta(days=int(i))
-    # #     print(time_s)
-    # #     message = "Couple_fd"+str(time_s)
-    # #     plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
-    # #                     lon_names=lon_names,message=message)
-
-    # time_s = datetime(2009,1,22,0,0,0,0)
-    # time_e = datetime(2009,2,14,0,0,0,0)
-    # message = "Couple_fd_"+str(time_s)+"-"+str(time_e)
-    # plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
-    #                 lon_names=lon_names,message=message)
-
-    # # #################################
-    # # Plot WRF-CABLE atmo var
-    # # #################################
-    #
-    # file_paths  = [cpl_atmo_file_fd, cpl_atmo_file_gw]
-    #
-    # var_name    = "temp"
-    # var_unit    = "degC"
-    # height      = 1000
-    # lat_names   = ["lat"]
-    # lon_names   = ["lon"]
-    #
-    # time_s = datetime(2009,1,22,0,0,0,0)
-    # time_e = datetime(2009,2,14,0,0,0,0)
-    #
-    # for i in np.arange(0,23):
-    #
-    #     time_s = datetime(2009,1,22,0,0,0,0) + timedelta(days=int(i))
-    #     time_e = datetime(2009,1,22,23,59,0,0) + timedelta(days=int(i))
-    #     message = "Couple_GW-FD"+str(time_s)
-    #     plot_spatial_map_hgt(file_paths, var_name, var_unit, height, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lat, message=message)
