@@ -90,13 +90,13 @@ def mask_by_lat_lon(file_path, loc_lat, loc_lon, lat_name, lon_name):
     return mask
 
 def time_mask(time, time_s, time_e, seconds=None):
-    
+
     '''
     Checked on 14 Dec 2021, no problem was identified
     '''
-    
+
     # print("In time_mask")
-    
+
     Time_s = time_s - datetime(2000,1,1,0,0,0)
     Time_e = time_e - datetime(2000,1,1,0,0,0)
 
@@ -110,7 +110,7 @@ def time_mask(time, time_s, time_e, seconds=None):
             else:
                 if_seconds = (time[j].seconds >= seconds[0]) & (time[j].seconds < seconds[1])
             time_cood.append( (time[j]>=Time_s) & (time[j]<Time_e) & if_seconds)
-    
+
     return time_cood
 
 # ================================ Read variables ==============================
@@ -539,7 +539,7 @@ def truncate_colormap(cmap, minval=0.0, maxval=1.0, n=100):
 
 # =============================== Regrid ================================
 def regrid_data(lat_in, lon_in, lat_out, lon_out, input_data):
-    
+
     if len(np.shape(lat_in)) == 1:
         lon_in_2D, lat_in_2D = np.meshgrid(lon_in,lat_in)
         lon_in_1D            = np.reshape(lon_in_2D,-1)
@@ -557,23 +557,20 @@ def regrid_data(lat_in, lon_in, lat_out, lon_out, input_data):
         lat_out_2D            = lat_out
     else:
         print("ERROR: lon_out has ", len(np.shape(lat_in)), "dimensions")
-        
+
     print("np.shape(input_data) ",np.shape(input_data))
     print("np.shape(lon_out_2D) ",np.shape(lon_out_2D))
     print("np.shape(lat_out_2D) ",np.shape(lat_out_2D))
-        
+
     value = np.reshape(input_data,-1)
-    value = np.where(value == np.nan, -999999999., value)
-    print(value)
-
-    print("np.shape(lat_in_1D) ", np.shape(lat_in_1D))
-    print("np.shape(lon_in_1D) ", np.shape(lon_in_1D))
-    print("np.shape(value) ", np.shape(value))
+    #value = np.where(np.isnan(value), -9999., value)
+    #print(type(value))
+    #print(type(value[:]))
+    #print("lon_out_2D ", lon_out_2D)
+    #print("np.shape(lat_in_1D) ", np.shape(lat_in_1D))
+    #print("np.shape(lon_in_1D) ", np.shape(lon_in_1D))
+    #print("np.shape(value) ", np.shape(value))
     Value = griddata((lon_in_1D, lat_in_1D), value, (lon_out_2D, lat_out_2D), method="nearest")
-    Value = np.where(Value == -999999999., np.nan, Value)
-    
-    return Value
+    #Value = np.where(Value == -9999., np.nan, Value)
 
-# def clip_to_new(input_data,output_demo):
-    
-    
+    return Value
