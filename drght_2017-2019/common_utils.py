@@ -563,14 +563,18 @@ def regrid_data(lat_in, lon_in, lat_out, lon_out, input_data):
     print("np.shape(lat_out_2D) ",np.shape(lat_out_2D))
 
     value = np.reshape(input_data,-1)
-    #value = np.where(np.isnan(value), -9999., value)
-    #print(type(value))
+    value = np.where(np.isnan(value), -9999., value)
+    print(value)
     #print(type(value[:]))
-    #print("lon_out_2D ", lon_out_2D)
+    print("lon_out_2D ", lon_out_2D)
+    print("lon_in_1D ", lon_in_1D)
+    print("lat_out_2D ", lat_out_2D)
+    print("lat_in_1D ", lat_in_1D)
     #print("np.shape(lat_in_1D) ", np.shape(lat_in_1D))
     #print("np.shape(lon_in_1D) ", np.shape(lon_in_1D))
     #print("np.shape(value) ", np.shape(value))
-    Value = griddata((lon_in_1D, lat_in_1D), value, (lon_out_2D, lat_out_2D), method="nearest")
-    #Value = np.where(Value == -9999., np.nan, Value)
+    Value = griddata((lon_in_1D, lat_in_1D), value, (lon_out_2D, lat_out_2D), method="cubic")
+    # method="nearest")
+    Value = np.where(Value < 0., np.nan, Value)
 
     return Value
