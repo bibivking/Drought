@@ -197,7 +197,7 @@ def plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=None, loc_lon
     plt.savefig('./plots/weather/spatial_map_weather_analysis_'+message+'.png',dpi=300)
 
 def plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e, loc_lat=None, loc_lon=None, lat_names=None,
-                          lon_names=None, message=None, metric=False):
+                          lon_names=None, message=None, metric=False, month=None):
 
     print("======== In plot_spital_map_multi =========")
 
@@ -259,7 +259,16 @@ def plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e
             else:
                 clevs    = [-180,-160,-140,-120,-100,-80,-60,-40,-20,-10,10,20,40,60,80,100,120,140,160,180]
                 cmap     = plt.cm.BrBG #RdYlBu_r
-            var      = spital_var(time,Var,time_s,time_e)*24*60*60.*30
+
+            if month == "01":
+                var      = spital_var(time,Var,time_s,time_e)*24*60*60.*30
+            elif month == "02":
+                var      = spital_var(time,Var,time_s,time_e)*24*60*60.*28
+            elif month == "03":
+                var      = spital_var(time,Var,time_s,time_e)*24*60*60.*31
+            else:
+                var      = spital_var(time,Var,time_s,time_e)*24*60*60.
+                
         elif var_names[i] in ['LWdown','LWdown_f_inst','SWdown','SWdown_f_inst']:
             if i == 0:
                 clevs = np.arange( 80.,520.,20.) #np.linspace( 15.,45., num=31)
@@ -398,7 +407,8 @@ if __name__ == "__main__":
     ERAI_R_file  = ERAI_path + '/tp/tp_3hrs_ERAI_historical_fc-sfc_20170101_20170131.nc' # Total rainfall
 
     ERA5_path    = "/g/data/rt52/era5/single-levels/reanalysis"
-    ERA5_T_file  = ERA5_path + '/2t/2017/2t_era5_oper_sfc_20170101-20170131.nc' # air temperature
+    ERA5_T_file  = ERA5_path + '/2t/2017/2t_era5_oper_sfc_20170201-20170228.nc' # air temperature
+    # ERA5_T_file  = ERA5_path + '/2t/2017/2t_era5_oper_sfc_20170101-20170131.nc' # air temperature
     ERA5_P_file  = ERA5_path + '/sp/2017/sp_era5_oper_sfc_20170101-20170131.nc'   # surface pressure
     ERA5_U_file  = ERA5_path + '/10u/2017/10u_era5_oper_sfc_20170101-20170131.nc' # 10 m wind speed
     ERA5_V_file  = ERA5_path + '/10v/2017/10v_era5_oper_sfc_20170101-20170131.nc' # 10 m wind speed
@@ -577,142 +587,164 @@ if __name__ == "__main__":
     # #################################
     # Plot WRF-CABLE - AWAP
     # #################################
-    metric     = True
-    message    = "WRF-AWAP_2017-01"
-    case_names = ["drght_2017_2019",
-                  "drght_2017_2019_bl_pbl1_mp6_sf_sfclay1",
-                  "drght_2017_2019_bl_pbl5_mp6_sf_sfclay1",
-                  "drght_2017_2019_bl_pbl5_mp8_sf_sfclay1",
-                  "drght_2017_2019_bl_pbl7_mp8_sf_sfclay1"]
-                  # "drght_2017_2019_bl_pbl5_mp8_sf_sfclay1",
-    names = [ "AWAP",
-              "bl_pbl2_mp4_sf_sfclay2",
-              "bl_pbl1_mp6_sf_sfclay1",
-              "bl_pbl5_mp6_sf_sfclay1",
-              "bl_pbl5_mp8_sf_sfclay1",
-              "bl_pbl7_mp8_sf_sfclay1"]
-    wrf_path   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_names[0]+"/WRF_output/wrfout_d01_2017-01-01_11:00:00"
-    time_s     = datetime(2017,1,2,0,0,0,0) #+ timedelta(days=int(i))
-    time_e     = datetime(2017,1,31,23,59,0,0) #+ timedelta(days=int(i))
-
-    # ============= Tair =============
-    file_paths  = [ AWAP_T_file]
-    var_names   = ['Tair']
-    lat_names   = ['lat']
-    lon_names   = ['lon']
-    for case_name in case_names:
-        file_paths.append("/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201701-201701.d01.nc")
-        var_names.append('Tair_f_inst')
-        lat_names.append('lat')
-        lon_names.append('lon')
-        print(file_paths)
-
-    plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e, loc_lat=loc_lat,
-                          loc_lon=loc_lon, lat_names=lat_names,lon_names=lon_names,message=message, metric=metric)
-
-    # ============= Rainf =============
-    file_paths  = [ AWAP_R_file]
-    var_names   = ['Rainf']
-    lat_names   = ['lat']
-    lon_names   = ['lon']
-    for case_name in case_names:
-        file_paths.append("/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201701-201701.d01.nc")
-        var_names.append('Rainf_tavg')
-        lat_names.append('lat')
-        lon_names.append('lon')
-
-    plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e, loc_lat=loc_lat,
-                          loc_lon=loc_lon, lat_names=lat_names,lon_names=lon_names,message=message, metric=metric)
-
-    # ============= Wind =============
-    file_paths  = [ AWAP_W_file]
-    var_names   = ['Wind']
-    lat_names   = ['lat']
-    lon_names   = ['lon']
-    for case_name in case_names:
-        file_paths.append("/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201701-201701.d01.nc")
-        var_names.append('Wind_f_inst')
-        lat_names.append('lat')
-        lon_names.append('lon')
-
-    plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e, loc_lat=loc_lat,
-                          loc_lon=loc_lon, lat_names=lat_names,lon_names=lon_names,message=message, metric=metric)
+    if 1:
+        metric     = True
+        month      = "02"
+        wrf_file   = "LIS.CABLE.2017"+month+"-2017"+month+".d01.nc"
+        message    = "WRF-AWAP_2017-"+month    
+        # time_s     = datetime(2017,1,2,0,0,0,0) #+ timedelta(days=int(i))
+        # time_e     = datetime(2017,1,31,23,59,0,0) #+ timedelta(days=int(i))
+        
+        time_s     = datetime(2017,2,1,0,0,0,0) #+ timedelta(days=int(i))
+        time_e     = datetime(2017,2,28,23,59,0,0) #+ timedelta(days=int(i))
+        
+        case_names = ["drght_2017_2019",
+                    "drght_2017_2019_bl_pbl1_mp6_sf_sfclay1",
+                    "drght_2017_2019_bl_pbl5_mp6_sf_sfclay1",
+                    "drght_2017_2019_bl_pbl5_mp8_sf_sfclay1",
+                    "drght_2017_2019_bl_pbl7_mp8_sf_sfclay1"]
+                    
+        names = [ "AWAP",
+                "bl_pbl2_mp4_sf_sfclay2",
+                "bl_pbl1_mp6_sf_sfclay1",
+                "bl_pbl5_mp6_sf_sfclay1",
+                "bl_pbl5_mp8_sf_sfclay1",
+                "bl_pbl7_mp8_sf_sfclay1"]
+        
+        wrf_path   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_names[0]+"/run_Jan2017/WRF_output/wrfout_d01_2017-01-01_11:00:00"
 
 
-    # ============= LWdown =============
-    file_paths  = [ AWAP_LW_file]
-    var_names   = ['LWdown']
-    lat_names   = ['lat']
-    lon_names   = ['lon']
-    for case_name in case_names:
-        file_paths.append("/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201701-201701.d01.nc")
-        var_names.append('LWdown_f_inst')
-        lat_names.append('lat')
-        lon_names.append('lon')
+        # ============= Tair =============
+        # file_paths  = [ AWAP_T_file]
+        # var_names   = ['Tair']
+        # lat_names   = ['lat']
+        # lon_names   = ['lon']
+        # for case_name in case_names:
+        #     file_paths.append("/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/"+wrf_file)
+        #     var_names.append('Tair_f_inst')
+        #     lat_names.append('lat')
+        #     lon_names.append('lon')
+        #     print(file_paths)
 
-    plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e, loc_lat=loc_lat,
-                          loc_lon=loc_lon, lat_names=lat_names,lon_names=lon_names,message=message, metric=metric)
+        # plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e, loc_lat=loc_lat,
+        #                     loc_lon=loc_lon, lat_names=lat_names,lon_names=lon_names,message=message, 
+        #                     metric=metric, month=month)
 
-    # ============= SWdown =============
-    file_paths  = [ AWAP_SW_file]
-    var_names   = ['SWdown']
-    lat_names   = ['lat']
-    lon_names   = ['lon']
-    for case_name in case_names:
-        file_paths.append("/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201701-201701.d01.nc")
-        var_names.append('SWdown_f_inst')
-        lat_names.append('lat')
-        lon_names.append('lon')
+        # ============= Rainf =============
+        file_paths  = [ AWAP_R_file]
+        var_names   = ['Rainf']
+        lat_names   = ['lat']
+        lon_names   = ['lon']
+        for case_name in case_names:
+            file_paths.append("/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/"+wrf_file)
+            var_names.append('Rainf_tavg')
+            lat_names.append('lat')
+            lon_names.append('lon')
 
-    plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e, loc_lat=loc_lat,
-                          loc_lon=loc_lon, lat_names=lat_names,lon_names=lon_names,message=message, metric=metric)
+        plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e, loc_lat=loc_lat,
+                            loc_lon=loc_lon, lat_names=lat_names,lon_names=lon_names,message=message, 
+                            metric=metric, month=month)
 
-    # ============= Qair =============
-    file_paths  = [ AWAP_Q_file]
-    var_names   = ['Qair']
-    lat_names   = ['lat']
-    lon_names   = ['lon']
-    for case_name in case_names:
-        file_paths.append("/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201701-201701.d01.nc")
-        var_names.append('Qair_f_inst')
-        lat_names.append('lat')
-        lon_names.append('lon')
+        # ============= Wind =============
+        file_paths  = [ AWAP_W_file]
+        var_names   = ['Wind']
+        lat_names   = ['lat']
+        lon_names   = ['lon']
+        for case_name in case_names:
+            file_paths.append("/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/"+wrf_file)
+            var_names.append('Wind_f_inst')
+            lat_names.append('lat')
+            lon_names.append('lon')
 
-    plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e, loc_lat=loc_lat,
-                          loc_lon=loc_lon, lat_names=lat_names,lon_names=lon_names,message=message, metric=metric)
+        plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e, loc_lat=loc_lat,
+                            loc_lon=loc_lon, lat_names=lat_names,lon_names=lon_names,message=message, 
+                            metric=metric, month=month)
+
+
+        # ============= LWdown =============
+        file_paths  = [ AWAP_LW_file]
+        var_names   = ['LWdown']
+        lat_names   = ['lat']
+        lon_names   = ['lon']
+        for case_name in case_names:
+            file_paths.append("/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/"+wrf_file)
+            var_names.append('LWdown_f_inst')
+            lat_names.append('lat')
+            lon_names.append('lon')
+
+        plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e, loc_lat=loc_lat,
+                            loc_lon=loc_lon, lat_names=lat_names,lon_names=lon_names,message=message, 
+                            metric=metric, month=month)
+
+        # ============= SWdown =============
+        file_paths  = [ AWAP_SW_file]
+        var_names   = ['SWdown']
+        lat_names   = ['lat']
+        lon_names   = ['lon']
+        for case_name in case_names:
+            file_paths.append("/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/"+wrf_file)
+            var_names.append('SWdown_f_inst')
+            lat_names.append('lat')
+            lon_names.append('lon')
+
+        plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e, loc_lat=loc_lat,
+                            loc_lon=loc_lon, lat_names=lat_names,lon_names=lon_names,message=message, 
+                            metric=metric, month=month)
+
+        # ============= Qair =============
+        file_paths  = [ AWAP_Q_file]
+        var_names   = ['Qair']
+        lat_names   = ['lat']
+        lon_names   = ['lon']
+        for case_name in case_names:
+            file_paths.append("/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/"+wrf_file)
+            var_names.append('Qair_f_inst')
+            lat_names.append('lat')
+            lon_names.append('lon')
+
+        plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e, loc_lat=loc_lat,
+                            loc_lon=loc_lon, lat_names=lat_names,lon_names=lon_names,message=message, 
+                            metric=metric, month=month)
 
     # #################################
     # Plot WRF-CABLE - ERA 5
     # #################################
-    message    = "WRF-ERA5_2017-01"
-    case_names = ["drght_2017_2019",
-                  "drght_2017_2019_bl_pbl1_mp6_sf_sfclay1",
-                  "drght_2017_2019_bl_pbl5_mp6_sf_sfclay1",
-                  "drght_2017_2019",
-                  "drght_2017_2019_bl_pbl7_mp8_sf_sfclay1"]
-                  # "drght_2017_2019_bl_pbl5_mp8_sf_sfclay1",
-    names = [ "ERA5",
-              "bl_pbl2_mp4_sf_sfclay2",
-              "bl_pbl1_mp6_sf_sfclay1",
-              "bl_pbl5_mp6_sf_sfclay1",
-              "drght_2017_2019",
-              "bl_pbl7_mp8_sf_sfclay1"]
-    wrf_path   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_names[0]+"/WRF_output/wrfout_d01_2017-01-01_11:00:00"
-    time_s     = datetime(2017,1,2,0,0,0,0) #+ timedelta(days=int(i))
-    time_e     = datetime(2017,1,31,23,59,0,0) #+ timedelta(days=int(i))
+    if 1:
+        month      = "02"
+        message    = "WRF-ERA5_2017-"+month
+        # time_s     = datetime(2017,1,2,0,0,0,0)
+        # time_e     = datetime(2017,1,31,23,59,0,0)
+        time_s     = datetime(2017,2,1,0,0,0,0) 
+        time_e     = datetime(2017,2,28,23,59,0,0) 
+        
+        case_names = ["drght_2017_2019",
+                    "drght_2017_2019_bl_pbl1_mp6_sf_sfclay1",
+                    "drght_2017_2019_bl_pbl5_mp6_sf_sfclay1",
+                    "drght_2017_2019_bl_pbl5_mp8_sf_sfclay1",
+                    "drght_2017_2019_bl_pbl7_mp8_sf_sfclay1"]
+                    
+        names = [ "ERA5",
+                "bl_pbl2_mp4_sf_sfclay2",
+                "bl_pbl1_mp6_sf_sfclay1",
+                "bl_pbl5_mp6_sf_sfclay1",
+                "bl_pbl5_mp8_sf_sfclay1",
+                "bl_pbl7_mp8_sf_sfclay1"]
+        wrf_path   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_names[0]+"/run_Jan2017/WRF_output/wrfout_d01_2017-01-01_11:00:00"
 
-    # ============= Tair =============
-    file_paths  = [ ERA5_T_file]
-    var_names   = ['t2m']
-    lat_names   = ['latitude']
-    lon_names   = ['longitude']
-    for case_name in case_names:
-        file_paths.append("/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201701-201701.d01.nc")
-        var_names.append('Tair_f_inst')
-        lat_names.append('lat')
-        lon_names.append('lon')
-    plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e, loc_lat=loc_lat,
-                          loc_lon=loc_lon, lat_names=lat_names,lon_names=lon_names,message=message)
+
+        # ============= Tair =============
+        file_paths  = [ ERA5_T_file]
+        var_names   = ['t2m']
+        lat_names   = ['latitude']
+        lon_names   = ['longitude']
+        for case_name in case_names:
+            file_paths.append("/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/"+wrf_file)
+            var_names.append('Tair_f_inst')
+            lat_names.append('lat')
+            lon_names.append('lon')
+        plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e, loc_lat=loc_lat,
+                            loc_lon=loc_lon, lat_names=lat_names,lon_names=lon_names,message=message, 
+                            metric=metric, month=month)
 
     # # ============= Rain =============
     # !!!!!!!!!! NCI didn't download rainfall data

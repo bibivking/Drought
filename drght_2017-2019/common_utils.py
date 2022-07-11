@@ -172,6 +172,7 @@ def read_var(file_path, var_name, loc_lat=None, loc_lon=None, lat_name=None, lon
                 # change GLEAM's coordinates from (time, lon, lat) to (time, lat, lon)
                 tmp = np.moveaxis(obs_file.variables[var_name], -1, 1)
             else:
+                print("obs_file ", obs_file)
                 tmp = obs_file.variables[var_name][:]
                 print("print tmp in def read_var: ", tmp)
 
@@ -558,23 +559,24 @@ def regrid_data(lat_in, lon_in, lat_out, lon_out, input_data):
     else:
         print("ERROR: lon_out has ", len(np.shape(lat_in)), "dimensions")
 
-    print("np.shape(input_data) ",np.shape(input_data))
-    print("np.shape(lon_out_2D) ",np.shape(lon_out_2D))
-    print("np.shape(lat_out_2D) ",np.shape(lat_out_2D))
-
-    value = np.reshape(input_data,-1)
-    value = np.where(np.isnan(value), -9999., value)
-    print(value)
-    #print(type(value[:]))
-    print("lon_out_2D ", lon_out_2D)
-    print("lon_in_1D ", lon_in_1D)
-    print("lat_out_2D ", lat_out_2D)
+    # Check NaN - input array shouldn't have NaN
+    value     = np.reshape(input_data,-1)
+    value     = value[~np.isnan(value)]
+    lat_in_1D = lat_in_1D[~np.isnan(lat_in_1D)]
+    lon_in_1D = lon_in_1D[~np.isnan(lon_in_1D)]
+    print("value ", value)
     print("lat_in_1D ", lat_in_1D)
+    print("lon_in_1D ", lon_in_1D)
+    print("len(value) ", len(value))
+    print("len(lat_in_1D) ", len(lat_in_1D))
+    print("len(lon_in_1D) ", len(lon_in_1D))
+    print("np.any(np.isnan(value))", np.any(np.isnan(value)))
+    # value = np.where(np.isnan(value), -9999., value)
     #print("np.shape(lat_in_1D) ", np.shape(lat_in_1D))
     #print("np.shape(lon_in_1D) ", np.shape(lon_in_1D))
     #print("np.shape(value) ", np.shape(value))
-    Value = griddata((lon_in_1D, lat_in_1D), value, (lon_out_2D, lat_out_2D), method="cubic")
+    Value = griddata((lon_in_1D, lat_in_1D), value, (lon_out_2D, lat_out_2D), method="nearest")
     # method="nearest")
-    Value = np.where(Value < 0., np.nan, Value)
+    # Value = np.where(Value < 0., np.nan, Value)
 
     return Value
