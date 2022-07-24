@@ -3,7 +3,7 @@
 #PBS -m ae
 #PBS -P w97
 #PBS -q normalbw
-#PBS -l walltime=0:50:00
+#PBS -l walltime=0:20:00
 #PBS -l mem=190GB
 #PBS -l ncpus=1
 #PBS -j oe
@@ -13,4 +13,5 @@
 module use /g/data/hh5/public/modules 
 module load conda/analysis3-unstable
 cd /g/data/w97/mm3972/scripts/Drought/drght_2017-2019
-python spatial_map_weather_analysis.py
+
+python spatial_map_single_plot.py

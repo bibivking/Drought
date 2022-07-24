@@ -241,8 +241,19 @@ if __name__ == "__main__":
     GRACE_path = "/g/data/w35/mm3972/data/GRACE/GRACE_JPL_RL06/GRACE_JPLRL06M_MASCON/"
     GRACE_file = GRACE_path + "GRCTellus.JPL.200204_202004.GLO.RL06M.MSCNv02CRI.nc"
 
-    cable_path = 
-    cable_file = cable_path + "cable_out_2000-2019.nc"
+    GW_off_path = "/g/data/w35/mm3972/model/cable/runs/runs_4_coupled/gw_after_sp30yrx3/outputs/"
+    GW_off_file = GW_off_path + "cable_out_2000-2019.nc"
+
+    FD_off_path = "/g/data/w35/mm3972/model/cable/runs/runs_4_coupled/fd_after_sp30yrx3/outputs/"
+    FD_off_file = FD_off_path + "cable_out_2000-2019.nc"
+
+    SP1_off_path = "/g/data/w35/mm3972/model/cable/runs/runs_4_coupled/spinup_30yrx3/outputs_1st/"
+    SP2_off_path = "/g/data/w35/mm3972/model/cable/runs/runs_4_coupled/spinup_30yrx3/outputs_2nd/"
+    SP3_off_path = "/g/data/w35/mm3972/model/cable/runs/runs_4_coupled/spinup_30yrx3/outputs_3rd/"
+
+    SP1_off_file = SP1_off_path + "cable_out_1970-1999.nc"
+    SP2_off_file = SP2_off_path + "cable_out_1970-1999.nc"
+    SP3_off_file = SP3_off_path + "cable_out_1970-1999.nc"
 
     # #######################
     #        variable       #
