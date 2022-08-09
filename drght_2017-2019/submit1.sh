@@ -2,9 +2,9 @@
 
 #PBS -m ae
 #PBS -P w97
-#PBS -q normalbw
-#PBS -l walltime=0:20:00
-#PBS -l mem=190GB
+#PBS -q express
+#PBS -l walltime=0:10:00
+#PBS -l mem=20GB
 #PBS -l ncpus=1
 #PBS -j oe
 #PBS -l wd
@@ -14,4 +14,4 @@ module use /g/data/hh5/public/modules
 module load conda/analysis3-unstable
 cd /g/data/w97/mm3972/scripts/Drought/drght_2017-2019
 
-python spatial_map_single_plot.py
+python time_series_offline_spinup.py

@@ -683,10 +683,14 @@ if __name__ == "__main__":
     # time_e     = datetime(2017,1,1,23,59,0,0)
     
     if 1:
-        message    = "LIS_depth_varying_ts2-LIS_depth_varying_ts1"
-        file_paths = ['/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/coupled_run/depth_varying/OUTPUT/SURFACEMODEL/LIS_HIST_201701011300.d01.nc',
-                      '/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/coupled_run/depth_varying/OUTPUT/SURFACEMODEL/LIS_HIST_201701011200.d01.nc']
-                    #   '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght1719_bdy_data/LIS_output/LIS.CABLE.20170101110000.d01.nc']
+        message    = "LIS-LIS_rst"
+        file_paths = ['/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/coupled_run/depth_varying/OUTPUT/SURFACEMODEL/LIS_HIST_201701011200.d01.nc',
+                      '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght1719_bdy_data/LIS_output/LIS.CABLE.20170101110000.d01.nc']
+                    # '/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/coupled_run/SM+002/OUTPUT/SURFACEMODEL/LIS_HIST_201701011200.d01.nc',
+                    # ['/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/coupled_run_old/Jan_unfinish/OUTPUT/SURFACEMODEL/LIS_HIST_201701011200.d01.nc',
+                    #   '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/uniform_soil_param/drght_2017_2019/run_Jan2017/LIS_output/LIS.CABLE.201701-201701.d01.nc']
+                    # "/g/data/w97/mm3972/model/cable/runs/runs_4_coupled/gw_after_sp30yrx3/outputs/cable_out_2000-2019.nc"]
+                    # '/g/data/w97/mm3972/model/cable/src/CABLE-AUX/offline/mmy_gridinfo_AU/gridinfo_AWAP_OpenLandMap_ELEV_DLCM_fix.nc']
         wrf_path   = "/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/coupled_run_old/Jan_unfinish/wrfout_d01_2017-01-01_11:00:00"
         lat_names  = ['lat','lat']#'latitude']
         lon_names  = ['lon','lon']#'longitude']
@@ -703,6 +707,15 @@ if __name__ == "__main__":
         var_names  = ['SoilMoist_inst','SoilMoist_inst']#'SoilMoist']
         spatial_map_single_plot_diff(file_paths, var_names, lat_names=lat_names, lon_names=lon_names,
                                     loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path,message=message)
+
+    # var_names  = ['Sucs_inst','sucs']
+    # # var_names  = ['SoilMoist_inst','SoilMoist']
+    # # var_names  = ['GWwb_tavg','GWMoist']
+    # # var_names  = ['WaterTableD_tavg','WatTable']
+    # lat_names  = ['lat','latitude']
+    # lon_names  = ['lon','longitude']
+    # spatial_map_single_plot_diff(file_paths, var_names, time_s, time_e, lat_names, lon_names,
+    #                             loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path,message=message)
 
     if 0:
         message    = "LIS-LIS_rst"
