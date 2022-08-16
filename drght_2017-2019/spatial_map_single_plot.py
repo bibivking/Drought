@@ -124,7 +124,7 @@ def spatial_map_single_plot(file_path, var_name, time_s, time_e, lat_name, lon_n
 
     plt.savefig('./plots/weather/spatial_map_'+message+'.png',dpi=300)
 
-def spatial_map_single_plot_diff(file_paths, var_names, time_s=None, time_e=None, lat_names="lat", 
+def spatial_map_single_plot_diff(file_paths, var_names, time_s=None, time_e=None, lat_names="lat",
                                  lon_names="lon",loc_lat=None, loc_lon=None, wrf_path=None,message=None):
 
     '''
@@ -145,6 +145,8 @@ def spatial_map_single_plot_diff(file_paths, var_names, time_s=None, time_e=None
 
     if 'LIS' in file_paths[0] and var_names[0] in ['WaterTableD_tavg','WatTable']:
         var1     = var1/1000.
+    if var_names[0] in ['ESoil_tavg','Evap_tavg','TVeg_tavg']:
+        var1     = var1*3600
 
     # read lat and lon outs
     wrf          = Dataset(wrf_path,  mode='r')
@@ -164,18 +166,20 @@ def spatial_map_single_plot_diff(file_paths, var_names, time_s=None, time_e=None
     elif 'LIS_HIST_' in file_paths[1]:
         var_file2   = Dataset(file_paths[1], mode='r')
         var2        = var_file2.variables[var_names[1]][:,:]
-    elif 'LIS' in file_paths[0]:    
+    elif 'LIS' in file_paths[0]:
         # lis restart
         time2, Var2 = read_var(file_paths[1], var_names[1], loc_lat, loc_lon, lat_names[1], lon_names[1])
         var2        = Var2[-1]
 
     if 'LIS' in file_paths[1] and var_names[1] in ['WaterTableD_tavg','WatTable']:
         var2     = var2/1000.
+    if var_names[1] in ['ESoil_tavg','Evap_tavg','TVeg_tavg']:
+        var2     = var2*3600
 
     if 'cable_out' in file_paths[1] :
         time, lats_in= read_var(file_paths[1], lat_names[1], loc_lat, loc_lon, lat_names[1], lon_names[1])
         time, lons_in= read_var(file_paths[1], lon_names[1], loc_lat, loc_lon, lat_names[1], lon_names[1])
-        
+
         if var_names[1] in ['SoilMoist','SoilMoist_inst','ssat','sucs']:
             nlat   = len(lats_out[:,0])
             nlon   = len(lats_out[0,:])
@@ -184,7 +188,7 @@ def spatial_map_single_plot_diff(file_paths, var_names, time_s=None, time_e=None
                 var2_regrid[j,:,:]  = regrid_data(lats_in, lons_in, lats_out, lons_out, var2[j,:,:])
         else:
             var2_regrid  = regrid_data(lats_in, lons_in, lats_out, lons_out, var2)
-            
+
         if var_names[1] in ['ssat','sucs']:
             nlat   = len(lats_out[:,0])
             nlon   = len(lats_out[0,:])
@@ -205,11 +209,14 @@ def spatial_map_single_plot_diff(file_paths, var_names, time_s=None, time_e=None
         clevs = [-0.3,-0.25,-0.2,-0.15,-0.1,-0.05,0.05,0.1,0.15,0.2,0.25,0.3]
     elif var_names[0] in ['Sucs_inst','sucs_inst']:
         clevs = [-100,-80,-60,-40,-20,-10,10,20,40,60,80,100]
+    elif var_names[0] in ['ESoil_tavg','Evap_tavg','TVeg_tavg']:
+        clevs = [-1,-0.8,-0.6,-0.4,-0.2,-0.1,0.1,0.2,0.4,0.6,0.8,1]
     else:
-        clevs = [-0.3,-0.25,-0.2,-0.15,-0.1,-0.05,0.05,0.1,0.15,0.2,0.25,0.3]
-        
+        # clevs = [-0.3,-0.25,-0.2,-0.15,-0.1,-0.05,0.05,0.1,0.15,0.2,0.25,0.3]
+        clevs = [-0.5,-0.4,-0.3,-0.2,-0.1,-0.05,0.05,0.1,0.2,0.3,0.4,0.5]
+
     print("len(np.shape(var))",len(np.shape(var)))
-    
+
     if len(np.shape(var)) >=3:
 
         for j in np.arange(6):
@@ -292,7 +299,7 @@ def spatial_map_single_plot_diff(file_paths, var_names, time_s=None, time_e=None
             gl = None
             ax = None
             fig= None
-            
+
     elif len(np.shape(var)) ==2:
         # ================== Start Plotting =================
         fig = plt.figure(figsize=(6,5))
@@ -356,7 +363,7 @@ def spatial_map_single_plot_diff(file_paths, var_names, time_s=None, time_e=None
         gl.xlabel_style = {'size':10, 'color':'black'}
         gl.ylabel_style = {'size':10, 'color':'black'}
 
-        plt.contourf(lons, lats, var, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') # 
+        plt.contourf(lons, lats, var, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
         print(var)
         cb = plt.colorbar(ax=ax, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
         cb.ax.tick_params(labelsize=10)
@@ -679,30 +686,56 @@ if __name__ == "__main__":
     # spatial_map_single_plot_diff(file_paths, var_names, time_s, time_e, lat_names, lon_names,
     #                             loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path,message=message)
 
-    # time_s     = datetime(2017,1,1,0,0,0,0)
-    # time_e     = datetime(2017,1,1,23,59,0,0)
-    
+
+    if 0:
+        message    = "LIS_depth_varying-LIS_rst_2016-12-31"
+        file_paths = ['/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/coupled_run/depth_varying/OUTPUT/SURFACEMODEL/LIS_HIST_201701011200.d01.nc',
+                      '/g/data/w97/mm3972/model/cable/runs/runs_4_coupled/gw_after_sp30yrx3/outputs/cable_out_2000-2019.nc']
+        wrf_path   = "/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/coupled_run_old/Jan_unfinish/wrfout_d01_2017-01-01_11:00:00"
+        lat_names  = ['lat','latitude']
+        lon_names  = ['lon','longitude']
+        time_s     = datetime(2016,12,31,0,0,0,0)
+        time_e     = datetime(2016,12,31,23,59,0,0)
+
+        var_names  = ['WaterTableD_tavg','WatTable']
+        spatial_map_single_plot_diff(file_paths, var_names, time_s=time_s, time_e = time_e, lat_names=lat_names, lon_names=lon_names,
+                                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path,message=message)
+        var_names  = ['SoilMoist_inst','SoilMoist']
+        spatial_map_single_plot_diff(file_paths, var_names, time_s=time_s, time_e = time_e, lat_names=lat_names, lon_names=lon_names,
+                                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path,message=message)
+
     if 1:
-        message    = "LIS_depth_varying_ts2-LIS_depth_varying_ts1"
-        file_paths = ['/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/coupled_run/depth_varying/OUTPUT/SURFACEMODEL/LIS_HIST_201701011300.d01.nc',
-                      '/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/coupled_run/depth_varying/OUTPUT/SURFACEMODEL/LIS_HIST_201701011200.d01.nc']
+        message    = "LIS_depth_varying_ts1-LIS_rst_2016-12-31"
+        file_paths = ['/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/coupled_run/depth_varying/OUTPUT/SURFACEMODEL/LIS_HIST_201701011200.d01.nc',
+                      '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/offline_rst_output/output_1719_drght/LIS.CABLE.20170101110000-day1.d01.nc',]
+                    # '/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/coupled_run/depth_varying/OUTPUT/SURFACEMODEL/LIS_HIST_201701021200.d01.nc',
+                    #  '/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/coupled_run/depth_varying/OUTPUT/SURFACEMODEL/LIS_HIST_201701011200.d01.nc']
                     #   '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght1719_bdy_data/LIS_output/LIS.CABLE.20170101110000.d01.nc']
         wrf_path   = "/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/coupled_run_old/Jan_unfinish/wrfout_d01_2017-01-01_11:00:00"
         lat_names  = ['lat','lat']#'latitude']
         lon_names  = ['lon','lon']#'longitude']
-        
+
 
         # var_names  = ['GWwb_tavg','GWwb_tavg']#'GWMoist']
-        # var_names  = ['WaterTableD_tavg','WaterTableD_tavg']#'WatTable']        
+        # var_names  = ['WaterTableD_tavg','WaterTableD_tavg']#'WatTable']
         # var_names  = ['SoilMoist_inst','SoilMoist_inst']#'SoilMoist']
-        var_names  = ['WaterTableD_tavg','WaterTableD_tavg']
+        # var_names  = ['WaterTableD_tavg','WaterTableD_tavg']
+        var_names = ['Evap_tavg','Evap_tavg']
         # var_names  = ['SoilTemp_inst','SoilTemp_inst']
         spatial_map_single_plot_diff(file_paths, var_names, lat_names=lat_names, lon_names=lon_names,
                                     loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path,message=message)
         # var_names  = ['Tair_f_inst','Tair_f_inst']
-        var_names  = ['SoilMoist_inst','SoilMoist_inst']#'SoilMoist']
+        # var_names  = ['SoilMoist_inst','SoilMoist_inst']#'SoilMoist']
+        var_names  = ['TVeg_tavg','TVeg_tavg']
         spatial_map_single_plot_diff(file_paths, var_names, lat_names=lat_names, lon_names=lon_names,
                                     loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path,message=message)
+        var_names  = ['ESoil_tavg','ESoil_tavg']
+        spatial_map_single_plot_diff(file_paths, var_names, lat_names=lat_names, lon_names=lon_names,
+                                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path,message=message)
+        var_names  = ['FWsoil_tavg','FWsoil_tavg']
+        spatial_map_single_plot_diff(file_paths, var_names, lat_names=lat_names, lon_names=lon_names,
+                                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path,message=message)
+
 
     if 0:
         message    = "LIS-LIS_rst"
