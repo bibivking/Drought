@@ -89,14 +89,34 @@ def read_rst_wb(file_path, lis_rst_path):
         
     return (wb_regrid, GWwb_regrid)
 
+def read_lis_wb(file_path):
+    
+    '''
+    read lis wb
+    '''
+    print("read_lis_wb")
+    
+    lis_out     = Dataset(file_path, mode='r')
+    wb          = lis_out.variables["SoilMoist_inst"][0,:,:,:]
+    GWwb        = lis_out.variables["GWwb_tavg"][0,:,:]
+        
+    return (wb, GWwb)
+
 def spatial_map_single_plot_diff(file_path, lis_rst_path, offline_path, wrf_path):
     
     wb_rst, GWwb_rst = read_rst_wb(file_path, lis_rst_path)
     wb_off, GWwb_off = read_off_wb(file_path, offline_path)
+    wb_lis, GWwb_lis = read_lis_wb(file_path)
     
-    wb_diff          = wb_rst - wb_off
-    GWwb_diff        = GWwb_rst - GWwb_off
+    # wb_diff          = wb_rst - wb_off
+    # GWwb_diff        = GWwb_rst - GWwb_off
     
+    # wb_diff          = wb_lis - wb_off
+    # GWwb_diff        = GWwb_lis - GWwb_off
+    
+    wb_diff          = wb_lis - wb_rst
+    GWwb_diff        = GWwb_lis - GWwb_rst
+
     # read lat and lon outs
     wrf              = Dataset(wrf_path,  mode='r')
     lons             = wrf.variables['XLONG'][0,:,:]
@@ -162,8 +182,9 @@ def spatial_map_single_plot_diff(file_path, lis_rst_path, offline_path, wrf_path
         cb.ax.tick_params(labelsize=10)
         plt.title("wb_diff_lyr="+str(l), size=16)
 
-        message = "rst-off_wb_lyr="+str(l)
-
+        # message = "rst-off_wb_lyr="+str(l)
+        message = "lis-rst_wb_lyr="+str(l)
+        
         plt.savefig('/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/plots/WTD_sudden_change/spatial_map_'+message+'.png',dpi=300)
         
     # ========================== plot GWwb ==========================
@@ -225,13 +246,14 @@ def spatial_map_single_plot_diff(file_path, lis_rst_path, offline_path, wrf_path
     cb.ax.tick_params(labelsize=10)
     plt.title("GWwb_diff", size=16)
 
-    message = "rst-off_GWwb"
-
+    # message = "rst-off_GWwb"
+    message = "lis-rst_GWwb"
+    
     plt.savefig('/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/plots/WTD_sudden_change/spatial_map_'+message+'.png',dpi=300)        
 
 if __name__ == "__main__":
     
-    file_path      = "/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2_old/coupled_run/depth_varying/OUTPUT/SURFACEMODEL/LIS_HIST_201701011200.d01.nc"
+    file_path      = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/LIS_output/LIS.CABLE.201701-201701.d01.nc"
     wrf_path       = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/uniform_soil_param/drght_2017_2019/run_Jan2017/WRF_output/wrfout_d01_2017-01-01_11:00:00"
     lis_rst_path   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/offline_rst_output/output_1719_drght/LIS_RST_CABLE_201701011100_restart_2017_Day2.d01.nc"
     offline_path   = "/g/data/w97/mm3972/model/cable/runs/runs_4_coupled/gw_after_sp30yrx3/outputs/cable_out_2000-2019.nc"

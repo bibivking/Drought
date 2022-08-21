@@ -149,8 +149,12 @@ def read_var(file_path, var_name, loc_lat=None, loc_lon=None, lat_name=None, lon
         if var_name == lat_name or var_name == lon_name:
             # read lat or lon
             mask = mask_by_lat_lon(file_path, loc_lat, loc_lon, lat_name, lon_name)
-            lat  = obs_file.variables[lat_name]
-            lon  = obs_file.variables[lon_name]
+            if 'GLEAM' in file_path:
+                lat  = obs_file.variables[lat_name][::-1]
+                lon  = obs_file.variables[lon_name]
+            else:       
+                lat  = obs_file.variables[lat_name]
+                lon  = obs_file.variables[lon_name]
             if len(np.shape(lat)) == 1:
                 lons, lats = np.meshgrid(lon, lat)
                 if var_name == lat_name:
@@ -244,7 +248,7 @@ def read_var_multi_file(file_paths, var_name, loc_lat=None, loc_lon=None, lat_na
         else:
             # selected region
             # read var except lat or lat
-            if  i == 0:
+            if i == 0:
                 mask = mask_by_lat_lon(file_path, loc_lat, loc_lon, lat_name, lon_name)
                 
             mask_multi = [ mask ] * ntime
@@ -465,6 +469,26 @@ def spital_var(time, Var, time_s, time_e, seconds=None):
 
     time_cood = time_mask(time, time_s, time_e, seconds)
     var       = np.nanmean(Var[time_cood],axis=0)
+
+    # np.savetxt("test_var.txt",var,delimiter=",")
+    return var
+
+def spital_var_mean(time, Var, time_s, time_e, seconds=None):
+    
+    # time should be AEST
+
+    time_cood = time_mask(time, time_s, time_e, seconds)
+    var       = np.nanmean(Var[time_cood],axis=0)
+
+    # np.savetxt("test_var.txt",var,delimiter=",")
+    return var
+
+def spital_var_sum(time, Var, time_s, time_e, seconds=None):
+    
+    # time should be AEST
+
+    time_cood = time_mask(time, time_s, time_e, seconds)
+    var       = np.nansum(Var[time_cood],axis=0)
 
     # np.savetxt("test_var.txt",var,delimiter=",")
     return var
