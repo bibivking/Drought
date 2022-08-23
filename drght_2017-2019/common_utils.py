@@ -152,7 +152,7 @@ def read_var(file_path, var_name, loc_lat=None, loc_lon=None, lat_name=None, lon
             if 'GLEAM' in file_path:
                 lat  = obs_file.variables[lat_name][::-1]
                 lon  = obs_file.variables[lon_name]
-            else:       
+            else:
                 lat  = obs_file.variables[lat_name]
                 lon  = obs_file.variables[lon_name]
             if len(np.shape(lat)) == 1:
@@ -173,13 +173,13 @@ def read_var(file_path, var_name, loc_lat=None, loc_lon=None, lat_name=None, lon
             mask = mask_by_lat_lon(file_path, loc_lat, loc_lon, lat_name, lon_name)
             #print("print mask in def read_var: ", mask)
             mask_multi = [ mask ] * ntime
-                        
+
             if var_name in ['E','Ei','Es','Et']:
                 # change GLEAM's coordinates from (time, lon, lat) to (time, lat, lon)
                 tmp = np.moveaxis(obs_file.variables[var_name], -1, 1)
             else:
                 tmp = obs_file.variables[var_name][:]
-                
+
             if var_name in ["SoilMoist_inst","SoilTemp_inst", "SoilMoist", "SoilTemp"]:
                 nlat    = len(mask[:,0])
                 nlon    = len(mask[0,:])
@@ -187,8 +187,8 @@ def read_var(file_path, var_name, loc_lat=None, loc_lon=None, lat_name=None, lon
                 for j in np.arange(6):
                     Var_tmp[:,j,:,:] = np.where(mask_multi,tmp[:,j,:,:],np.nan)
             else:
-                Var_tmp = np.where(mask_multi,tmp,np.nan)            
-                  
+                Var_tmp = np.where(mask_multi,tmp,np.nan)
+
             #print("print Var_tmp in def read_var: ", Var_tmp)
             # print(np.shape(Var_tmp))
             if hasattr(obs_file.variables[var_name], '_FillValue'):
@@ -216,9 +216,9 @@ def read_var_multi_file(file_paths, var_name, loc_lat=None, loc_lon=None, lat_na
     time = []
 
     for i, file_path in enumerate(file_paths):
-        
+
         print("file_path = ", file_path)
-        
+
         var_file   = Dataset(file_path, mode='r')
         time_tmp   = nc.num2date(var_file.variables['time'][:],var_file.variables['time'].units,
                      only_use_cftime_datetimes=False, only_use_python_datetimes=True)
@@ -227,13 +227,13 @@ def read_var_multi_file(file_paths, var_name, loc_lat=None, loc_lon=None, lat_na
         else:
             time_tmp   = UTC_to_AEST(time_tmp) - datetime(2000,1,1,0,0,0)
         ntime      = len(time_tmp)
-        
+
         if i == 0:
             time = time_tmp
         else:
             time = np.concatenate((time, time_tmp), axis=0)
-        print(time)
-        
+        # print(time)
+
         if loc_lat == None:
             Var_tmp = var_file.variables[var_name][:]
             if hasattr(var_file.variables[var_name], '_FillValue'):
@@ -250,15 +250,15 @@ def read_var_multi_file(file_paths, var_name, loc_lat=None, loc_lon=None, lat_na
             # read var except lat or lat
             if i == 0:
                 mask = mask_by_lat_lon(file_path, loc_lat, loc_lon, lat_name, lon_name)
-                
+
             mask_multi = [ mask ] * ntime
-            
+
             if var_name in ['E','Ei','Es','Et']:
                 # change GLEAM's coordinates from (time, lon, lat) to (time, lat, lon)
                 tmp = np.moveaxis(var_file.variables[var_name], -1, 1)
             else:
                 tmp = var_file.variables[var_name][:]
-                
+
             if var_name in ["SoilMoist_inst","SoilTemp_inst", "SoilMoist", "SoilTemp"]:
                 nlat    = len(mask[:,0])
                 nlon    = len(mask[0,:])
@@ -282,8 +282,8 @@ def read_var_multi_file(file_paths, var_name, loc_lat=None, loc_lon=None, lat_na
             var = np.concatenate((var, Var), axis=0)
 
     print("=== In read_var_multi_file ===")
-    print("time = ", np.shape(time))
-    print("var = ", np.shape(var))
+    # print("time = ", np.shape(time))
+    # print("var = ", np.shape(var))
 
     return time,var
 
@@ -450,7 +450,7 @@ def time_clip_to_day(time, Var, time_s, time_e, seconds=None):
         nlayer   = len(Var[0,:,0,0])
         nlat     = len(Var[0,0,:,0])
         nlon     = len(Var[0,0,0,:])
-        
+
         var_slt  = Var[time_cood,:,:,:]
         days     = []
         for t in time_slt:
@@ -460,7 +460,38 @@ def time_clip_to_day(time, Var, time_s, time_e, seconds=None):
         for d in np.unique(days):
             var_tmp[cnt,:,:,:] = np.nanmean(var_slt[days == d,:,:,:],axis=0)
             cnt              = cnt +1
-            
+
+    return var_tmp
+
+def time_clip_to_day_sum(time, Var, time_s, time_e, seconds=None):
+
+    time_cood = time_mask(time, time_s, time_e, seconds)
+    time_slt  = time[time_cood]
+    if len(np.shape(Var))==3:
+        var_slt  = Var[time_cood,:,:]
+        days     = []
+        for t in time_slt:
+            days.append(t.days)
+        cnt = 0
+        var_tmp  = np.zeros([len(np.unique(days)),len(var_slt[0,:,0]),len(var_slt[0,0,:])])
+        for d in np.unique(days):
+            var_tmp[cnt,:,:] = np.nansum(var_slt[days == d,:,:],axis=0)
+            cnt              = cnt +1
+    elif len(np.shape(Var))==4:
+        nlayer   = len(Var[0,:,0,0])
+        nlat     = len(Var[0,0,:,0])
+        nlon     = len(Var[0,0,0,:])
+
+        var_slt  = Var[time_cood,:,:,:]
+        days     = []
+        for t in time_slt:
+            days.append(t.days)
+        cnt = 0
+        var_tmp  = np.zeros([len(np.unique(days)),nlayer,nlat,nlon])
+        for d in np.unique(days):
+            var_tmp[cnt,:,:,:] = np.nansum(var_slt[days == d,:,:,:],axis=0)
+            cnt              = cnt +1
+
     return var_tmp
 
 def spital_var(time, Var, time_s, time_e, seconds=None):
@@ -474,7 +505,7 @@ def spital_var(time, Var, time_s, time_e, seconds=None):
     return var
 
 def spital_var_mean(time, Var, time_s, time_e, seconds=None):
-    
+
     # time should be AEST
 
     time_cood = time_mask(time, time_s, time_e, seconds)
@@ -484,7 +515,7 @@ def spital_var_mean(time, Var, time_s, time_e, seconds=None):
     return var
 
 def spital_var_sum(time, Var, time_s, time_e, seconds=None):
-    
+
     # time should be AEST
 
     time_cood = time_mask(time, time_s, time_e, seconds)
@@ -688,7 +719,7 @@ def regrid_data(lat_in, lon_in, lat_out, lon_out, input_data):
     # Check NaN - input array shouldn't have NaN
     value_tmp = np.reshape(input_data,-1)
     value     = value_tmp[~np.isnan(value_tmp)]
-    
+
     # ======= CAUTION =======
     lat_in_1D = lat_in_1D[~np.isnan(value_tmp)]  # here I make nan in values as the standard
     lon_in_1D = lon_in_1D[~np.isnan(value_tmp)]
@@ -696,7 +727,9 @@ def regrid_data(lat_in, lon_in, lat_out, lon_out, input_data):
     print("shape lat_in_1D = ", np.shape(lat_in_1D))
     print("shape lon_in_1D = ", np.shape(lon_in_1D))
     # =======================
-    
+    print("value =",value)
+    print("lat_in_1D =",lat_in_1D)
+    print("lon_in_1D =",lon_in_1D)
     Value = griddata((lon_in_1D, lat_in_1D), value, (lon_out_2D, lat_out_2D), method="linear")
 
     return Value

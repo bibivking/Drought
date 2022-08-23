@@ -2,9 +2,9 @@
 
 #PBS -m ae
 #PBS -P w97
-#PBS -q express
-#PBS -l walltime=4:00:00
-#PBS -l mem=190GB
+#PBS -q megamem
+#PBS -l walltime=8:00:00
+#PBS -l mem=2990GB
 #PBS -l ncpus=1
 #PBS -j oe
 #PBS -l wd
@@ -14,4 +14,4 @@ module use /g/data/hh5/public/modules
 module load conda/analysis3-22.01
 cd /g/data/w97/mm3972/scripts/Drought/drght_2017-2019
 
-python time_series_wrf_cable.py
+python spatial_map_sim_vs_obs_metrics.py

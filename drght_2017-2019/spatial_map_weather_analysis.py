@@ -551,7 +551,7 @@ def plot_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_name
         cmap3  = plt.cm.seismic
         cmap4  = plt.cm.seismic
         cmap5  = plt.cm.seismic
-        clevs1 = np.arange( 0.5,1.05,0.05)
+        clevs1 = np.arange( 0.6,1.025,0.025)
         clevs2 = np.arange( 0.,5.5,0.5)
         clevs3 = [-5,-4,-3,-2,-1,-0.5,0.5,1,2,3,4,5] 
         clevs4 = [-5,-4,-3,-2,-1,-0.5,0.5,1,2,3,4,5] 
@@ -563,10 +563,10 @@ def plot_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_name
         cmap4  = plt.cm.seismic_r
         cmap5  = plt.cm.seismic_r
         clevs1 = np.arange( 0.0,1.0,0.05)
-        clevs2 = np.arange( 0.0,55,5.)
-        clevs3 = [-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10]
+        clevs2 = np.arange( 0.0,22,2.)
+        clevs3 = [-5,-4,-3,-2,-1,1,2,3,4,5]
         clevs4 = [-1,-0.8,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.] 
-        clevs5 = [-30,-25,-20,-15,-10,-5,-2,2,5,10,15,20,25,30]
+        clevs5 = [-10,-8,-6,-4,-2,-1,1,2,4,6,8,10]
     elif var_name in ['E','Evap_tavg']:
         cmap1  = plt.cm.YlGnBu
         cmap2  = plt.cm.YlGnBu        
@@ -610,7 +610,7 @@ def plot_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_name
     cb    = plt.colorbar(plot1, ax=ax[2, 0], orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
     ax[2, 0].text(0.02, 0.95, "p95=" + "%.8f" % np.nanmean(p95), transform=ax[2, 0].transAxes, verticalalignment='top', bbox=props, fontsize=12)
 
-    cb.ax.tick_params(labelsize=7)
+    # cb.ax.tick_params(labelsize=7)
 
     if message == None:
         message = var_name
@@ -666,14 +666,13 @@ if __name__ == "__main__":
     if 1:
         case_names =[ "drght_2017_2019_bl_pbl2_mp4_sf_sfclay2",]
                     #   "drght_2017_2019_bl_pbl5_mp6_sf_sfclay1",]
-
-        
+        time_s     = datetime(2017,1,1,0,0,0,0)
+        time_e     = datetime(2018,12,31,23,59,0,0)
         for case_name in case_names:
 
             message    = "WRF_vs_AWAP_" + case_name + "_201701-201812"
             wrf_path   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/WRF_output/wrfout_d01_2017-02-01_06:00:00"
             print(message)
-            obs_path   = [AWAP_T_file] #[AWAP_R_file] #
             file_paths = ["/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201701-201701.d01.nc",
                           "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201702-201702.d01.nc",
                           "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201703-201703.d01.nc",
@@ -700,10 +699,27 @@ if __name__ == "__main__":
                           "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201812-201812.d01.nc", ]
             
             print(file_paths)
-            obs_name   = 'Tair' # 'Rainf'        #
-            var_name   = 'Tair_f_inst' # 'Rainf_tavg'   #
-            time_s     = datetime(2017,1,1,0,0,0,0)
-            time_e     = datetime(2018,12,31,23,59,0,0)
+            
+            # 'plot Tair'
+            obs_path       = [ AWAP_path+'/Tair/AWAP.Tair.3hr.2017.nc',
+                               AWAP_path+'/Tair/AWAP.Tair.3hr.2018.nc' ] #[AWAP_R_file] #
+            obs_name       = 'Tair' # 'Rainf'        #
+            var_name       = 'Tair_f_inst' # 'Rainf_tavg'   #
+
+            lat_var_name   = 'lat'
+            lon_var_name   = 'lon'
+            lat_obs_name   = 'lat'
+            lon_obs_name   = 'lon'
+
+            plot_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_name, time_s, time_e,
+                                loc_lat=loc_lat, loc_lon=loc_lon, lat_obs_name=lat_obs_name, lon_obs_name=lon_obs_name,
+                                lat_var_name=lat_var_name, lon_var_name=lon_var_name, message=message)
+
+            # 'plot Rainf'
+            obs_path       = [ AWAP_path+'/Rainf/AWAP.Rainf.3hr.2017.nc',
+                               AWAP_path+'/Rainf/AWAP.Rainf.3hr.2018.nc' ] #[AWAP_R_file] #
+            obs_name       = 'Rainf' # 'Rainf'        #
+            var_name       = 'Rainf_tavg' # 'Rainf_tavg'   #
 
             lat_var_name   = 'lat'
             lon_var_name   = 'lon'
