@@ -12,5 +12,5 @@
 
 module use /g/data/hh5/public/modules
 module load conda/analysis3-22.01
-cd /g/data/w97/mm3972/scripts/Drought/drght_2017-2019
-python spatial_map_sim_vs_obs_metrics.py
+cd /g/data/w97/mm3972/scripts/Drought/drght_2017-2019/
+python time_series_wrf_cable.py

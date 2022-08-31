@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+__author__ = "Mengyuan Mu"
+__email__  = "mu.mengyuan815@gmail.com" 
+
 from netCDF4 import Dataset
 import netCDF4 as nc
 import numpy as np

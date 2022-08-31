@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+__author__ = "Mengyuan Mu"
+__email__  = "mu.mengyuan815@gmail.com" 
+
 '''
 Functions:
 1. Compare LIS-CABLE with GRACE, GLEAM, & DOLCE

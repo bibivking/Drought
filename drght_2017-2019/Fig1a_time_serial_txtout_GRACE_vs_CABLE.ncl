@@ -3,6 +3,10 @@
 ; Author  : Mengyuan Mu
 ; Version : 1.0 (2021-08-04)
 ; Email   : mu.mengyuan815@gmail.com
+
+; Note: Fig1a in Mu et al, 2021, ESD
+; 
+;
 ;WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 
 ;*******************************************
@@ -62,13 +66,13 @@ pic_message = "CTL" ; FD ; DR ; FD+DR
 Soil_thickness = (/0.022, 0.058, 0.154, 0.409, 1.085, 2.872/)
 
 ; =============================== Pre-define ===================================
-year_s   = 2000
-year_e   = 2019
+year_s           = 2000
+year_e           = 2019
 GRACE_start_year = 2002
 GRACE_end_year   = year_e ; 2019
-year_sum = year_e-year_s+1
-total    = year_sum*12
-case_sum = dimsizes(case_name)
+year_sum         = year_e-year_s+1
+total            = year_sum*12
+case_sum         = dimsizes(case_name)
 
 ; ================================ Set Regrid ==================================
 PFT           = "all" ; "tree" ;"all"
@@ -80,7 +84,7 @@ grace_version = "Original-fill-nan"
                 ;"Original" : if this option, should alwasy set GRACE_start_year = 2003
                 ;             GRACE_end_year <= 2010, since too many gaps after 2010
 output        = "daily" ;"monthly"
-cable_version = "CABLE-HESS" ;"LIS-CABLE" ; "CABLE-HESS"
+cable_version = "OFF-CABLE" ;"LIS-CABLE" ; "OFF-CABLE"
 
 ; set PFT
 if PFT .eq. "all" then
@@ -89,6 +93,27 @@ if PFT .eq. "all" then
 else if PFT .eq. "tree" then
   iveg_s = 1
   iveg_e = 4
+end if
+end if
+
+; ================================ Set Region ==================================
+scale = "SE-AU" ;"45S-N";"30S-N";"Global" ; "50S-N" ; "SE-AU" ; "AU"
+if scale .eq. "Global" then
+  A = -90.
+  B = 90.
+  C = 0.
+  D = 360.
+else if scale .eq. "SE-AU" then
+  A = -40.
+  B = -28.
+  C = 140.
+  D = 154.
+else if scale .eq. "AU" then
+  A = -44.
+  B = -10.
+  C = 112.
+  D = 154.
+end if
 end if
 end if
 
@@ -118,9 +143,8 @@ if cable_version .eq. "LIS-CABLE" then
     C = minlon
     D = maxlon
     delete(f)
-else if cable_version .eq. "CABLE-HESS" then
-    scale = "SE-AU" ;"45S-N";"30S-N";"Global" ; "50S-N" ; "SE-AU" ; "AU"
-
+else if cable_version .eq. "OFF-CABLE" then
+    
     filename = path+case_name(0)+"/cable_out_1990.nc" ; MMY
     f = addfile (filename,"r")
 
@@ -129,25 +153,6 @@ else if cable_version .eq. "CABLE-HESS" then
     CABLE_lat = f->y
     CABLE_lon = f->x
     default_value = -1.e+33
-
-    if scale .eq. "Global" then
-      A = -90.
-      B = 90.
-      C = 0.
-      D = 360.
-    else if scale .eq. "SE-AU" then
-      A = -40.
-      B = -28.
-      C = 140.
-      D = 154.
-    else if scale .eq. "AU" then
-      A = -44.
-      B = -10.
-      C = 112.
-      D = 154.
-    end if
-    end if
-    end if
 
     ; PFT mask
     PFT_mask  = where((f->iveg({A:B},{C:D}) .ge. iveg_s) .and. (f->iveg({A:B},{C:D}) .le. iveg_e), 1, 0)
@@ -172,10 +177,10 @@ res@gsnDraw            = True  ; Don't draw plots
 res@gsnFrame           = True  ; ?????
 
 ; =========================== Read GRACE and fill gap ==========================
-GRACE      = new((/total,360,720/),float, -99999.)
-uncertainty= new((/total,360,720/),float, -99999.)
-GRACE      = -99999.
-uncertainty= -99999.
+GRACE        = new((/total,360,720/),float, -99999.)
+uncertainty  = new((/total,360,720/),float, -99999.)
+GRACE        = -99999.
+uncertainty  = -99999.
 
 ; compensate_month : months before GRACE start year
 if GRACE_start_year .gt. year_s then
@@ -186,8 +191,8 @@ end if
 
 if grace_version .eq. "Original-fill-nan" then
 
-  filename   = "/g/data/w97/W35_GDATA_MOVED/Shared_data/Observations/GRACE/GRACE_JPLRL06M_MASCON/GRCTellus.JPL.2002_2020_gap-fill_MMY.nc"
-  f          = addfile (filename,"r")
+  filename        = "/g/data/w97/W35_GDATA_MOVED/Shared_data/Observations/GRACE/GRACE_JPLRL06M_MASCON/GRCTellus.JPL.2002_2020_gap-fill_MMY.nc"
+  f               = addfile (filename,"r")
 
   tot_grace       = (GRACE_end_year-GRACE_start_year+1)*12 ; how many year will be read from GRACE
   GRACE_ts_str_yr = (GRACE_start_year - 2002) * 12
@@ -202,109 +207,13 @@ if grace_version .eq. "Original-fill-nan" then
   printVarSummary(GRACE)
   printVarSummary(uncertainty)
 
-else if grace_version .eq. "Original" then
-    filename   = "/g/data/w35/mm3972/data/GRACE/GRACE_JPL_RL06/GRCTellus.JPL.200204_201706.GLO.RL06M.MSCNv01CRIv01.nc"
-    f          = addfile (filename,"r")
-
-    tot_grace  = (GRACE_end_year-GRACE_start_year+1)*12 ; how many year will be read from GRACE
-    GRACE(compensate_month+0:compensate_month+4,:,:)           = dble2flt(f->lwe_thickness(7:11,:,:))*10.
-    GRACE(compensate_month+6:compensate_month+tot_grace-1,:,:) = dble2flt(f->lwe_thickness(12:tot_grace+5,:,:))*10.
-
-    uncertainty(compensate_month+0:compensate_month+4,:,:)          = dble2flt(f->uncertainty(7:11,:,:))*10.
-    uncertainty(compensate_month+6:compensate_month+tot_grace-1,:,:)= dble2flt(f->uncertainty(12:tot_grace+5,:,:))*10.
-
-    printVarSummary(GRACE)
-    printVarSummary(uncertainty)
-
-    May_ave = new((/360,720/),float)
-    Jun_ave = new((/360,720/),float)
-    Jul_ave = new((/360,720/),float)
-    May_ave = 0.
-    Jun_ave = 0.
-    Jul_ave = 0.
-
-    GRACE@_FillValue       = dble2flt(f->lwe_thickness@_FillValue)
-    uncertainty@_FillValue = dble2flt(f->lwe_thickness@_FillValue)
-
-    printVarSummary(GRACE)
-    printVarSummary(uncertainty)
-
-    res@tiMainString = "GRACE(compensate_month,:,:)"
-    plot = gsn_csm_contour(wks,GRACE(compensate_month,:,:),res)
-
-    do year = GRACE_start_year+1,GRACE_end_year
-        ; print("add year :" + year)
-        May_ave = May_ave + GRACE(compensate_month+(year-GRACE_start_year)*12+4,:,:)
-        Jun_ave = Jun_ave + GRACE(compensate_month+(year-GRACE_start_year)*12+5,:,:)
-        Jul_ave = Jul_ave + GRACE(compensate_month+(year-GRACE_start_year)*12+6,:,:)
-    end do
-
-    May_ave = May_ave/(GRACE_end_year-GRACE_start_year)
-    Jun_ave = Jun_ave/(GRACE_end_year-GRACE_start_year)
-    Jul_ave = Jul_ave/(GRACE_end_year-GRACE_start_year)
-    ; print(May_ave)
-
-    plot = gsn_csm_contour(wks,May_ave,res)
-    plot = gsn_csm_contour(wks,Jun_ave,res)
-    plot = gsn_csm_contour(wks,Jul_ave,res)
-
-    if use_month .eq. "Jul" then
-       GRACE(compensate_month+5,:,:) = GRACE(compensate_month+6,:,:) * (Jun_ave/Jul_ave)
-    else if use_month .eq. "May" then
-       GRACE(compensate_month+5,:,:) = GRACE(compensate_month+4,:,:) * (Jun_ave/May_ave)
-    end if
-    end if
-
-    uncertainty(compensate_month+5,:,:) = (uncertainty(compensate_month+4,:,:) + uncertainty(compensate_month+6,:,:))/2.
-
-    delete(May_ave)
-    delete(Jun_ave)
-    delete(Jul_ave)
-
-else if grace_version .eq. "Gap-fill" then
-
-    if GRACE_start_year .lt. year_s then
-      GRACE_start_year = year_s
-    end if
-
-    if GRACE_end_year .gt. year_e then
-      GRACE_end_year = year_e
-    end if
-
-    do year = GRACE_start_year,GRACE_end_year
-
-        filename   = "/g/data/w35/mm3972/data/GRACE/GRACE_JPL_RL06/fill_gap_filter_singular_Sanaa/GRACERel06_lwe_"+ year+".nc"
-        f          = addfile (filename,"r")
-
-        a = (year-year_s)*12
-        b = (year-year_s)*12+11
-
-        GRACE(a:b,:,:)       = lonFlip(f->lwe)*10.
-        uncertainty(a:b,:,:) = lonFlip(f->uncertainty)*10.
-
-    end do
-
-    printVarSummary(GRACE)
-    printVarSummary(uncertainty)
-
-    GRACE@_FillValue       = -1.e+33
-    uncertainty@_FillValue = -1.e+33
-
-    replace_ieeenan (GRACE, GRACE@_FillValue, 0)
-    replace_ieeenan (uncertainty, uncertainty@_FillValue, 0)
-
-    printVarSummary(GRACE)
-    printVarSummary(uncertainty)
-
-end if
-end if
 end if
 
 ; ++++++++ check GRACE input ++++++++
 res@tiMainString = "GRACE(compensate_month+24,:,:)"
-plot = gsn_csm_contour(wks,GRACE(compensate_month+24,:,:),res)
+plot             = gsn_csm_contour(wks,GRACE(compensate_month+24,:,:),res)
 res@tiMainString = "uncertainty(compensate_month+24,:,:)"
-plot = gsn_csm_contour(wks,uncertainty(compensate_month+24,:,:),res)
+plot             = gsn_csm_contour(wks,uncertainty(compensate_month+24,:,:),res)
 ; +++++++++++++++++++++++++++++++++++
 
 ; ====== post process GRACE =======
@@ -375,7 +284,7 @@ SWE           = 0.0
 TWS           = 0.0
 Rain          = 0.0
 
-if cable_version .eq. "CABLE-HESS" then
+if cable_version .eq. "OFF-CABLE" then
     do case_num = 0,case_sum-1
        print(case_name(case_num))
        counter = 0
@@ -411,19 +320,20 @@ if cable_version .eq. "CABLE-HESS" then
                dom = (/0,31,59,90,120,151,181,212,243,273,304,334,365/)
             end if
             do month = 0,11
-               TWS(case_num,counter,:,:) = dim_avg_n_Wrap(GWMoist_tmp(date+dom(month):date+dom(month+1)-1,:,:),0) \
-                                          *GWdz_tmp*1000. + dim_avg_n_Wrap(CanopInt_tmp(date+dom(month):date+dom(month+1)-1,:,:),0)\
-                                          + dim_avg_n_Wrap(SWE_tmp(date+dom(month):date+dom(month+1)-1,:,:), 0)
+               ; calculate monthly values
+               TWS(case_num,counter,:,:)       = dim_avg_n_Wrap(GWMoist_tmp(date+dom(month):date+dom(month+1)-1,:,:),0) \
+                                                 * GWdz_tmp*1000. + dim_avg_n_Wrap(CanopInt_tmp(date+dom(month):date+dom(month+1)-1,:,:),0)\
+                                                 + dim_avg_n_Wrap(SWE_tmp(date+dom(month):date+dom(month+1)-1,:,:), 0)
                GWMoist(case_num,counter,:,:)   = dim_avg_n_Wrap(GWMoist_tmp(date+dom(month):date+dom(month+1)-1,:,:),0)*GWdz_tmp*1000.
                CanopInt(case_num,counter,:,:)  = dim_avg_n_Wrap(CanopInt_tmp(date+dom(month):date+dom(month+1)-1,:,:),0)
                SWE(case_num,counter,:,:)       = dim_avg_n_Wrap(SWE_tmp(date+dom(month):date+dom(month+1)-1,:,:), 0)
                Rain(case_num,counter,:,:)      = dim_avg_n_Wrap(Rainf_tmp(date+dom(month):date+dom(month+1)-1,:,:), 0)
                do layer = 0,5
                   SoilMoist(case_num,counter,:,:) = SoilMoist(case_num,counter,:,:) + dim_avg_n_Wrap( \
-                                             SoilMoist(date+dom(month):date+dom(month+1)-1,layer,:,:),0)\
+                                             SoilMoist_tmp(date+dom(month):date+dom(month+1)-1,layer,:,:),0)\
                                              *Soil_thickness(layer)*1000.
                   TWS(case_num,counter,:,:) = TWS(case_num,counter,:,:) + dim_avg_n_Wrap( \
-                                             SoilMoist(date+dom(month):date+dom(month+1)-1,layer,:,:),0)\
+                                             SoilMoist_tmp(date+dom(month):date+dom(month+1)-1,layer,:,:),0)\
                                              *Soil_thickness(layer)*1000.
                end do
                counter = counter + 1
@@ -603,13 +513,13 @@ SoilMoist_global_ave   = 0.0
 Rain_global_ave        = 0.0
 
 ; print("average GRACE")
-GRACE_tmp = where(PFT_mask_multi .eq. 1, GRACE_regrid,  -99999.)
-GRACE_tmp@_FillValue = -99999.
-uncertainty_tmp = where(PFT_mask_multi .eq. 1, uncertainty_regrid,  -99999.)
+GRACE_tmp                  = where(PFT_mask_multi .eq. 1, GRACE_regrid,  -99999.)
+GRACE_tmp@_FillValue       = -99999.
+uncertainty_tmp            = where(PFT_mask_multi .eq. 1, uncertainty_regrid,  -99999.)
 uncertainty_tmp@_FillValue = -99999.
 
-GRACE_global_ave(0,:)     = dim_avg_n_Wrap(GRACE_tmp,(/1,2/))
-uncertainty_global_ave    = dim_avg_n_Wrap(uncertainty_tmp,(/1,2/))
+GRACE_global_ave(0,:)      = dim_avg_n_Wrap(GRACE_tmp,(/1,2/))
+uncertainty_global_ave     = dim_avg_n_Wrap(uncertainty_tmp,(/1,2/))
 
 ; ++++++++ check GRACE input ++++++++
 res@tiMainString = "dim_avg_n_Wrap(GRACE_tmp,0),0)"
@@ -622,7 +532,7 @@ delete(uncertainty_tmp)
 
 ; print("average CABLE")
 do case_num = 0,case_sum-1
-  if cable_version .eq. "CABLE-HESS" then
+  if cable_version .eq. "OFF-CABLE" then
       TWS_tmp = where(PFT_mask_multi .eq. 1, TWS(case_num,:,{A:B},{C:D}),  default_value)
       TWS_tmp@_FillValue = default_value
       GWMoist_tmp = where(PFT_mask_multi .eq. 1, GWMoist(case_num,:,{A:B},{C:D}),  default_value)

@@ -1,9 +1,11 @@
 #!/usr/bin/python
 
+__author__ = "Mengyuan Mu"
+__email__  = "mu.mengyuan815@gmail.com" 
+
 '''
 Functions:
-1. Analyze weather situation during heatwaves
-2. Process ERAI, AWAP, offline CABLE and LIS-CABLE data
+1. process multi-year dataset and calculate a few metrics
 '''
 
 from netCDF4 import Dataset
@@ -245,10 +247,10 @@ def plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e
         if var_names[i] in ['t2m','tas','Tair','Tair_f_inst']:
             if i == 0:
                 clevs    = np.linspace( 15.,45., num=31)
-                cmap     = plt.cm.seismic
+                cmap     = plt.cm.coolwarm
             else:
                 clevs    = [-5,-4,-3,-2,-1,-0.5,0.5,1,2,3,4,5] # np.linspace( -5., 5., num=11)
-                cmap     = plt.cm.seismic
+                cmap     = plt.cm.coolwarm
             var      = spital_var(time,Var,time_s,time_e)-273.15
         elif var_names[i] in ['Rainf','Rainf_tavg','tp']:
             if i == 0:
@@ -408,12 +410,11 @@ def spital_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_na
     time, lons_obs    = read_var(obs_path[0], lon_obs_name, loc_lat, loc_lon, lat_obs_name, lon_obs_name)
 
     # clip and resample sims to daily data
-    if var_name in ["Evap_tavg","TVeg_tavg","ESoil_tavg","ECanop_tavg","Qs_tavg","Qsb_tavg","Rainf_tavg"]:
-        Var_daily = time_clip_to_day_sum(time_var, Var_tmp, time_s, time_e, seconds=None)
-    elif var_name in ["WaterTableD_tavg"]:
-        Var_daily = time_clip_to_day(time_var, Var_tmp, time_s, time_e, seconds=None)
-    else:
-        Var_daily = time_clip_to_day(time_var, Var_tmp, time_s, time_e, seconds=None)
+    # if var_name in ["WaterTableD_tavg","Rainf_tavg","Evap_tavg","TVeg_tavg","ESoil_tavg","ECanop_tavg","Qs_tavg","Qsb_tavg"]:
+    #     Var_daily = time_clip_to_day(time_var, Var_tmp, time_s, time_e, seconds=None)
+    # else:
+    #     Var_daily = time_clip_to_day(time_var, Var_tmp, time_s, time_e, seconds=None)
+    Var_daily = time_clip_to_day(time_var, Var_tmp, time_s, time_e, seconds=None)
 
     ntime     = len(Var_daily[:,0,0])
     nlat      = len(Var_daily[0,:,0])
@@ -421,10 +422,10 @@ def spital_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_na
     print("var dimension is ", np.shape(Var_daily))
 
     # clip time coordinate
-    if obs_name in ["Rainf"]:
-        Obs_daily = time_clip_to_day_sum(time_obs, Obs_tmp, time_s, time_e)
-    else:
-        Obs_daily = time_clip_to_day(time_obs, Obs_tmp, time_s, time_e, seconds=None)
+    # if obs_name in ["E"]:
+    #     Obs_daily = time_clip_to_day_sum(time_obs, Obs_tmp, time_s, time_e)
+    # else:
+    Obs_daily = time_clip_to_day(time_obs, Obs_tmp, time_s, time_e, seconds=None)
     print("obs dimension is ", np.shape(Obs_daily))
 
     # read no-nan wrf-cable lat and lon
@@ -442,10 +443,11 @@ def spital_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_na
         var    = Var_daily - 273.15
         obs    = Obs_regrid - 273.15
     elif var_name in ['Rainf','Rainf_tavg','tp']:
-        var    = Var_daily*60*60.
-        obs    = Obs_regrid*60*60.*3. # for AWAP 3 hourly data
-    elif var_name in ['Evap_tavg']:
-        var    = Var_daily*24*60*60.
+        var    = Var_daily*60*60.*24
+        obs    = Obs_regrid*60*60.*24 # for AWAP 3 hourly data
+    elif var_name in ['Evap_tavg','TVeg_tavg','ESoil_tavg','ECanop_tavg','Qs_tavg','Qsb_tavg']:
+        var    = Var_daily*60*60.*24
+        obs    = Obs_regrid
     elif var_name in ['Wind','Wind_f_inst']:
         var    = Var_daily
         obs    = Obs_regrid*2
@@ -467,8 +469,10 @@ def spital_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_na
             else:
                 r[x,y]    = stats.pearsonr(obs_tmp, var_tmp)[0]
                 RMSE[x,y] = np.sqrt(mean_squared_error(obs_tmp, var_tmp))
-
-    MBE  = np.mean((var - obs),axis=0)
+    if var_name in ['Rainf','Rainf_tavg','tp','Evap_tavg','Qs_tavg','Qsb_tavg']:
+        MBE  = np.sum((var - obs),axis=0)/3
+    else:
+        MBE  = np.mean((var - obs),axis=0)
     p5   = np.percentile(var, 5, axis=0) - np.percentile(obs, 5, axis=0)
     p95  = np.percentile(var, 95, axis=0) - np.percentile(obs, 95, axis=0)
 
@@ -481,11 +485,11 @@ def spital_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_na
     if var_name in ['t2m','tas','Tair','Tair_f_inst','Wind','Wind_f_inst']:
         var    = np.mean(var,axis=0)
         obs    = np.mean(obs,axis=0)
-    elif var_name in ['Rainf','Rainf_tavg','tp','Evap_tavg']:
+    elif var_name in ['Rainf','Rainf_tavg','tp','Evap_tavg','Qs_tavg','Qsb_tavg']:
         var    = np.sum(var,axis=0)
         obs    = np.sum(obs,axis=0)
-        var    = var#/3.
-        obs    = obs#/3.
+        var    = var/3.
+        obs    = obs/3.
     else:
         var    = np.mean(var,axis=0)
         obs    = np.mean(obs,axis=0)
@@ -566,12 +570,12 @@ def plot_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_name
             gl.ylines        = False
 
     if var_name in ['t2m','tas','Tair','Tair_f_inst']:
-        cmap1  = plt.cm.hot_r
-        cmap2  = plt.cm.hot_r
-        cmap3  = plt.cm.hot_r
-        cmap4  = plt.cm.seismic
-        cmap5  = plt.cm.seismic
-        cmap6  = plt.cm.seismic
+        cmap1  = plt.cm.coolwarm
+        cmap2  = plt.cm.coolwarm
+        cmap3  = plt.cm.coolwarm
+        cmap4  = plt.cm.coolwarm
+        cmap5  = plt.cm.coolwarm
+        cmap6  = plt.cm.coolwarm
         clevs1 = np.arange( 0, 42, 2)
         clevs2 = np.arange( 0, 42, 2)
         clevs3 = np.arange( 0.,5.5,0.5)
@@ -579,31 +583,31 @@ def plot_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_name
         clevs5 = [-5,-4,-3,-2,-1,-0.5,0.5,1,2,3,4,5]
         clevs6 = [-5,-4,-3,-2,-1,-0.5,0.5,1,2,3,4,5]
     elif var_name in ['Rainf','Rainf_tavg','tp']:
-        cmap1  = plt.cm.YlGnBu
-        cmap2  = plt.cm.YlGnBu
-        cmap3  = plt.cm.YlGnBu
-        cmap4  = plt.cm.seismic_r
-        cmap5  = plt.cm.seismic_r
-        cmap6  = plt.cm.seismic_r
+        cmap1  = plt.cm.BrBG
+        cmap2  = plt.cm.BrBG
+        cmap3  = plt.cm.BrBG
+        cmap4  = plt.cm.BrBG
+        cmap5  = plt.cm.BrBG
+        cmap6  = plt.cm.BrBG
         clevs1 = np.arange( 0.,1050.,50.)
         clevs2 = np.arange( 0.,1050.,50.)
-        clevs3 = np.arange( 0.0,21, 1.)
-        clevs4 = [-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10]
+        clevs3 = np.arange( 0.0,11, 1.)
+        clevs4 = [-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,10,20,30,40,50,60,70,80,90,100]
         clevs5 = [-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10]
         #[-1,-0.8,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.]
         clevs6 = [-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10]
         # [-10,-8,-6,-4,-2,-1,1,2,4,6,8,10]
     elif var_name in ['E','Evap_tavg']:
-        cmap1  = plt.cm.YlGnBu
-        cmap2  = plt.cm.YlGnBu
-        cmap3  = plt.cm.YlGnBu
-        cmap4  = plt.cm.seismic_r
-        cmap5  = plt.cm.seismic_r
-        cmap6  = plt.cm.seismic_r
-        clevs1 = np.arange( 0.,10.5,0.5)
-        clevs2 = np.arange( 0.,10.5,0.5)
-        clevs3 = np.arange( 0.,10.5,0.5)
-        clevs4 = [-5.,-4.5,-4.,-3.5,-3,-2.5,-2,-1.5,-1,-0.5,0.5,1,1.5,2.,2.5,3,3.5,4.,4.5,5.]
+        cmap1  = plt.cm.BrBG
+        cmap2  = plt.cm.BrBG
+        cmap3  = plt.cm.BrBG
+        cmap4  = plt.cm.BrBG
+        cmap5  = plt.cm.BrBG
+        cmap6  = plt.cm.BrBG
+        clevs1 = np.arange( 0.,1050.,50.)
+        clevs2 = np.arange( 0.,1050.,50.)
+        clevs3 = np.arange( 0.,5.5,0.5)
+        clevs4 = [-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,10,20,30,40,50,60,70,80,90,100]
         clevs5 = [-5.,-4.5,-4.,-3.5,-3,-2.5,-2,-1.5,-1,-0.5,0.5,1,1.5,2.,2.5,3,3.5,4.,4.5,5.]
         #[-1,-0.8,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.]
         clevs6 = [-5.,-4.5,-4.,-3.5,-3,-2.5,-2,-1.5,-1,-0.5,0.5,1,1.5,2.,2.5,3,3.5,4.,4.5,5.]
@@ -611,10 +615,10 @@ def plot_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_name
     # elif var_name in ['hfls','Qle_tavg']:
     #     cmap1  = plt.cm.YlGnBu
     #     cmap2  = plt.cm.YlGnBu
-    #     cmap3  = plt.cm.seismic_r
-    #     cmap4  = plt.cm.seismic_r
-    #     cmap5  = plt.cm.seismic_r
-    #     cmap6  = plt.cm.seismic_r
+    #     cmap3  = plt.cm.coolwarm_r
+    #     cmap4  = plt.cm.coolwarm_r
+    #     cmap5  = plt.cm.coolwarm_r
+    #     cmap6  = plt.cm.coolwarm_r
     #     clevs1 = np.arange( 0.0,55.,5)
     #     clevs2 = np.arange( 0.0,55.,5)
     #     clevs3 = [-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10]
@@ -634,22 +638,22 @@ def plot_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_name
     # RMSE
     plot1 = ax[1, 0].contourf(lons, lats, RMSE, clevs3, transform=ccrs.PlateCarree(), cmap=cmap3, extend='both')
     cb    = plt.colorbar(plot1, ax=ax[1, 0], orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
-    ax[1, 0].text(0.02, 0.95, "RMSE=" + "%.8f" % np.nanmean(RMSE), transform=ax[1, 0].transAxes, verticalalignment='top', bbox=props, fontsize=12)
+    ax[1, 0].text(0.02, 0.95, "RMSE=" + "%.2f" % np.nanmean(RMSE), transform=ax[1, 0].transAxes, verticalalignment='top', bbox=props, fontsize=12)
 
     # MBE
     plot1 = ax[1, 1].contourf(lons, lats, MBE, clevs4, transform=ccrs.PlateCarree(), cmap=cmap4, extend='both')
     cb    = plt.colorbar(plot1, ax=ax[1, 1], orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
-    ax[1, 1].text(0.02, 0.95, "MBE=" + "%.8f" % np.nanmean(MBE), transform=ax[1, 1].transAxes, verticalalignment='top', bbox=props, fontsize=12)
+    ax[1, 1].text(0.02, 0.95, "MBE=" + "%.2f" % np.nanmean(MBE), transform=ax[1, 1].transAxes, verticalalignment='top', bbox=props, fontsize=12)
 
     # p5
     plot1 = ax[2, 0].contourf(lons, lats, p5, clevs5, transform=ccrs.PlateCarree(), cmap=cmap5, extend='both')
     cb    = plt.colorbar(plot1, ax=ax[2, 0], orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
-    ax[2, 0].text(0.02, 0.95, "p5=" + "%.8f" % np.nanmean(p5), transform=ax[2, 0].transAxes, verticalalignment='top', bbox=props, fontsize=12)
+    ax[2, 0].text(0.02, 0.95, "p5=" + "%.2f" % np.nanmean(p5), transform=ax[2, 0].transAxes, verticalalignment='top', bbox=props, fontsize=12)
 
     # p95
     plot1 = ax[2, 1].contourf(lons, lats, p95, clevs6, transform=ccrs.PlateCarree(), cmap=cmap6, extend='both')
     cb    = plt.colorbar(plot1, ax=ax[2, 1], orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
-    ax[2, 1].text(0.02, 0.95, "p95=" + "%.8f" % np.nanmean(p95), transform=ax[2, 1].transAxes, verticalalignment='top', bbox=props, fontsize=12)
+    ax[2, 1].text(0.02, 0.95, "p95=" + "%.2f" % np.nanmean(p95), transform=ax[2, 1].transAxes, verticalalignment='top', bbox=props, fontsize=12)
 
     # cb.ax.tick_params(labelsize=7)
 
@@ -694,14 +698,13 @@ if __name__ == "__main__":
     # Plot WRF-CABLE vs AWAP temperal metrics
     # #################################
     if 1:
-        case_names =[ "drght_2017_2019_bl_pbl2_mp4_sf_sfclay2",]
-                    #   "drght_2017_2019_bl_pbl5_mp6_sf_sfclay1",]
+        case_names =[ "drght_2017_2019_bl_pbl2_mp4_sf_sfclay2",
+                      "drght_2017_2019_bl_pbl5_mp6_sf_sfclay1",]
         time_s     = datetime(2017,1,1,0,0,0,0)
-        time_e     = datetime(2017,12,31,23,59,0,0)
-        # time_e     = datetime(2019,12,31,23,59,0,0)
+        time_e     = datetime(2019,12,31,23,59,0,0)
+        # time_e     = datetime(2017,12,31,23,59,0,0)
         for case_name in case_names:
-
-            message    = "WRF_vs_AWAP_" + case_name + "_201701-201812"
+            message    = "WRF_vs_AWAP_" + case_name + "_201701-201912"
             wrf_path   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/WRF_output/wrfout_d01_2017-02-01_06:00:00"
             file_paths = ["/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201701-201701.d01.nc",
                           "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201702-201702.d01.nc",
@@ -714,40 +717,47 @@ if __name__ == "__main__":
                           "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201709-201709.d01.nc",
                           "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201710-201710.d01.nc",
                           "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201711-201711.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201712-201712.d01.nc",]
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201801-201801.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201802-201802.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201803-201803.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201804-201804.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201805-201805.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201806-201806.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201807-201807.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201808-201808.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201809-201809.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201810-201810.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201811-201811.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201812-201812.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201901-201901.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201902-201902.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201903-201903.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201904-201904.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201905-201905.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201906-201906.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201907-201907.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201908-201908.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201909-201909.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201910-201910.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201911-201911.d01.nc",
-                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201912-201912.d01.nc", ]
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201712-201712.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201801-201801.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201802-201802.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201803-201803.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201804-201804.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201805-201805.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201806-201806.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201807-201807.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201808-201808.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201809-201809.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201810-201810.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201811-201811.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201812-201812.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201901-201901.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201902-201902.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201903-201903.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201904-201904.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201905-201905.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201906-201906.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201907-201907.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201908-201908.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201909-201909.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201910-201910.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201911-201911.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201912-201912.d01.nc",]
+                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.202001-202001.d01.nc",
+                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.202002-202002.d01.nc",
+                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.202003-202003.d01.nc",
+                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.202004-202004.d01.nc",
+                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.202005-202005.d01.nc",
+                          # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.202006-202006.d01.nc", ]
 
             print(file_paths)
 
 
             # 'plot Evap'
-            if 0:
-                obs_path = [ GLEAM_path + "2017/E_2017_GLEAM_v3.6a.nc",
-                             GLEAM_path + "2018/E_2018_GLEAM_v3.6a.nc",
-                            GLEAM_path + "2019/E_2019_GLEAM_v3.6a.nc"    ]
+            if 1:
+                obs_path       = [ GLEAM_path + "2017/E_2017_GLEAM_v3.6a.nc",
+                                   GLEAM_path + "2018/E_2018_GLEAM_v3.6a.nc",
+                                   GLEAM_path + "2019/E_2019_GLEAM_v3.6a.nc",]
+                                #  GLEAM_path + "2019/E_2020_GLEAM_v3.6a.nc"    ]
                 obs_name       = 'E'
                 var_name       = 'Evap_tavg'
 
@@ -761,28 +771,28 @@ if __name__ == "__main__":
                                     lat_var_name=lat_var_name, lon_var_name=lon_var_name, message=message)
 
 
-            # # 'plot Tair'
-            # if 0:
-                # obs_path       = [ AWAP_path+'/Tair/AWAP.Tair.3hr.2017.nc',
-                #                    AWAP_path+'/Tair/AWAP.Tair.3hr.2018.nc',
-                #                    AWAP_path+'/Tair/AWAP.Tair.3hr.2019.nc' ] #[AWAP_R_file] #
-                # obs_name       = 'Tair' # 'Rainf'        #
-                # var_name       = 'Tair_f_inst' # 'Rainf_tavg'   #
-                #
-                # lat_var_name   = 'lat'
-                # lon_var_name   = 'lon'
-                # lat_obs_name   = 'lat'
-                # lon_obs_name   = 'lon'
-                #
-                # plot_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_name, time_s, time_e,
-                #                     loc_lat=loc_lat, loc_lon=loc_lon, lat_obs_name=lat_obs_name, lon_obs_name=lon_obs_name,
-                #                     lat_var_name=lat_var_name, lon_var_name=lon_var_name, message=message)
-            #
+            # 'plot Tair'
+            if 1:
+                obs_path       = [ AWAP_path+'/Tair/AWAP.Tair.3hr.2017.nc',
+                                   AWAP_path+'/Tair/AWAP.Tair.3hr.2018.nc',
+                                   AWAP_path+'/Tair/AWAP.Tair.3hr.2019.nc' ] #[AWAP_R_file] #
+                obs_name       = 'Tair' # 'Rainf'        #
+                var_name       = 'Tair_f_inst' # 'Rainf_tavg'   #
+
+                lat_var_name   = 'lat'
+                lon_var_name   = 'lon'
+                lat_obs_name   = 'lat'
+                lon_obs_name   = 'lon'
+
+                plot_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_name, time_s, time_e,
+                                    loc_lat=loc_lat, loc_lon=loc_lon, lat_obs_name=lat_obs_name, lon_obs_name=lon_obs_name,
+                                    lat_var_name=lat_var_name, lon_var_name=lon_var_name, message=message)
+
             # 'plot Rainf'
             if 1:
-                obs_path       = [ AWAP_path+'/Rainf/AWAP.Rainf.3hr.2017.nc',]
-                                   # AWAP_path+'/Rainf/AWAP.Rainf.3hr.2018.nc',
-                                   # AWAP_path+'/Rainf/AWAP.Rainf.3hr.2019.nc' ] #[AWAP_R_file] #
+                obs_path       = [ AWAP_path+'/Rainf/AWAP.Rainf.3hr.2017.nc',
+                                   AWAP_path+'/Rainf/AWAP.Rainf.3hr.2018.nc',
+                                   AWAP_path+'/Rainf/AWAP.Rainf.3hr.2019.nc' ] #[AWAP_R_file] #
                 obs_name       = 'Rainf' # 'Rainf'        #
                 var_name       = 'Rainf_tavg' # 'Rainf_tavg'   #
 

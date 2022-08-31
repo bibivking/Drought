@@ -3,6 +3,10 @@
 ; Author  : Mengyuan Mu
 ; Version : 1.0 (2021-08-04)
 ; Email   : mu.mengyuan815@gmail.com
+
+; Note: Fig1a in Mu et al, 2021, ESD
+;
+;
 ;WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 
 ;*******************************************
@@ -23,7 +27,7 @@ begin
 ; =============================== Pre-define ===================================
 case_name   = (/"CTL"/) ;,"DEEP_ROOT"/)
 path        = "/g/data/w97/mm3972/model/cable/runs/runs_4_coupled/gw_after_sp30yrx3/outputs/"
-pic_message = "CTL+FD_in_1_panel"
+pic_message = "CTL"
 
 year_s         = 2000
 year_e         = 2019
@@ -40,7 +44,7 @@ order_name     = (/"(a)","(b)","(c)","(d)","(e)","(f)"/)
 PFT           = "all" ; "tree" ;"all"
 scale         = "SE-AU"
 time_scale    = "monthly" ; "annual"; "monthly"
-cable_version = "CABLE-HESS" ;"LIS-CABLE" ; "CABLE-HESS"
+cable_version = "OFF-CABLE" ;"LIS-CABLE" ; "OFF-CABLE"
 grace_version = "Original-fill-nan"
 
 ; ================================= PLOT ======================================
@@ -119,7 +123,7 @@ res@pmLegendDisplayMode    = "Always"
 tmp_all           = new((/4,total/),"float") ; 0: GRACE, 1: GW TWS, 2: GW Aquifer 3: FD SM
 
 ; GW
-txt_name_GW       = "./GRACE_PFT-"+PFT+"_"+year_s+"-"+year_e+".txt"
+txt_name_GW       = "CTL_GRACE_PFT-all_2000-2019.txt"
 tmp_GW            = asciiread(txt_name_GW,(/6,total/),"float")
 tmp_GW@_FillValue = default_value
 SD_GRACE          = stddev(tmp_GW(0,:))

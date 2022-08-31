@@ -4,6 +4,7 @@ from netCDF4 import Dataset
 import netCDF4 as nc
 import numpy as np
 import matplotlib.colors as colors
+import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from scipy.interpolate import griddata
 from wrf import (getvar, interplevel, get_cartopy, cartopy_xlim,
@@ -66,6 +67,8 @@ def mask_by_lat_lon(file_path, loc_lat, loc_lon, lat_name, lon_name):
         lat  = file.variables[lat_name][:]
         lon  = file.variables[lon_name][:]
 
+    if 'GLEAM' in file_path:
+        lat = lat[::-1]
     # print(lat)
     # print(lon)
 
@@ -150,11 +153,15 @@ def read_var(file_path, var_name, loc_lat=None, loc_lon=None, lat_name=None, lon
             # read lat or lon
             mask = mask_by_lat_lon(file_path, loc_lat, loc_lon, lat_name, lon_name)
             if 'GLEAM' in file_path:
-                lat  = obs_file.variables[lat_name][::-1]
+                print("1")
+                lat  = obs_file.variables[lat_name][:]
+                lat  = lat[::-1]
                 lon  = obs_file.variables[lon_name]
             else:
+                print("2")
                 lat  = obs_file.variables[lat_name]
                 lon  = obs_file.variables[lon_name]
+                
             if len(np.shape(lat)) == 1:
                 lons, lats = np.meshgrid(lon, lat)
                 if var_name == lat_name:
@@ -171,13 +178,18 @@ def read_var(file_path, var_name, loc_lat=None, loc_lon=None, lat_name=None, lon
         else:
             # read var except lat or lat
             mask = mask_by_lat_lon(file_path, loc_lat, loc_lon, lat_name, lon_name)
-            #print("print mask in def read_var: ", mask)
             mask_multi = [ mask ] * ntime
 
-            if var_name in ['E','Ei','Es','Et']:
+            if 'v3-6a' in file_path:
+                print("1")
+                tmp = obs_file.variables[var_name][:,::-1,:]
+            elif 'GLEAM' in file_path:
                 # change GLEAM's coordinates from (time, lon, lat) to (time, lat, lon)
+                print("2")
                 tmp = np.moveaxis(obs_file.variables[var_name], -1, 1)
+                tmp = tmp[:,::-1,:]
             else:
+                print("3")
                 tmp = obs_file.variables[var_name][:]
 
             if var_name in ["SoilMoist_inst","SoilTemp_inst", "SoilMoist", "SoilTemp"]:
@@ -252,13 +264,24 @@ def read_var_multi_file(file_paths, var_name, loc_lat=None, loc_lon=None, lat_na
                 mask = mask_by_lat_lon(file_path, loc_lat, loc_lon, lat_name, lon_name)
 
             mask_multi = [ mask ] * ntime
-
-            if var_name in ['E','Ei','Es','Et']:
+            
+            print("shape of mask_multi",np.shape(mask_multi))    
+            
+            if 'v3-6a' in file_paths[0]:
+                print("1")
+                tmp = var_file.variables[var_name][:,::-1,:]
+            elif 'GLEAM' in file_paths[0]:
+                print("2")
                 # change GLEAM's coordinates from (time, lon, lat) to (time, lat, lon)
                 tmp = np.moveaxis(var_file.variables[var_name], -1, 1)
+                tmp = tmp[:,::-1,:]
             else:
+                print("3")
                 tmp = var_file.variables[var_name][:]
-
+                
+            # plt.contourf(tmp[0])
+            # plt.show()
+            
             if var_name in ["SoilMoist_inst","SoilTemp_inst", "SoilMoist", "SoilTemp"]:
                 nlat    = len(mask[:,0])
                 nlon    = len(mask[0,:])

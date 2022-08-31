@@ -28,6 +28,29 @@ from wrf import (to_np, getvar, smooth2d, get_cartopy, cartopy_xlim,
                         cartopy_ylim, latlon_coords, ALL_TIMES)
 from common_utils import *
 
+def read_LIS_vars(var_type):
+
+    '''
+    List the variables in a LIS file
+    '''
+    if var_type == "var_3D":
+        var_names  =  [ "Swnet_tavg","Lwnet_tavg","Qle_tavg","Qh_tavg","Qg_tavg","Snowf_tavg",
+                        "Rainf_tavg","Evap_tavg","Qs_tavg","Qsb_tavg","VegT_tavg","AvgSurfT_tavg",
+                        "Albedo_inst","SWE_inst","SnowDepth_inst","SoilWet_inst","ECanop_tavg","TVeg_tavg",
+                        "FWsoil_tavg","ESoil_tavg","CanopInt_inst","SnowCover_inst","Wind_f_inst",
+                        "Rainf_f_inst","Tair_f_inst", "Qair_f_inst","Psurf_f_inst","SWdown_f_inst","LWdown_f_inst"] # "GPP_tavg",
+    elif var_type == "var_landinfo_3D":
+        var_names  =  [ "Landmask_inst","Landcover_inst","Soiltype_inst","SandFrac_inst","ClayFrac_inst","SiltFrac_inst",
+                        "SoilFieldCap_inst","SoilSat_inst","SoilWiltPt_inst","Hyds_inst","Bch_inst","Sucs_inst",
+                        "Elevation_inst","LAI_inst"]
+    elif var_type == "var_4D":
+        var_names  =  ["RelSMC_inst","SoilMoist_inst","SoilTemp_inst","SmLiqFrac_inst","SmFrozFrac_inst"]
+    elif var_type == "var_3D_basic":
+        var_names  = ['Evap_tavg',"ESoil_tavg","ECanop_tavg",'TVeg_tavg',"FWsoil_tavg","Qle_tavg","Qh_tavg","Qg_tavg","VegT_tavg","WaterTableD_tavg"]
+    elif var_type == "var_energy":
+        var_names  = ["Tair_f_inst"] #["Swnet_tavg","Lwnet_tavg","Qle_tavg","Qh_tavg","Qg_tavg","Qair_f_inst","Rnet","EF"] #
+    return var_names
+
 def spatial_map_single_plot(file_path, var_name, time_s, time_e, lat_name, lon_name,
                             loc_lat=None, loc_lon=None, wrf_path=None,message=None):
 
@@ -376,6 +399,226 @@ def spatial_map_single_plot_diff(file_paths, var_names, time_s=None, time_e=None
 
         plt.savefig('./plots/WTD_sudden_change/spatial_map_'+message+'.png',dpi=300)
 
+def spatial_map_single_plot_LIS_diff(land_1201_files, land_clim_files, var_names, time_s=None, time_e=None, lat_names="lat",
+                                 lon_names="lon",loc_lat=None, loc_lon=None, wrf_path=None,message=None):
+
+    '''
+    plot a single spatial map
+    '''
+
+    # WRF-CABLE
+    for var_name in var_names:
+        time, Dec1_tmp = read_var_multi_file(land_1201_files, var_name, loc_lat, loc_lon, lat_names, lon_names)
+        time, Clim_tmp = read_var_multi_file(land_clim_files, var_name, loc_lat, loc_lon, lat_names, lon_names)
+        if  ["Tair_f_inst",]:
+            Dec1       = spital_var_max(time,Dec1_tmp,time_s,time_e)
+            Clim       = spital_var_max(time,Clim_tmp,time_s,time_e)
+        else:
+            Dec1       = spital_var(time,Dec1_tmp,time_s,time_e)
+            Clim       = spital_var(time,Clim_tmp,time_s,time_e)
+
+        wrf            = Dataset(wrf_path,  mode='r')
+        lons           = wrf.variables['XLONG'][0,:,:]
+        lats           = wrf.variables['XLAT'][0,:,:]
+
+        if var_name in ['WaterTableD_tavg','WatTable']:
+            Dec1     = Dec1/1000.
+            Clim     = Clim/1000.
+        if var_name in ['ESoil_tavg','Evap_tavg','TVeg_tavg']:
+            Dec1     = Dec1*3600*24
+            Clim     = Clim*3600*24
+        if var_name in ['Qair_f_inst']:
+            Dec1     = Dec1*1000
+            Clim     = Clim*1000
+
+        var_diff     = Dec1 - Clim
+
+        # read lat and lon outs
+
+        if var_name in ['WaterTableD_tavg','WatTable']:
+            clevs = [-4,-3,-2,-1.5,-1,-0.5,0.5,1,1.5,2,3,4]
+        elif var_name in ['GWwb_tavg','GWMoist']:
+            clevs = [-0.05,-0.04,-0.03,-0.02,-0.01,-0.005,0.005,0.01,0.02,0.03,0.04,0.05]
+        elif  var_name in ["Qair_f_inst"]:
+            clevs = [-2.,-1.8,-1.6,-1.4,-1.2,-1.,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.,1.2,1.4,1.6,1.8,2]
+        elif var_name in ['SoilMoist_inst','SoilMoist']:
+            clevs = [-0.3,-0.25,-0.2,-0.15,-0.1,-0.05,0.05,0.1,0.15,0.2,0.25,0.3]
+        elif var_name in ["GPP_tavg",]:
+            clevs = [-100,-80,-60,-40,-20,-10,10,20,40,60,80,100]
+        elif var_name in ['ESoil_tavg','Evap_tavg',"ECanop_tavg",'TVeg_tavg',"Rainf_tavg","Snowf_tavg","Qs_tavg","Qsb_tavg"]:
+            clevs = [-2,-1.5,-1,-0.5,-0.1,0.1,0.5,1.,1.5,2.]
+        elif var_name in ["Qle_tavg","Qh_tavg","Qg_tavg"]:
+            clevs = [-140,-120,-100,-80,-60,-40,-20,-10,10,20,40,60,80,100,120,140]
+        elif var_name in ["Swnet_tavg","Lwnet_tavg","SWdown_f_inst","LWdown_f_inst"]:
+            clevs = [-22,-18,-14,-10,-6,-2,2,6,10,14,18,22]
+        elif var_name in ["VegT_tavg","AvgSurfT_tavg","CanopInt_inst","SnowCover_inst","Wind_f_inst", "SoilTemp_inst",]:
+            clevs = [-4,-3,-2,-1.5,-1,-0.5,0.5,1,1.5,2,3,4]
+        elif var_name in ["Psurf_f_inst"]:
+            clevs = [-22,-18,-14,-10,-6,-2,2,6,10,14,18,22]
+        elif var_name in ["Tair_f_inst",]:
+            # clevs = [-1,-0.8,-0.6,-0.4,-0.2,-0.1,0.1,0.2,0.4,0.6,0.8,1.]
+            clevs = [-3,-2.5,-2,-1.5,-1,-0.5,-0.1,0.1,0.5,1.,1.5,2,2.5,3.]
+        elif var_name in ["FWsoil_tavg","SmLiqFrac_inst","SmFrozFrac_inst"]:
+            clevs = [-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4,0.5,0.6]
+        else:
+            clevs = [-0.5,-0.4,-0.3,-0.2,-0.1,-0.05,0.05,0.1,0.2,0.3,0.4,0.5]
+
+        print("len(np.shape(var_diff))",len(np.shape(var_diff)))
+
+        if len(np.shape(var_diff)) >=3:
+
+            for j in np.arange(6):
+
+                # ================== Start Plotting =================
+                fig = plt.figure(figsize=(6,5))
+                ax = plt.axes(projection=ccrs.PlateCarree())
+
+                plt.rcParams['text.usetex']     = False
+                plt.rcParams['font.family']     = "sans-serif"
+                plt.rcParams['font.serif']      = "Helvetica"
+                plt.rcParams['axes.linewidth']  = 1.5
+                plt.rcParams['axes.labelsize']  = 14
+                plt.rcParams['font.size']       = 14
+                plt.rcParams['legend.fontsize'] = 14
+                plt.rcParams['xtick.labelsize'] = 14
+                plt.rcParams['ytick.labelsize'] = 14
+
+                almost_black                    = '#262626'
+                # change the tick colors also to the almost black
+                plt.rcParams['ytick.color']     = almost_black
+                plt.rcParams['xtick.color']     = almost_black
+
+                # change the text colors also to the almost black
+                plt.rcParams['text.color']      = almost_black
+
+                # Change the default axis colors from black to a slightly lighter black,
+                # and a little thinner (0.5 instead of 1)
+                plt.rcParams['axes.edgecolor']  = almost_black
+                plt.rcParams['axes.labelcolor'] = almost_black
+
+                # set the box type of sequence number
+                props = dict(boxstyle="round", facecolor='white', alpha=0.0, ec='white')
+                # choose colormap
+
+                # =============== CHANGE HERE ===============
+                cmap  = plt.cm.seismic
+
+                #hot_r # BrBG
+
+                # start plotting
+                if loc_lat == None:
+                    ax.set_extent([135,155,-40,-25])
+                else:
+                    ax.set_extent([loc_lon[0],loc_lon[1],loc_lat[0],loc_lat[1]])
+
+                ax.coastlines(resolution="50m",linewidth=1)
+
+                # Add gridlines
+                gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=1, color='black', linestyle='--')
+                gl.xlabels_top   = False
+                gl.ylabels_right = False
+                gl.xlines        = True
+
+                if loc_lat == None:
+                    gl.xlocator  = mticker.FixedLocator([135,140,145,150,155])
+                    gl.ylocator  = mticker.FixedLocator([-40,-35,-30,-25])
+                else:
+                    gl.xlocator  = mticker.FixedLocator(loc_lon)
+                    gl.ylocator  = mticker.FixedLocator(loc_lat)
+
+                gl.xformatter = LONGITUDE_FORMATTER
+                gl.yformatter = LATITUDE_FORMATTER
+                gl.xlabel_style = {'size':10, 'color':'black'}
+                gl.ylabel_style = {'size':10, 'color':'black'}
+                plt.contourf(lons, lats, var_diff[j,:,:], clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
+
+                cb = plt.colorbar(ax=ax, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
+                cb.ax.tick_params(labelsize=10)
+                plt.title(var_name, size=16)
+
+                if j == 0:
+                    if message == None:
+                        message = var_name
+                    else:
+                        message = message + "_" + var_name
+
+                plt.savefig('./plots/spatial_map_'+message+'_layer='+str(j)+'.png',dpi=300)
+                cb = None
+                gl = None
+                ax = None
+                fig= None
+
+        elif len(np.shape(var_diff)) ==2:
+            # ================== Start Plotting =================
+            fig = plt.figure(figsize=(6,5))
+            ax = plt.axes(projection=ccrs.PlateCarree())
+
+            plt.rcParams['text.usetex']     = False
+            plt.rcParams['font.family']     = "sans-serif"
+            plt.rcParams['font.serif']      = "Helvetica"
+            plt.rcParams['axes.linewidth']  = 1.5
+            plt.rcParams['axes.labelsize']  = 14
+            plt.rcParams['font.size']       = 14
+            plt.rcParams['legend.fontsize'] = 14
+            plt.rcParams['xtick.labelsize'] = 14
+            plt.rcParams['ytick.labelsize'] = 14
+
+            almost_black                    = '#262626'
+            # change the tick colors also to the almost black
+            plt.rcParams['ytick.color']     = almost_black
+            plt.rcParams['xtick.color']     = almost_black
+
+            # change the text colors also to the almost black
+            plt.rcParams['text.color']      = almost_black
+
+            # Change the default axis colors from black to a slightly lighter black,
+            # and a little thinner (0.5 instead of 1)
+            plt.rcParams['axes.edgecolor']  = almost_black
+            plt.rcParams['axes.labelcolor'] = almost_black
+
+            # set the box type of sequence number
+            props = dict(boxstyle="round", facecolor='white', alpha=0.0, ec='white')
+            # choose colormap
+
+            # =============== CHANGE HERE ===============
+            cmap  = plt.cm.seismic
+
+            #hot_r # BrBG
+
+            # start plotting
+            if loc_lat == None:
+                ax.set_extent([135,155,-40,-25])
+            else:
+                ax.set_extent([loc_lon[0],loc_lon[1],loc_lat[0],loc_lat[1]])
+
+            ax.coastlines(resolution="50m",linewidth=1)
+
+            # Add gridlines
+            gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=1, color='black', linestyle='--')
+            gl.xlabels_top   = False
+            gl.ylabels_right = False
+            gl.xlines        = True
+
+            if loc_lat == None:
+                gl.xlocator  = mticker.FixedLocator([135,140,145,150,155])
+                gl.ylocator  = mticker.FixedLocator([-40,-35,-30,-25])
+            else:
+                gl.xlocator  = mticker.FixedLocator(loc_lon)
+                gl.ylocator  = mticker.FixedLocator(loc_lat)
+
+            gl.xformatter = LONGITUDE_FORMATTER
+            gl.yformatter = LATITUDE_FORMATTER
+            gl.xlabel_style = {'size':10, 'color':'black'}
+            gl.ylabel_style = {'size':10, 'color':'black'}
+
+            plt.contourf(lons, lats, var_diff, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
+            print(var_diff)
+            cb = plt.colorbar(ax=ax, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
+            cb.ax.tick_params(labelsize=10)
+            plt.title(var_name, size=16)
+
+            plt.savefig('./plots/spatial_map_'+message + "_" + var_name+'.png',dpi=300)
+
 def spatial_map_total_soil_water_diff(file_paths, lis_path, loc_lat=None, loc_lon=None, wrf_path=None,message=None):
 
     '''
@@ -687,6 +930,38 @@ if __name__ == "__main__":
     #                             loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path,message=message)
 
 
+    if 1:
+        case_name  = "bl_pbl5_mp6_sf_sfclay1" # "bl_pbl2_mp4_sf_sfclay2" #
+        case_1201  = "drght_2017_2019_"+case_name+"_1201"
+        case_clim  = "drght_2017_2019_"+case_name+"_climatology"
+        var_type   = "var_3D" #"var_energy"
+
+        # period     = "Dec_2018-Jan_2019"
+        # time_s     = datetime(2018,12,1,0,0,0,0)
+        # time_e     = datetime(2019,2,28,23,59,0,0)
+
+        period     = "14-26Jan_2019"
+        time_s     = datetime(2019,1,14,0,0,0,0)
+        time_e     = datetime(2019,1,26,23,59,0,0)
+        
+        wrf_path       = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_1201+"/WRF_output/wrfout_d01_2018-12-01_01:00:00"
+        land_1201_path = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_1201+"/LIS_output/"
+        land_clim_path = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_clim+"/LIS_output/"
+
+        land_1201_files = [ land_1201_path+"LIS.CABLE.201812-201812.d01.nc",
+                            land_1201_path+"LIS.CABLE.201901-201901.d01.nc",
+                            land_1201_path+"LIS.CABLE.201902-201902.d01.nc",]
+        land_clim_files = [ land_clim_path+"LIS.CABLE.201812-201812.d01.nc",
+                            land_clim_path+"LIS.CABLE.201901-201901.d01.nc",
+                            land_clim_path+"LIS.CABLE.201902-201902.d01.nc",]
+
+
+        var_names  = read_LIS_vars(var_type)
+        message    = case_name+"_"+period
+        spatial_map_single_plot_LIS_diff(land_1201_files, land_clim_files, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+                                 lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path,message=message)
+
+
     if 0:
         message    = "LIS_depth_varying-LIS_rst_2016-12-31"
         file_paths = ['/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/coupled_run/depth_varying/OUTPUT/SURFACEMODEL/LIS_HIST_201701011200.d01.nc',
@@ -704,7 +979,7 @@ if __name__ == "__main__":
         spatial_map_single_plot_diff(file_paths, var_names, time_s=time_s, time_e = time_e, lat_names=lat_names, lon_names=lon_names,
                                     loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path,message=message)
 
-    if 1:
+    if 0:
         message    = "LIS_depth_varying_ts1-LIS_rst_2016-12-31"
         file_paths = ['/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/coupled_run/depth_varying/OUTPUT/SURFACEMODEL/LIS_HIST_201701011200.d01.nc',
                       '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/offline_rst_output/output_1719_drght/LIS.CABLE.20170101110000-day1.d01.nc',]
