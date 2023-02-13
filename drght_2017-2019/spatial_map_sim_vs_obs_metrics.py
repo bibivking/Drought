@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 __author__ = "Mengyuan Mu"
-__email__  = "mu.mengyuan815@gmail.com" 
+__email__  = "mu.mengyuan815@gmail.com"
 
 '''
 Functions:

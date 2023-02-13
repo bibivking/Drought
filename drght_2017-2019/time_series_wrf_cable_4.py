@@ -14,9 +14,9 @@ Functions:
 from netCDF4 import Dataset
 import netCDF4 as nc
 import numpy as np
+import pandas as pd
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
-import pandas as pd
 import cartopy.crs as ccrs
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 from scipy.interpolate import griddata
@@ -87,30 +87,10 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
                           lat_name=None, lon_name=None, message=None, multi=None,iveg=None):
 
     print("======== In plot_time_series =========")
-    if var_name == "EF":
-        time_ctl, Var_ctl_Qle = read_var_multi_file(file_paths_ctl, "Qle_tavg", loc_lat, loc_lon, lat_name, lon_name)
-        time_ctl, Var_ctl_Qh = read_var_multi_file(file_paths_ctl, "Qh_tavg", loc_lat, loc_lon, lat_name, lon_name)
-        
-        time_sen, Var_sen_Qle = read_var_multi_file(file_paths_sen, "Qle_tavg", loc_lat, loc_lon, lat_name, lon_name)
-        time_sen, Var_sen_Qh = read_var_multi_file(file_paths_sen, "Qh_tavg", loc_lat, loc_lon, lat_name, lon_name)
-        
-        ctl_QleQh = Var_ctl_Qle+Var_ctl_Qh
-        sen_QleQh = Var_sen_Qle+Var_sen_Qh
-        Var_ctl = np.where(abs(ctl_QleQh)>0.01, Var_ctl_Qle/ctl_QleQh,np.nan)
-        Var_sen = np.where(abs(sen_QleQh)>0.01, Var_sen_Qle/sen_QleQh,np.nan)
-    else:
-        time_ctl, Var_ctl = read_var_multi_file(file_paths_ctl, var_name, loc_lat, loc_lon, lat_name, lon_name)
-        time_sen, Var_sen = read_var_multi_file(file_paths_sen, var_name, loc_lat, loc_lon, lat_name, lon_name)
-        
+    time_ctl, Var_ctl = read_var_multi_file(file_paths_ctl, var_name, loc_lat, loc_lon, lat_name, lon_name)
+    time_sen, Var_sen = read_var_multi_file(file_paths_sen, var_name, loc_lat, loc_lon, lat_name, lon_name)
     if file_paths_sen_2 != None:
-        
-        if var_name == "EF":
-            time_sen_2, Var_sen_2_Qle = read_var_multi_file(file_paths_sen_2, "Qle_tavg", loc_lat, loc_lon, lat_name, lon_name)
-            time_sen_2, Var_sen_2_Qh  = read_var_multi_file(file_paths_sen_2, "Qh_tavg", loc_lat, loc_lon, lat_name, lon_name)
-            sen_2_QleQh = Var_sen_2_Qle+Var_sen_2_Qh
-            Var_sen_2 = np.where(abs(sen_2_QleQh)>0.01, Var_sen_2_Qle/sen_2_QleQh,np.nan)
-        else:
-            time_sen_2, Var_sen_2 = read_var_multi_file(file_paths_sen_2, var_name, loc_lat, loc_lon, lat_name, lon_name)
+        time_sen_2, Var_sen_2 = read_var_multi_file(file_paths_sen_2, var_name, loc_lat, loc_lon, lat_name, lon_name)
 
     if var_name in ["Evap_tavg","TVeg_tavg","ESoil_tavg","ECanop_tavg","Qs_tavg","Qsb_tavg"]:
         Var_daily_ctl = time_clip_to_day_sum(time_ctl, Var_ctl, time_s, time_e, seconds=None)
@@ -178,7 +158,6 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
                 var_sen = np.nanmean(Var_daily_sen[:,:,:],axis=(1,2))
                 ax.plot(np.arange(len(var_ctl)), var_ctl, c = "red",  label=var_name+"_ctl", alpha=0.5)
                 ax.plot(np.arange(len(var_sen)), var_sen, c = "blue", label=var_name+"_sen", alpha=0.5)
-                
             elif np.shape(iveg)[0]>1:
                 for i,pft in enumerate(iveg):
                     var_ctl = np.nanmean(np.where(landcover == pft, Var_daily_ctl, np.nan),axis=(1,2))
@@ -341,18 +320,17 @@ if __name__ == "__main__":
         LIS_path_sen_2 = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name_sen_2+"/LIS_output/"
 
         file_paths_ctl  = [
-                            LIS_path_ctl+"LIS.CABLE.201701-202006_energy.nc"
+                            LIS_path_ctl+"LIS.CABLE.201701-202006_ALB_LAI.nc"
                             ]
 
         file_paths_sen = [
-                            LIS_path_sen+"LIS.CABLE.201701-202006_energy.nc"
+                            LIS_path_sen+"LIS.CABLE.201701-202006_ALB_LAI.nc"
                             ]
 
         file_paths_sen_2 = None
                         #    [LIS_path_sen_2+"LIS.CABLE.201701-201701.d01.nc",]
 
-        var_names  = ["Qh_tavg","EF"]#"Qle_tavg"
-                    #[ "Evap_tavg","Rainf_tavg"]#,"TVeg_tavg","ESoil_tavg"]
+        var_names  = [ 'Albedo_inst','LAI_inst']
                     #    "WaterTableD_tavg","Qle_tavg","Qh_tavg", "Qg_tavg","AvgSurfT_tavg","VegT_tavg",'Albedo_inst',
                     #    'Tair_f_inst',"SoilMoist_inst", "FWsoil_tavg", "GWwb_tavg",,"ECanop_tavg","Qs_tavg","Qsb_tavg",]
 

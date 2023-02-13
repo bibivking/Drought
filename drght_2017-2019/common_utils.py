@@ -138,6 +138,7 @@ def read_var(file_path, var_name, loc_lat=None, loc_lon=None, lat_name=None, lon
 
     if loc_lat == None:
         Var_tmp = obs_file.variables[var_name][:]
+        # print('Var_tmp',Var_tmp)
         if hasattr(obs_file.variables[var_name], '_FillValue'):
             # hasattr(a,"b"): check whether object a has attribute 'b'
             def_val = obs_file.variables[var_name]._FillValue
@@ -161,7 +162,7 @@ def read_var(file_path, var_name, loc_lat=None, loc_lon=None, lat_name=None, lon
                 print("2")
                 lat  = obs_file.variables[lat_name]
                 lon  = obs_file.variables[lon_name]
-                
+
             if len(np.shape(lat)) == 1:
                 lons, lats = np.meshgrid(lon, lat)
                 if var_name == lat_name:
@@ -264,9 +265,9 @@ def read_var_multi_file(file_paths, var_name, loc_lat=None, loc_lon=None, lat_na
                 mask = mask_by_lat_lon(file_path, loc_lat, loc_lon, lat_name, lon_name)
 
             mask_multi = [ mask ] * ntime
-            
-            print("shape of mask_multi",np.shape(mask_multi))    
-            
+
+            print("shape of mask_multi",np.shape(mask_multi))
+
             if 'v3-6a' in file_paths[0]:
                 print("1")
                 tmp = var_file.variables[var_name][:,::-1,:]
@@ -278,10 +279,10 @@ def read_var_multi_file(file_paths, var_name, loc_lat=None, loc_lon=None, lat_na
             else:
                 print("3")
                 tmp = var_file.variables[var_name][:]
-                
+
             # plt.contourf(tmp[0])
             # plt.show()
-            
+
             if var_name in ["SoilMoist_inst","SoilTemp_inst", "SoilMoist", "SoilTemp"]:
                 nlat    = len(mask[:,0])
                 nlon    = len(mask[0,:])
@@ -386,6 +387,70 @@ def read_wrf_surf_var(file_path, var_name, loc_lat=None, loc_lon=None, mask_map=
 
     return var
 
+def read_wrf_surf_var_multi_files(file_paths, var_name, loc_lat=None, loc_lon=None, mask_map=None):
+
+    '''
+    output: [time,lat,lon]
+    '''
+
+    print("read "+var_name+" from wrf output")
+
+    var_3D = [
+                'rh2',  # 2m Relative Humidity
+                'T2',   # 2m Temperature
+                'td2',  # 2m Dew Point Temperature
+                'slp',  # Sea Level Pressure
+                'ter',  # Model Terrain Height
+                'ctt',  # Cloud Top Temperature
+                'mdbz', # Maximum Reflectivity
+                'pw',   # Precipitable Water
+                'updraft_helicity', # Updraft Helicity
+                'helicity',        # Storm Relative Helicity
+              ]
+
+    for i, file_path in enumerate(file_paths):
+        print(file_path)
+        wrf_file = Dataset(file_path)
+        # p        = getvar(wrf_file, "pressure",timeidx=ALL_TIMES)
+        time_tmp = read_wrf_time(file_path)
+
+        if var_name == 'cape_2d':
+            # 'cape_2d', # 2D CAPE (MCAPE/MCIN/LCL/LFC)
+            var_tmp  = getvar(wrf_file, var_name, timeidx=ALL_TIMES)[0]
+            print("======= cape_2d =======")
+        elif var_name == 'cloudfrac':
+            # 'cloudfrac', # Cloud Fraction
+            var_tmp  = getvar(wrf_file, var_name, timeidx=ALL_TIMES)[0]
+            print("======= cloudfrac =======")
+        else:
+            var_tmp  = getvar(wrf_file, var_name, timeidx=ALL_TIMES)
+
+        if loc_lat == None:
+            if mask_map is not None:
+                ntime      = len(var_tmp[:,0,0,0])
+                mask_multi = [ mask_map ] * ntime
+                Var        = np.where(mask_multi,var_tmp,np.nan)
+            else:
+                Var        = var_tmp
+        else:
+            ### need to fix, not work
+            ntime      = len(var_tmp[:,0,0,0])
+            mask       = mask_by_lat_lon(file_path, loc_lat, loc_lon, 'XLAT', 'XLONG')
+            if mask_map is not None:
+                mask   = np.where(np.all([mask,mask_map],axis=0), True, False)
+            # np.savetxt("check",mask)
+            mask_multi = [ mask ] * ntime
+            Var        = np.where(mask_multi,var_tmp,np.nan)
+
+        if i == 0:
+            var = Var
+            time= time_tmp
+        else:
+            var = np.concatenate((var, Var), axis=0)
+            time = np.concatenate((time, time_tmp), axis=0)
+
+    return time, var
+
 def read_wrf_hgt_var(file_path, var_name, var_unit=None, height=None, loc_lat=None, loc_lon=None, p_hgt="p"):
 
     print("read "+var_name+" from wrf output")
@@ -454,12 +519,86 @@ def read_wrf_hgt_var(file_path, var_name, var_unit=None, height=None, loc_lat=No
 
     return var
 
+def read_wrf_hgt_var_multi_files(file_paths, var_name, var_unit=None, height=None, loc_lat=None, loc_lon=None, p_hgt="p"):
+
+    print("read "+var_name+" from wrf output")
+
+    var_4D =  [
+                'p',    # Full Model Pressure
+                'avo',    # Absolute Vorticity
+                'eth',    # Equivalent Potential Temperature
+                'dbz',    # Reflectivity
+                'geopt',  # Geopotential for the Mass Grid
+                'omg',  # Omega
+                'pvo',  # Potential Vorticity
+                'rh',   # Relative Humidity
+                'td',   # Dew Point Temperature
+                'tc',   # Temperature in Celsius
+                'th',   # Potential Temperature
+                'temp', # Temperature (in specified units)
+                'tv',   # Virtual Temperature
+                'twb',  # Wet Bulb Temperature
+                'ua',   # U-component of Wind on Mass Points
+                'va',   # V-component of Wind on Mass Points
+                'wa',   # W-component of Wind on Mass Points
+                'z',    # Model Height for Mass Grid
+                'cape_3d',# 3D CAPE and CIN
+                'height_agl', # Model Height for Mass Grid (AGL)
+                ]
+
+    for i, file_path in enumerate(file_paths):
+
+        wrf_file = Dataset(file_path)
+        time_tmp = read_wrf_time(file_path)
+
+        if p_hgt == "p":
+            p   = getvar(wrf_file, "pressure",timeidx=ALL_TIMES)
+        if p_hgt == "hgt":
+            hgt = getvar(wrf_file, "height_agl",timeidx=ALL_TIMES)
+
+        # if var_name in var_4D:
+        if var_unit == None:
+            if var_name == 'cape_3d':
+                Var  = getvar(wrf_file, var_name, timeidx=ALL_TIMES)[0]
+            else:
+                Var  = getvar(wrf_file, var_name, timeidx=ALL_TIMES)
+        else:
+            Var      = getvar(wrf_file, var_name, units=var_unit, timeidx=ALL_TIMES)
+
+        if height == None:
+            var_tmp  = Var
+        else:
+            if p_hgt == "p":
+                var_tmp  = interplevel(Var, p, height)
+            if p_hgt == "hgt":
+                var_tmp  = interplevel(Var, hgt, height)
+
+        if loc_lat == None:
+            var  = var_tmp
+        else:
+            # here only suit 2D and 3D var
+            ntime  = np.shape(var_tmp)[0]
+            print("ntime",ntime)
+            mask   = mask_by_lat_lon(file_path, loc_lat, loc_lon, 'XLAT', 'XLONG')
+            mask_multi = [ mask ] * ntime
+            var    = np.where(mask_multi,var_tmp,np.nan)
+
+        if i == 0:
+            var_e  = var
+            time   = time_tmp
+        else:
+            var_e  = np.concatenate((var_e, var), axis=0)
+            time   = np.concatenate((time, time_tmp), axis=0)
+
+    return var_e
+
 # ========================= Spitial & temporal Average =========================
 def time_clip_to_day(time, Var, time_s, time_e, seconds=None):
 
     time_cood = time_mask(time, time_s, time_e, seconds)
     time_slt  = time[time_cood]
     if len(np.shape(Var))==3:
+        print("len(np.shape(Var))==3")
         var_slt  = Var[time_cood,:,:]
         days     = []
         for t in time_slt:
@@ -470,6 +609,7 @@ def time_clip_to_day(time, Var, time_s, time_e, seconds=None):
             var_tmp[cnt,:,:] = np.nanmean(var_slt[days == d,:,:],axis=0)
             cnt              = cnt +1
     elif len(np.shape(Var))==4:
+        print("len(np.shape(Var))==4")
         nlayer   = len(Var[0,:,0,0])
         nlat     = len(Var[0,0,:,0])
         nlon     = len(Var[0,0,0,:])
@@ -483,7 +623,7 @@ def time_clip_to_day(time, Var, time_s, time_e, seconds=None):
         for d in np.unique(days):
             var_tmp[cnt,:,:,:] = np.nanmean(var_slt[days == d,:,:,:],axis=0)
             cnt              = cnt +1
-
+    print("var_tmp", var_tmp)
     return var_tmp
 
 def time_clip_to_day_sum(time, Var, time_s, time_e, seconds=None):
