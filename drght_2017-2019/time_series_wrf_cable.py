@@ -112,7 +112,7 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
         else:
             time_sen_2, Var_sen_2 = read_var_multi_file(file_paths_sen_2, var_name, loc_lat, loc_lon, lat_name, lon_name)
 
-    if var_name in ["Evap_tavg","TVeg_tavg","ESoil_tavg","ECanop_tavg","Qs_tavg","Qsb_tavg"]:
+    if var_name in ["Rainf_tavg","Evap_tavg","TVeg_tavg","ESoil_tavg","ECanop_tavg","Qs_tavg","Qsb_tavg"]:
         Var_daily_ctl = time_clip_to_day_sum(time_ctl, Var_ctl, time_s, time_e, seconds=None)
         Var_daily_ctl = Var_daily_ctl*3600.
     elif var_name in ["WaterTableD_tavg"]:
@@ -121,7 +121,7 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
     else:
         Var_daily_ctl = time_clip_to_day(time_ctl, Var_ctl, time_s, time_e, seconds=None)
 
-    if var_name in ["Evap_tavg","TVeg_tavg","ESoil_tavg","ECanop_tavg","Qs_tavg","Qsb_tavg"]:
+    if var_name in ["Rainf_tavg","Evap_tavg","TVeg_tavg","ESoil_tavg","ECanop_tavg","Qs_tavg","Qsb_tavg"]:
         Var_daily_sen = time_clip_to_day_sum(time_sen, Var_sen, time_s, time_e, seconds=None)
         Var_daily_sen = Var_daily_sen*3600.
     elif var_name in ["WaterTableD_tavg"]:
@@ -131,7 +131,7 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
         Var_daily_sen = time_clip_to_day(time_sen, Var_sen, time_s, time_e, seconds=None)
 
     if file_paths_sen_2 != None:
-        if var_name in ["Evap_tavg","TVeg_tavg","ESoil_tavg","ECanop_tavg","Qs_tavg","Qsb_tavg"]:
+        if var_name in ["Rainf_tavg","Evap_tavg","TVeg_tavg","ESoil_tavg","ECanop_tavg","Qs_tavg","Qsb_tavg"]:
             Var_daily_sen_2 = time_clip_to_day_sum(time_sen_2, Var_sen_2, time_s, time_e, seconds=None)
             Var_daily_sen_2 = Var_daily_sen_2*3600.
         elif var_name in ["WaterTableD_tavg"]:
@@ -341,17 +341,18 @@ if __name__ == "__main__":
         LIS_path_sen_2 = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name_sen_2+"/LIS_output/"
 
         file_paths_ctl  = [
-                            LIS_path_ctl+"LIS.CABLE.201701-202006_energy.nc"
+                            LIS_path_ctl+"LIS.CABLE.201701-202006_met.nc"
                             ]
 
         file_paths_sen = [
-                            LIS_path_sen+"LIS.CABLE.201701-202006_energy.nc"
+                            LIS_path_sen+"LIS.CABLE.201701-202006_met.nc"
                             ]
 
         file_paths_sen_2 = None
                         #    [LIS_path_sen_2+"LIS.CABLE.201701-201701.d01.nc",]
 
-        var_names  = ["Qh_tavg","EF"]#"Qle_tavg"
+        var_names  = ["Qair_f_inst"]
+                    # ["Qh_tavg","EF","Qle_tavg"]
                     #[ "Evap_tavg","Rainf_tavg"]#,"TVeg_tavg","ESoil_tavg"]
                     #    "WaterTableD_tavg","Qle_tavg","Qh_tavg", "Qg_tavg","AvgSurfT_tavg","VegT_tavg",'Albedo_inst',
                     #    'Tair_f_inst',"SoilMoist_inst", "FWsoil_tavg", "GWwb_tavg",,"ECanop_tavg","Qs_tavg","Qsb_tavg",]

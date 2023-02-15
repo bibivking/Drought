@@ -666,7 +666,7 @@ if __name__ == "__main__":
     # Plot WRF-CABLE vs AWAP temperal metrics
     # #################################
     if 1:
-        case_names = [ "drght_2017_2019_bl_pbl2_mp4_sf_sfclay2",
+        case_names = [ #"drght_2017_2019_bl_pbl2_mp4_sf_sfclay2",
                        "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB" ]
 
         time_s     = datetime(2017,1,1,0,0,0,0)
@@ -690,9 +690,9 @@ if __name__ == "__main__":
                               AWAP_path+'/Tair/AWAP.Tair.3hr.2019.nc',]
             obs_name       = 'Tair' 
             var_name       = 'Tair_f_inst' 
-            #plot_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_name, time_s, time_e,
-            #                    loc_lat=loc_lat, loc_lon=loc_lon, lat_obs_name=lat_obs_name, lon_obs_name=lon_obs_name,
-            #                    lat_var_name=lat_var_name, lon_var_name=lon_var_name, message=message)
+            plot_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_name, time_s, time_e,
+                                loc_lat=loc_lat, loc_lon=loc_lon, lat_obs_name=lat_obs_name, lon_obs_name=lon_obs_name,
+                                lat_var_name=lat_var_name, lon_var_name=lon_var_name, message=message)
             
             file_paths = ["/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201701-202006_water.nc" ]
             # 'plot Rainf'
@@ -701,7 +701,7 @@ if __name__ == "__main__":
                                AWAP_path+'/Rainf/AWAP.Rainf.3hr.2019.nc',] 
             obs_name       = 'Rainf'
             var_name       = 'Rainf_tavg'
-            plot_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_name, time_s, time_e,
+            #plot_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_name, time_s, time_e,
                                 loc_lat=loc_lat, loc_lon=loc_lon, lat_obs_name=lat_obs_name, lon_obs_name=lon_obs_name,
                                 lat_var_name=lat_var_name, lon_var_name=lon_var_name, message=message)
 

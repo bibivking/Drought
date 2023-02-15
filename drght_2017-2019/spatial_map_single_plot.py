@@ -560,7 +560,8 @@ def spatial_map_single_plot_LIS_diff(land_ctl_files, land_sen_files, var_names, 
         elif var_name in ['GWwb_tavg','GWMoist']:
             clevs = [-0.05,-0.04,-0.03,-0.02,-0.01,-0.005,0.005,0.01,0.02,0.03,0.04,0.05]
         elif  var_name in ["Qair_f_inst"]:
-            clevs = [-2.,-1.8,-1.6,-1.4,-1.2,-1.,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.,1.2,1.4,1.6,1.8,2]
+            clevs = [-0.4,-0.35,-0.3,-0.25,-0.2,-0.15,-0.1,-0.05,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4]
+            #clevs = [-2.,-1.8,-1.6,-1.4,-1.2,-1.,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.,1.2,1.4,1.6,1.8,2]
         elif var_name in ['SoilMoist_inst','SoilMoist']:
             clevs = [-0.3,-0.25,-0.2,-0.15,-0.1,-0.05,0.05,0.1,0.15,0.2,0.25,0.3]
         elif var_name in ['ESoil_tavg','Evap_tavg',"ECanop_tavg",'TVeg_tavg',"Rainf_tavg","Snowf_tavg","Qs_tavg","Qsb_tavg"]:
@@ -1231,7 +1232,8 @@ if __name__ == "__main__":
             # var_type   = "var_3D" #"var_energy" #"var_3D" #"var_3D" #"var_energy"#"var_albedo" #
             # var_names  = read_LIS_vars(var_type)
 
-            var_names  =["Psurf_f_inst","SWdown_f_inst","LWdown_f_inst"]
+            var_names  =["Qair_f_inst"]
+                        #["Rainf_tavg","Evap_tavg","ECanop_tavg","TVeg_tavg","FWsoil_tavg","ESoil_tavg","WaterTableD_tavg","Snowf_tavg","GWwb_tavg","Qs_tavg","Qsb_tavg"]
                         #["Qle_tavg","Qh_tavg"]
                         #["Wind_f_inst","Tair_f_inst","Qair_f_inst","Psurf_f_inst","SWdown_f_inst","LWdown_f_inst"] 
                         #["Snowf_tavg","Rainf_tavg","Evap_tavg","ECanop_tavg","TVeg_tavg","FWsoil_tavg","ESoil_tavg","WaterTableD_tavg","GWwb_tavg","Qs_tavg","Qsb_tavg",]

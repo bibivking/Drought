@@ -528,11 +528,7 @@ if __name__ == "__main__":
     #######################################################
 
     var_3D = [ 
-                # 'cloudfrac', # Cloud Fraction
-                # 'td2',  # 2m Dew Point Temperature
-                # 'rh2',  # 2m Relative Humidity
-                'T2',   # 2m Temperature
-                # 'slp',  # Sea Level Pressure       
+                'cloudfrac', # Cloud Fraction  
               ]
                 # 'ter',  # Model Terrain Height
                 # 'updraft_helicity', # Updraft Helicity
@@ -547,40 +543,33 @@ if __name__ == "__main__":
                 # 'cape_2d', # 2D CAPE (MCAPE/MCIN/LCL/LFC)
                 # 'cloudfrac', # Cloud Fraction
 
-    var_other         = [   "SWDNB", # INSTANTANEOUS DOWNWELLING SHORTWAVE FLUX AT BOTTOM
-                            "LWDNB", # INSTANTANEOUS DOWNWELLING LONGWAVE FLUX AT BOTTOM
-                            "SWUPB", # INSTANTANEOUS UPWELLING SHORTWAVE FLUX AT BOTTOM
-                            "LWUPB", # INSTANTANEOUS UPWELLING LONGWAVE FLUX AT BOTTOM
-                            ]
-    # ['RAINC','RAINNC','PSFC','U10','V10','TSK','PBLH']
+    var_other = [   "SWDNB", # INSTANTANEOUS DOWNWELLING SHORTWAVE FLUX AT BOTTOM
+                    "LWDNB", # INSTANTANEOUS DOWNWELLING LONGWAVE FLUX AT BOTTOM
+                    "SWUPB", # INSTANTANEOUS UPWELLING SHORTWAVE FLUX AT BOTTOM
+                    "LWUPB", # INSTANTANEOUS UPWELLING LONGWAVE FLUX AT BOTTOM
+                ]
+                # ['RAINC','RAINNC','PSFC','U10','V10','TSK','PBLH']
 
-    hw_name           = "hw2019_3Nov" 
+    ctl_name = "drght_2017_2019_bl_pbl2_mp4_sf_sfclay2" 
+    sen_name = "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB"
 
-    if hw_name == "hw2009_3Nov":
-        period     = "20090122-20090213"
-        time_s = datetime(2009,1,28,0,0,0,0)
-        time_e = datetime(2009,2,8,23,59,0,0)
-    elif  hw_name == "hw2013_3Nov":
-        period     = "20121229-20130122"
-        time_s = datetime(2013,1,4,0,0,0,0)
-        time_e = datetime(2013,1,18,23,59,0,0)
-    elif  hw_name == "hw2019_3Nov":
-        period     = "20190108-20190130"
-        time_s = datetime(2019,1,14,0,0,0)
-        time_e = datetime(2019,1,26,23,59,0,0)
+    time_s   = datetime(2017,1,1,0,0,0)
+    time_e   = datetime(2020,1,1,0,0,0,0)
 
-    cpl_atmo_file     = '/g/data/w35/mm3972/model/wrf/NUWRF/LISWRF_configs/'+hw_name+'/ensemble_avg'
-    cpl_atmo_file_gw  = cpl_atmo_file + '/wrfout_'+period+'_gw'  # atmo output of wrf-cable run
-    cpl_atmo_file_fd  = cpl_atmo_file + '/wrfout_'+period+'_fd'  # atmo output of wrf-cable run
+    cpl_atmo_file     = '/g/data/w35/mm3972/model/wrf/NUWRF/LISWRF_configs/'+ctl_name+'/ensemble_avg'
+    cpl_atmo_file_sen = cpl_atmo_file + '/wrfout_'+period+'_sen' 
+                        # atmo output of wrf-cable run
+    cpl_atmo_file_ctl = cpl_atmo_file + '/wrfout_'+period+'_ctl'
+                        # atmo output of wrf-cable run
 
-    file_paths        = [cpl_atmo_file_fd,cpl_atmo_file_gw] # cpl_atmo_file_fd, cpl_atmo_file_gw
+    file_paths        = [cpl_atmo_file_ctl,cpl_atmo_file_sen] # cpl_atmo_file_ctl, cpl_atmo_file_sen
 
     for j, var_name in enumerate(var_other):
 
         if len(file_paths) > 1:
-            message = "Couple_GW-FD_"+str(time_s)+"-"+str(time_e)
+            message = "Couple_sen-ctl_"+str(time_s)+"-"+str(time_e)
         else:
-            message = "Couple_GW_"+str(time_s)+"-"+str(time_e)
+            message = "Couple_sen_"+str(time_s)+"-"+str(time_e)
 
         plot_spatial_wrf_surf(file_paths, var_name, time_s, time_e, message=message)
 
@@ -621,14 +610,14 @@ if __name__ == "__main__":
     #         file_paths = []
 
     #         path       = "/g/data/w35/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_names[case_num]+"/ensemble_avg/"
-    #         file_path  = path + file_names[case_num]+"_fd"
+    #         file_path  = path + file_names[case_num]+"_ctl"
     #         file_paths.append(file_path)
-    #         file_path  = path + file_names[case_num]+"_gw"
+    #         file_path  = path + file_names[case_num]+"_sen"
     #         file_paths.append(file_path)
 
     #         tss = [0] #np.arange(0*8, 28*8, 8) # day 0-- day 28, local time 1pm
 
-    #         message   = case_names[case_num]+"_GW-FD"
+    #         message   = case_names[case_num]+"_sen-ctl"
     #         plot_spatial_wrf_surf_var(is_diff, file_paths, var_name, tss, message=message)
 
     #     # ###############################################
@@ -643,12 +632,12 @@ if __name__ == "__main__":
     #         file_paths = []
 
     #         path       = "/g/data/w35/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_names[case_num]+"/ensemble_avg/"
-    #         file_path  = path + file_names[case_num]+"_fd"
+    #         file_path  = path + file_names[case_num]+"_ctl"
     #         file_paths.append(file_path)
-    #         file_path  = path + file_names[case_num]+"_gw"
+    #         file_path  = path + file_names[case_num]+"_sen"
     #         file_paths.append(file_path)
 
-    #         message = case_names[case_num]+"_GW-FD"
+    #         message = case_names[case_num]+"_sen-ctl"
 
     #         tss  = np.arange(24) # 1 pm
     #         for ts in tss:
