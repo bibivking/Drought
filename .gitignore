@@ -25,4 +25,12 @@
 */*/refuse/*
 */*/plots/*
 */*/data/*
+*/*/csv/*
+*/*/txt/*
 */*/nc_file/*
+*/*/*/*sh.o*
+./drght_2017-2019/csv/*
+./drght_2017-2019/txt/*
+./drght_2017-2019/logs/*
+
+
