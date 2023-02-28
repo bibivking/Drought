@@ -13,5 +13,5 @@
 module use /g/data/hh5/public/modules
 module load conda/analysis3-22.01
 cd /g/data/w97/mm3972/scripts/Drought/drght_2017-2019
-python boxplot.py
+python spatial_map_single_plot_drghtbreak_1.py
 #python spatial_map_single_plot.py

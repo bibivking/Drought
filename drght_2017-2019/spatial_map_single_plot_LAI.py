@@ -1210,11 +1210,11 @@ if __name__ == "__main__":
         Test WRF-CABLE output
         '''
 
-        case_name      = "ALB-CTL" #"bl_pbl2_mp4_sf_sfclay2" #
-        case_ctl       = "drght_2017_2019_bl_pbl2_mp4_sf_sfclay2"
+        case_name      = "ABL-LAI" #"bl_pbl2_mp4_sf_sfclay2" #
+        case_ctl       = "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI"
         case_sen       = "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB"
 
-        wrf_path       = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_ctl+"/WRF_output/wrfout_d01_2017-02-01_06:00:00"
+        wrf_path       = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_sen+"/WRF_output/wrfout_d01_2017-02-01_06:00:00"
         land_sen_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_sen+"/LIS_output/"
         land_ctl_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_ctl+"/LIS_output/"
         atmo_sen_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_sen+"/WRF_output/"
@@ -1278,34 +1278,34 @@ if __name__ == "__main__":
             message    = case_name+"_"+period
                         
 
-            # land_sen_files = [land_sen_path+"LIS.CABLE.201701-202006_ALB_LAI.nc"]
-            # land_ctl_files = [land_ctl_path+"LIS.CABLE.201701-202006_ALB_LAI.nc"]
-            # var_names      = ['Albedo_inst','LAI_inst']
-            # spatial_map_single_plot_LIS_diff(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-            
-            # land_sen_files = [land_sen_path+"LIS.CABLE.201701-202006_met.nc"]
-            # land_ctl_files = [land_ctl_path+"LIS.CABLE.201701-202006_met.nc"]
-            # var_names      = ["Tair_f_inst"]  
-            # spatial_map_single_plot_LIS_diff(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-    
-            
-            # land_sen_files = [land_sen_path+"LIS.CABLE.201701-202006_energy.nc"]
-            # land_ctl_files = [land_ctl_path+"LIS.CABLE.201701-202006_energy.nc"]
-            # var_names      = ["Qle_tavg","Qh_tavg","EF"]
-            # spatial_map_single_plot_LIS_diff(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)            
-            
-            land_sen_files = [land_sen_path+"LIS.CABLE.201701-202006_water.nc"]
-            land_ctl_files = [land_ctl_path+"LIS.CABLE.201701-202006_water.nc"]
-            var_names      = ["Rainf_tavg","TVeg_tavg"]
+            land_sen_files = [land_sen_path+"LIS.CABLE.201701-202006_ALB_LAI.nc"]
+            land_ctl_files = [land_ctl_path+"LIS.CABLE.201701-202006_ALB_LAI.nc"]
+            var_names      = ['Albedo_inst','LAI_inst']
             spatial_map_single_plot_LIS_diff(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
                                 lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-                                message=message)   
+                                message=message)
+            
+            land_sen_files = [land_sen_path+"LIS.CABLE.201701-202006_met.nc"]
+            land_ctl_files = [land_ctl_path+"LIS.CABLE.201701-202006_met.nc"]
+            var_names      = ["Tair_f_inst"]  
+            spatial_map_single_plot_LIS_diff(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+                                message=message)
+    
+            
+            land_sen_files = [land_sen_path+"LIS.CABLE.201701-202006_energy.nc"]
+            land_ctl_files = [land_ctl_path+"LIS.CABLE.201701-202006_energy.nc"]
+            var_names      = ["Qle_tavg","Qh_tavg","EF"]
+            spatial_map_single_plot_LIS_diff(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+                                message=message)            
+            
+            # land_sen_files = [land_sen_path+"LIS.CABLE.201701-202006_water.nc"]
+            # land_ctl_files = [land_ctl_path+"LIS.CABLE.201701-202006_water.nc"]
+            # var_names      = ["Rainf_tavg","TVeg_tavg"]
+            # spatial_map_single_plot_LIS_diff(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+            #                     message=message)   
             
             
             
@@ -1334,12 +1334,12 @@ if __name__ == "__main__":
                                 lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
                                 message=message)            
             
-            land_sen_files = [land_sen_path+"LIS.CABLE.201701-202006_water.nc"]
-            land_ctl_files = [land_ctl_path+"LIS.CABLE.201701-202006_water.nc"]
-            var_names      = ["Rainf_tavg","TVeg_tavg"]
-            spatial_map_single_plot_LIS_diff(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-                                message=message)   
+            # land_sen_files = [land_sen_path+"LIS.CABLE.201701-202006_water.nc"]
+            # land_ctl_files = [land_ctl_path+"LIS.CABLE.201701-202006_water.nc"]
+            # var_names      = ["Rainf_tavg","TVeg_tavg"]
+            # spatial_map_single_plot_LIS_diff(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+            #                     message=message)   
             
 
             period     = "2018"
@@ -1368,12 +1368,12 @@ if __name__ == "__main__":
                                 lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
                                 message=message)            
             
-            land_sen_files = [land_sen_path+"LIS.CABLE.201701-202006_water.nc"]
-            land_ctl_files = [land_ctl_path+"LIS.CABLE.201701-202006_water.nc"]
-            var_names      = ["Rainf_tavg","TVeg_tavg"]
-            spatial_map_single_plot_LIS_diff(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-                                message=message)   
+            # land_sen_files = [land_sen_path+"LIS.CABLE.201701-202006_water.nc"]
+            # land_ctl_files = [land_ctl_path+"LIS.CABLE.201701-202006_water.nc"]
+            # var_names      = ["Rainf_tavg","TVeg_tavg"]
+            # spatial_map_single_plot_LIS_diff(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+            #                     message=message)   
 
             period     = "2019"
             time_s     = datetime(2019,1,1,0,0,0,0)
@@ -1401,12 +1401,12 @@ if __name__ == "__main__":
                                 lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
                                 message=message)            
             
-            land_sen_files = [land_sen_path+"LIS.CABLE.201701-202006_water.nc"]
-            land_ctl_files = [land_ctl_path+"LIS.CABLE.201701-202006_water.nc"]
-            var_names      = ["Rainf_tavg","TVeg_tavg"]
-            spatial_map_single_plot_LIS_diff(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-                                message=message)   
+            # land_sen_files = [land_sen_path+"LIS.CABLE.201701-202006_water.nc"]
+            # land_ctl_files = [land_ctl_path+"LIS.CABLE.201701-202006_water.nc"]
+            # var_names      = ["Rainf_tavg","TVeg_tavg"]
+            # spatial_map_single_plot_LIS_diff(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+            #                     message=message)   
                                                         
         if 0:
             var_type   = "var_wrf_surf_basic"
