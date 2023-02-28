@@ -13,7 +13,6 @@ Functions:
 
 '''
 History:
-1. 8 Feb 2023: cp ./drght_2017-2019_VPD/time_series_wrf_cable.py ./drght_2017-2019_VPD/
 '''
 
 from netCDF4 import Dataset
@@ -21,12 +20,13 @@ import netCDF4 as nc
 import numpy as np
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
+import pandas as pd
 import cartopy.crs as ccrs
 from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 from scipy.interpolate import griddata
+from scipy.stats import linregress
 import matplotlib.ticker as mticker
 from common_utils import *
-
 
 
 def plot_time_series(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,var_names=None,
@@ -62,10 +62,44 @@ def plot_time_series(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,var_n
     xtickslocs    = [0,     365,      730,   1095  ]
 
     fig, ax       = plt.subplots()
+    df_ctl        = pd.DataFrame({'ctl': var_ctl})
+    df_sen        = pd.DataFrame({'sen': var_sen})
     
-    ax.plot(time_ctl_day, var_ctl, c = "red",  label=var_names[0], alpha=0.5)
-    ax.plot(time_sen_day, var_sen, c = "blue", label=var_names[1], alpha=0.5)
+    ctl_smooth    = df_ctl['ctl'].rolling(window=30).mean().values
+    sen_smooth    = df_sen['sen'].rolling(window=30).mean().values
+    
+    print("ctl_smooth", ctl_smooth)
+    print("sen_smooth", sen_smooth)
+    
+    mask_ctl      = np.array(~np.isnan(ctl_smooth))
+    mask_sen      = np.array(~np.isnan(sen_smooth))
+    mask_sen2     = np.array(~np.isnan(var_sen_2))
+    
+    print("mask_ctl", mask_ctl)
+    print("mask_sen", mask_sen)
+    print("mask_sen2", mask_sen2)
+    
+    print("ctl_smooth[mask_ctl]", ctl_smooth[mask_ctl])
+    
+    result_ctl    = linregress(time_ctl_day[mask_ctl==True],ctl_smooth[mask_ctl==True])
+    result_sen    = linregress(time_sen_day[mask_sen==True],sen_smooth[mask_sen==True])
+    result_sen2   = linregress(time_sen_2_day[mask_sen2==True],var_sen_2[mask_sen2==True])
+    
+    print("result_ctl", result_ctl)
+    print("result_ctl.intercept", result_ctl.intercept)
+    print("result_ctl.intercept", result_ctl.slope)
+    
+    ax.plot(time_ctl_day, df_ctl['ctl'].rolling(window=30).mean(), c = "red",  label=var_names[0], alpha=0.5)
+    ax.plot(time_sen_day, df_sen['sen'].rolling(window=30).mean(), c = "blue", label=var_names[1], alpha=0.5)
     ax.plot(time_sen_2_day, var_sen_2, c = "green", label=var_names[2], alpha=0.5)
+    
+    pre_ctl  = result_ctl.intercept + result_ctl.slope*time_ctl_day
+    pre_sen  = result_sen.intercept + result_sen.slope*time_sen_day
+    pre_sen2 = result_sen2.intercept + result_sen2.slope*time_sen_2_day
+    
+    ax.plot(time_ctl_day,  pre_ctl, c = "red",  label=var_names[0], alpha=1)
+    ax.plot(time_sen_day,  pre_sen, c = "blue", label=var_names[1], alpha=1)
+    ax.plot(time_sen_2_day,pre_sen2,c = "green",label=var_names[2], alpha=1)
 
     ax.legend()
     fig.tight_layout()
