@@ -164,7 +164,7 @@ if __name__ == "__main__":
     # 2017-2019 drought polygon shapefile
     shape_path = "/g/data/w97/ad9701/drought_2017to2020/drought_focusArea/smooth_polygon_drought_focusArea.shp"
 
-    region     = "SE Aus" #"SE Aus" #"CORDEX" #"SE Aus"
+    region     = "Aus" #"SE Aus" #"SE Aus" #"CORDEX" #"SE Aus"
 
     if region == "Aus":
         loc_lat    = [-44,-10]

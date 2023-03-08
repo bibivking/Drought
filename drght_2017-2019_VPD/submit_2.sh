@@ -3,7 +3,7 @@
 #PBS -m ae
 #PBS -P w97
 #PBS -q hugemem
-#PBS -l walltime=1:00:00
+#PBS -l walltime=5:00:00
 #PBS -l mem=1470GB
 #PBS -l ncpus=1
 #PBS -j oe
@@ -13,4 +13,4 @@
 module use /g/data/hh5/public/modules
 module load conda/analysis3-22.01
 cd /g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD
-python detrend_AWAP_daily_data.py
+python spatial_map_single_plot.py

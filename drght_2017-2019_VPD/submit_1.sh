@@ -13,4 +13,4 @@
 module use /g/data/hh5/public/modules
 module load conda/analysis3-22.01
 cd /g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD
-python detrend_AWAP_daily_data.py
+python time_series_RH_Qair.py

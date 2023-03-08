@@ -640,7 +640,7 @@ if __name__ == "__main__":
     # 2017-2019 drought polygon shapefile
     shape_path = "/g/data/w97/ad9701/drought_2017to2020/drought_focusArea/smooth_polygon_drought_focusArea.shp"
 
-    region     = "SE Aus" #"SE Aus" #"CORDEX" #"SE Aus"
+    region     = "Aus" #"SE Aus" #"CORDEX" #"SE Aus"
 
     if region == "Aus":
         loc_lat    = [-44,-10]
@@ -688,24 +688,24 @@ if __name__ == "__main__":
         land_sen_files = [ land_sen_path+"cable_out_2017.nc"]
         land_ctl_files = [ land_ctl_path+"cable_out_2017.nc"]
         
-        if 0:
+        if 1:
             var_names      = ["RadT","Evap","TVeg"]
             
-            period         = "Jan2017"
+            period         = "Jan2017_Aus"
             time_s         = datetime(2017,1,1,0,0,0,0)
             time_e         = datetime(2017,2,1,0,0,0,0)
             message        = case_name+"_"+case_sen+"-"+case_ctl+"_"+period
             spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
                                             lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
 
-            period         = "2017"
+            period         = "2017_Aus"
             time_s         = datetime(2017,1,1,0,0,0,0)
             time_e         = datetime(2018,1,1,0,0,0,0)
             message        = case_name+"_"+case_sen+"-"+case_ctl+"_"+period
             spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
                                             lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
 
-        if 1:
+        if 0:
             var_names      = ["RadT", "Evap","TVeg"]
             
             period         = "Jan2017"
