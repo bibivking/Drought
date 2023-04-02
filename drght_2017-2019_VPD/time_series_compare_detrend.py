@@ -143,7 +143,7 @@ if __name__ == "__main__":
         file_path_detrend_vph09        = ["/g/data/w97/mm3972/data/AWAP_detrend/vph09_detrend/AWAP_daily_vph09_1970_2019.nc"]
         file_path_detrend_vph15        = ["/g/data/w97/mm3972/data/AWAP_detrend/vph15_detrend/AWAP_daily_vph15_1970_2019.nc"]
         
-        if 1:
+        if 0:
             file_path_AWAP_q           = []
             file_path_AWAP_T           = []
             file_path_AWAP_q_detrend   = []
@@ -196,10 +196,10 @@ if __name__ == "__main__":
 
 
         if 1:
-            file_path_out_detrend = ["/g/data/w97/mm3972/model/cable/runs/VPD_drought/default/outputs/cable_out_2017.nc"]
+            file_path_out_detrend = ["/g/data/w97/mm3972/model/cable/runs/VPD_drought/100th_check/outputs/cable_out_2017.nc"]
             file_path_out_default = ["/g/data/w97/mm3972/model/cable/runs/VPD_drought/detrended_Tair_VPD/outputs/cable_out_2017.nc"]
                 
-            message               = "detrend_vs_default"
+            message               = "detrend_vs_100th_check"
             var_names             = ["Qle","Qle"]
 
             plot_time_series(file_path_out_default, file_path_out_detrend, None, var_names,

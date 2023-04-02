@@ -182,7 +182,6 @@ def spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_n
                           "VegT","AvgSurfT","CanopInt","SnowCover", "SoilTemp","RadT"]:
             Ctl_var   = Ctl_var -273.15
             Sen_var   = Sen_var -273.15
-            
         var_diff      = Sen_var - Ctl_var
 
         # read lat and lon outs
@@ -205,8 +204,8 @@ def spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_n
             # clevs = [-5.,-4.5,-4.,-3.5,-3.,-2.5,-2,-1.5,-1,-0.5,0.5,1.,1.5,2.,2.5,3.,3.5,4.,4.5,5.]
             # clevs = [-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,-5,5,10,20.,30,40,50,60,70,80,90,100]
             # clevs = [-140,-120,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,10,20.,30,40,50,60,70,80,90,100,120,140]
-            clevs = [5,10,20.,30,40,50,60,70,80,90,100]
-            cmap  = plt.cm.GnBu
+            clevs = [-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,5,5,10,20.,30,40,50,60,70,80,90,100]
+            cmap  = plt.cm.RdBu_r #plt.cm.GnBu
             # clevs = [-50,-45,-40,-35,-30,-25,-20,-15,-10,-5, 5,10,15,20,25,30,35,40,45,50]
         elif var_name in ["Qle_tavg","Qh_tavg","Qg_tavg","Qle","Qh","Qg"]:
             # clevs = [-140,-120,-100,-80,-60,-40,-20,-10,-5,5,10,20,40,60,80,100,120,140]
@@ -218,7 +217,7 @@ def spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_n
             clevs = [-10,-9,-8,-7,-6,-5,-4,-3,-2,-1, 1,2,3,4,5,6,7,8,9,10]
         elif var_name in ["VegT_tavg","AvgSurfT_tavg","CanopInt_inst","SnowCover_inst", "SoilTemp_inst",
                           "VegT","AvgSurfT","CanopInt","SnowCover", "SoilTemp","RadT"]:
-            clevs = [-0.3,-0.25,-0.2,-0.15,-0.1,-0.05,0.05,0.1,0.15,0.2,0.25,0.3]
+            clevs = [-1,-0.8,-0.6,-0.4,-0.2,-0.1,0.1,0.2,0.4,0.6,0.8,1.]
             cmap  = plt.cm.RdBu_r
         elif var_name in ["Wind_f_inst","Wind"]:
             clevs = [-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4]
@@ -299,7 +298,7 @@ def spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_n
                 gl.xlabel_style = {'size':10, 'color':'black'}
                 gl.ylabel_style = {'size':10, 'color':'black'}
                 plt.contourf(lons, lats, var_diff[j,:,:], clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
-                
+
                 cb = plt.colorbar(ax=ax, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
                 cb.ax.tick_params(labelsize=10)
                 plt.title(var_name, size=16)
@@ -427,7 +426,7 @@ def spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=None,
         if var_name in ["VegT_tavg","AvgSurfT_tavg","CanopInt_inst","SnowCover_inst", "SoilTemp_inst",
                           "VegT","AvgSurfT","CanopInt","SnowCover", "SoilTemp","RadT"]:
             Ctl_var   = Ctl_var -273.15
-            
+
         # read lat and lon outs
 
         if var_name in ['WaterTableD_tavg','WatTable']:
@@ -532,7 +531,7 @@ def spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=None,
                 gl.yformatter = LATITUDE_FORMATTER
                 gl.xlabel_style = {'size':10, 'color':'black'}
                 gl.ylabel_style = {'size':10, 'color':'black'}
-                plt.contourf(lons, lats, Ctl_var[j,:,:], clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') 
+                plt.contourf(lons, lats, Ctl_var[j,:,:], clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
                 cb = plt.colorbar(ax=ax, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
                 cb.ax.tick_params(labelsize=10)
                 plt.title(var_name, size=16)
@@ -617,7 +616,7 @@ def spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=None,
             gl.xlabel_style = {'size':10, 'color':'black'}
             gl.ylabel_style = {'size':10, 'color':'black'}
 
-            plt.contourf(lons, lats, Ctl_var, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') 
+            plt.contourf(lons, lats, Ctl_var, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
             print(Ctl_var)
             cb = plt.colorbar(ax=ax, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
             cb.ax.tick_params(labelsize=10)
@@ -633,6 +632,38 @@ def spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=None,
                     plt.plot(x,y,c="black")
 
             plt.savefig('./plots/spatial_map_'+message + "_" + var_name+'.png',dpi=300)
+
+def sen_vs_ctl(case_ctl,case_sen):
+
+    land_ctl_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_ctl+"/outputs/"
+    land_sen_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_sen+"/outputs/"
+
+
+    land_ctl_files = [ land_ctl_path+"cable_out_2017.nc",
+                       land_ctl_path+"cable_out_2018.nc",
+                       land_ctl_path+"cable_out_2019.nc",
+                       ]
+
+    land_sen_files = [ land_sen_path+"cable_out_2017.nc",
+                       land_sen_path+"cable_out_2018.nc",
+                       land_sen_path+"cable_out_2019.nc",
+                       ]
+
+    var_names      = ["RadT","Evap","TVeg"]
+
+    period         = "2019_Aus_new"
+    time_s         = datetime(2019,1,1,0,0,0,0)
+    time_e         = datetime(2020,1,1,0,0,0,0)
+    message        = case_sen+"-"+case_ctl+"_"+period
+    spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
+                                    lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
+
+    period         = "2017-2019_Aus_new"
+    time_s         = datetime(2017,1,1,0,0,0,0)
+    time_e         = datetime(2020,1,1,0,0,0,0)
+    message        = case_sen+"-"+case_ctl+"_"+period
+    spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
+                                    lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
 
 if __name__ == "__main__":
 
@@ -656,127 +687,64 @@ if __name__ == "__main__":
     # Decks to run:
     #    plot a single map
     #######################################################
+
+
+    if 0:
+        # ctl sim
+
+
+        case_ctl       = "ctl"
+        land_ctl_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_ctl+"/outputs/"
+        land_ctl_files = [ land_ctl_path+"cable_out_2017.nc",
+                       land_ctl_path+"cable_out_2018.nc",
+                       land_ctl_path+"cable_out_2019.nc"]
+
+        var_names      = ["RadT", "Evap","TVeg"]
+
+        period         = "2019_Aus"
+        time_s         = datetime(2019,1,1,0,0,0,0)
+        time_e         = datetime(2020,1,1,0,0,0,0)
+        message        = case_ctl+"_"+period
+        spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
+                                        lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
+
+        period         = "2017-2019_Aus"
+        time_s         = datetime(2017,1,1,0,0,0,0)
+        time_e         = datetime(2020,1,1,0,0,0,0)
+        message        = case_ctl+"_"+period
+        spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
+                                        lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
+
     if 1:
+        case_sen       = "Q_detrend_2000_2019"
+        sen_vs_ctl(case_ctl,case_sen)
 
-        # cable output
+        case_sen       = "T_detrend_2000_2019"
+        sen_vs_ctl(case_ctl,case_sen)
 
-        # var_type       = "var_CABLE_3D" #"var_energy" #"var_3D" #"var_3D" #"var_energy"#"var_albedo" #
-        # var_names      = read_LIS_vars(var_type)
+        case_sen       = "T_Q_detrend_2000_2019"
+        sen_vs_ctl(case_ctl,case_sen)
 
-        # case_name      = "VPD"
-        # case_ctl       = "default"
-        # case_sen       = "100th_check"
+        case_sen       = "Q_detrend_2017_2019"
+        sen_vs_ctl(case_ctl,case_sen)
 
-        # land_sen_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_sen+"/outputs/"
-        # land_ctl_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_ctl+"/outputs/"
+        case_sen       = "T_detrend_2017_2019"
+        sen_vs_ctl(case_ctl,case_sen)
 
-        # land_sen_files = [ land_sen_path+"cable_out_2017.nc"]
-        # land_ctl_files = [ land_ctl_path+"cable_out_2017.nc"]
+        case_sen       = "T_Q_detrend_2017_2019"
+        sen_vs_ctl(case_ctl,case_sen)
 
-        # message    = case_name+"_"+case_sen+"-"+case_ctl+"_"+period
-        # spatial_map_single_plot_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
-        #                                 lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
-
-
+    if 0:
+        # compare old VPD sims
         case_name      = "VPD"
         case_ctl       = "default"
-        case_sen       = "90th"
+        case_sen       = "80th"
 
-        land_sen_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_sen+"/outputs/"
         land_ctl_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_ctl+"/outputs/"
 
-        land_sen_files = [ land_sen_path+"cable_out_2017.nc"]
         land_ctl_files = [ land_ctl_path+"cable_out_2017.nc"]
-        
-        if 1:
-            var_names      = ["RadT","Evap","TVeg"]
-            
-            period         = "Jan2017_Aus"
-            time_s         = datetime(2017,1,1,0,0,0,0)
-            time_e         = datetime(2017,2,1,0,0,0,0)
-            message        = case_name+"_"+case_sen+"-"+case_ctl+"_"+period
-            spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
-                                            lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
+        land_sen_files = [ land_sen_path+"cable_out_2017.nc"]
 
-            period         = "2017_Aus"
-            time_s         = datetime(2017,1,1,0,0,0,0)
-            time_e         = datetime(2018,1,1,0,0,0,0)
-            message        = case_name+"_"+case_sen+"-"+case_ctl+"_"+period
-            spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
-                                            lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
-
-        if 0:
-            var_names      = ["RadT", "Evap","TVeg"]
-            
-            period         = "Jan2017"
-            time_s         = datetime(2017,1,1,0,0,0,0)
-            time_e         = datetime(2017,2,1,0,0,0,0)
-            message        = case_name+"_"+case_ctl+"_"+period
-            spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
-                                            lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
-
-            # period         = "2017"
-            # time_s         = datetime(2017,1,1,0,0,0,0)
-            # time_e         = datetime(2018,1,1,0,0,0,0)
-            # message        = case_name+"_"+case_ctl+"_"+period
-            # spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
-            #                                 lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
-            
-        # case_name      = "VPD"
-        # case_ctl       = "default"
-        # case_sen       = "80th"
-
-        # land_sen_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_sen+"/outputs/"
-        # land_ctl_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_ctl+"/outputs/"
-
-        # land_sen_files = [ land_sen_path+"cable_out_2017.nc"]
-        # land_ctl_files = [ land_ctl_path+"cable_out_2017.nc"]
-
-        # message    = case_name+"_"+case_sen+"-"+case_ctl+"_"+period
-        # spatial_map_single_plot_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
-        #                                 lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
-
-
-        # case_name      = "VPD"
-        # case_ctl       = "default"
-        # case_sen       = "70th"
-
-        # land_sen_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_sen+"/outputs/"
-        # land_ctl_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_ctl+"/outputs/"
-
-        # land_sen_files = [ land_sen_path+"cable_out_2017.nc"]
-        # land_ctl_files = [ land_ctl_path+"cable_out_2017.nc"]
-
-        # message    = case_name+"_"+case_sen+"-"+case_ctl+"_"+period
-        # spatial_map_single_plot_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
-        #                                 lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
-
-
-        # case_name      = "VPD"
-        # case_ctl       = "default"
-        # case_sen       = "60th"
-
-        # land_sen_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_sen+"/outputs/"
-        # land_ctl_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_ctl+"/outputs/"
-
-        # land_sen_files = [ land_sen_path+"cable_out_2017.nc"]
-        # land_ctl_files = [ land_ctl_path+"cable_out_2017.nc"]
-
-        # message    = case_name+"_"+case_sen+"-"+case_ctl+"_"+period
-        # spatial_map_single_plot_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
-        #                                 lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
-
-
-        # case_name      = "VPD"
-        # case_ctl       = "default"
-        # case_sen       = "50th"
-
-        # land_sen_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_sen+"/outputs/"
-        # land_ctl_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_ctl+"/outputs/"
-
-        # land_sen_files = [ land_sen_path+"cable_out_2017.nc"]
-        # land_ctl_files = [ land_ctl_path+"cable_out_2017.nc"]
-
-        # message    = case_name+"_"+case_sen+"-"+case_ctl+"_"+period
-        # spatial_map_single_plot_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
-        #                                 lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
+        message    = case_name+"_"+case_sen+"-"+case_ctl+"_"+period
+        spatial_map_single_plot_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
+                                        lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
