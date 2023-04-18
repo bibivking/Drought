@@ -51,14 +51,15 @@ from cartopy.feature import NaturalEarthFeature
 plot a simple spatial difference map
 '''
 
-file_name1 = "/g/data/w97/mm3972/data/AWAP_detrend/AWAP_detrend_10km/Tair/AWAP.Tair.3hr.2000.nc"
-# file_name1 = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/old_runs/100th_check/outputs/cable_out_2017.nc"
-file_name2 = "/g/data/w97/mm3972/data/AWAP_3h_v1_10km/Tair/AWAP.Tair.3hr.2000.nc"
-# file_name2 =  "/g/data/w97/mm3972/model/cable/runs/runs_4_coupled/gw_after_sp30yrx3/outputs/cable_out_2000-2019.nc"
-var_name = "Tair"
-message  = "Tair"
-scale    = 1
-clevs    = [-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,-0.5,-0.1,0.1,0.5,1,2,3,4,5,6,7,8,9,10]
+#file_name1 = "/g/data/w97/mm3972/data/AWAP_detrend/AWAP_detrend_10km/Tair/AWAP.Tair.3hr.2000.nc"
+#file_name1 = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/old_runs/100th_check/outputs/cable_out_2017.nc"
+file_name1 = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/new_default/outputs/cable_out_2003.nc"
+#file_name2 = "/g/data/w97/mm3972/data/AWAP_3h_v1_10km/Tair/AWAP.Tair.3hr.2000.nc"
+file_name2 = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/outputs/cable_out_2003.nc"
+var_name = "Qle"
+message  = "Qle"
+scale    = 1 #3600*24
+clevs    = [-1.0,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,-0.05,-0.01,0.01,0.05,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
 # [-10,-1,-0.01,0.01,1,10]
 
 f1         = Dataset(file_name1, mode='r')
@@ -72,7 +73,7 @@ print(var_diff)
 
 fig, ax = plt.subplots()
 
-plot    = ax.contourf(var_diff,clevs,cmap="BrBG")#"viridis_r") #"BrBG") 
+plot    = ax.contourf(var_diff,clevs,cmap="BrBG")#"viridis_r") #"BrBG")
 cb      = plt.colorbar(plot)#, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
 
 plt.show()

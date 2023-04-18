@@ -465,7 +465,7 @@ def spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_n
 
 def spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=None,
                                      time_e=None, lat_names="latitude", lon_names="longitude",loc_lat=None,
-                                     loc_lon=None, shape_path=None, message=None,config_set=None):
+                                     loc_lon=None, shape_path=None, message=None):
 
     '''
     plot a single spatial map
@@ -625,7 +625,7 @@ def spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=None,
                     else:
                         message = message + "_" + var_name
 
-                plt.savefig('./plots/ctl/'+config_set+'/spatial_map_'+message+'_layer='+str(j)+'.png',dpi=300)
+                plt.savefig('./plots/ctl/spatial_map_'+message+'_layer='+str(j)+'.png',dpi=300)
                 cb = None
                 gl = None
                 ax = None
@@ -705,7 +705,7 @@ def spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=None,
                     y = [i[1] for i in shape.shape.points[:]]
                     plt.plot(x,y,c="black")
 
-            plt.savefig('./plots/ctl/'+config_set+'/spatial_map_'+message + "_" + var_name+'.png',dpi=300)
+            plt.savefig('./plots/ctl/spatial_map_'+message + "_" + var_name+'.png',dpi=300)
 
 def sen_vs_ctl(case_ctl,case_sen,loc_lat=None,loc_lon=None,sen_vs_ctl=None):
 
@@ -785,61 +785,60 @@ if __name__ == "__main__":
     #######################################################
 
 
-    if 1:
+    if 0:
         # ctl sim
         case_ctl       = "ctl"
-        config_set     = "litter_on_PM"
-        land_ctl_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_ctl+"/"+config_set+"/outputs/"
+        land_ctl_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_ctl+"/outputs/"
         land_ctl_files = [ land_ctl_path+"cable_out_2017.nc",
                            land_ctl_path+"cable_out_2018.nc",
                            land_ctl_path+"cable_out_2019.nc"]
 
-        var_names      = ["Fwsoil"]
-        #["Gs","GPP","NPP","Qle","Qh","RadT","VegT","Evap","TVeg","ESoil","SoilMoist","Fwsoil","Tair","Qair","VPD"]
+        var_names      = ["VPD"]
+        #["Gs","GPP","NPP","Qle","Qh","RadT","VegT","Evap","TVeg","ESoil","SoilMoist","Fwsoil","Tair","Qair",]
 
         period         = "2019_fire"
         time_s         = datetime(2019,9,1,0,0,0,0)
         time_e         = datetime(2020,1,1,0,0,0,0)
         message        = case_ctl+"_"+period
         spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
-                                        lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message,config_set=config_set)
+                                        lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
 
-        # period         = "2017"
-        # time_s         = datetime(2017,1,1,0,0,0,0)
-        # time_e         = datetime(2018,1,1,0,0,0,0)
-        # message        = case_ctl+"_"+period
-        # spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
-        #                                 lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
+        period         = "2017"
+        time_s         = datetime(2017,1,1,0,0,0,0)
+        time_e         = datetime(2018,1,1,0,0,0,0)
+        message        = case_ctl+"_"+period
+        spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
+                                        lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
 
-        # period         = "2018"
-        # time_s         = datetime(2018,1,1,0,0,0,0)
-        # time_e         = datetime(2019,1,1,0,0,0,0)
-        # message        = case_ctl+"_"+period
-        # spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
-        #                                 lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
+        period         = "2018"
+        time_s         = datetime(2018,1,1,0,0,0,0)
+        time_e         = datetime(2019,1,1,0,0,0,0)
+        message        = case_ctl+"_"+period
+        spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
+                                        lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
 
         period         = "2019"
         time_s         = datetime(2019,1,1,0,0,0,0)
         time_e         = datetime(2020,1,1,0,0,0,0)
         message        = case_ctl+"_"+period
         spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
-                                        lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message,config_set=config_set)
+                                        lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
 
         period         = "2017-2019"
         time_s         = datetime(2017,1,1,0,0,0,0)
         time_e         = datetime(2020,1,1,0,0,0,0)
         message        = case_ctl+"_"+period
         spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
-                                        lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message,config_set=config_set)
+                                        lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message)
 
-    if 0:
-        config_set     = ["litter_on_PM","litter_on_PM"]
+    if 1:
+        config_set     = ["litter_on_PM","litter_on_PM_VPD_only"]
         #["litter_off_HDM","litter_off_HDM"]
         
         case_ctl       = "ctl"
         case_sen       = "T_Q_LWdown_detrend_2017_2019"
 
-        sen_vs_ctl(case_ctl,case_sen,config_set) #loc_lat,loc_lon,
+        sen_vs_ctl(case_ctl,case_sen,loc_lat,loc_lon,config_set) #
 
         # case_sen       = "Q_detrend_2000_2019"
         # sen_vs_ctl(case_ctl,case_sen)

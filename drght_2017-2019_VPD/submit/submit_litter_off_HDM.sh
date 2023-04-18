@@ -2,9 +2,9 @@
 
 #PBS -m ae
 #PBS -P w97
-#PBS -q hugemem
-#PBS -l walltime=5:00:00
-#PBS -l mem=1470GB
+#PBS -q expressbw
+#PBS -l walltime=2:20:00
+#PBS -l mem=90GB
 #PBS -l ncpus=1
 #PBS -j oe
 #PBS -l wd
@@ -13,4 +13,4 @@
 module use /g/data/hh5/public/modules
 module load conda/analysis3-22.01
 cd /g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD
-python spatial_map_single_plot.py
+python spatial_map_single_plot_litter_off_HDM.py
