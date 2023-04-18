@@ -79,8 +79,8 @@ def plot_spital_map(file_paths, var_names, time_s, time_e, file_paths2=None, loc
 
     if var_names[0] == "RM":
         time1, SM1      = read_var_multi_file(file_paths,"SoilMoist", loc_lat, loc_lon, lat_names[0], lon_names[0])
-        file_name   = Dataset(file_paths[0], mode='r')
-        ssat1            = file_name.variables["ssat"][:]
+        file_name       = Dataset(file_paths[0], mode='r')
+        ssat1           = file_name.variables["ssat"][:]
         ntime           = len(time1)
         nlat            = len(lats1[:,0])
         nlon            = len(lons1[0,:])
@@ -95,7 +95,9 @@ def plot_spital_map(file_paths, var_names, time_s, time_e, file_paths2=None, loc
         time1, Var1     = read_var_multi_file(file_paths, var_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
 
     if var_names[0] in ['Evap','TVeg','ESoil','ECanop']:
-        var1        = spital_var_sum(time1,Var1,time_s,time_e)*3600.
+        var1        = spital_var_sum(time1,Var1,time_s,time_e)*3600.*24
+    elif var_names[0] in ['E','Et','Ei','Es']:
+        var1        = spital_var_sum(time1,Var1,time_s,time_e)
     else:
         scale       = get_scale(var_names[0])
         var1        = spital_var_mean(time1,Var1,time_s,time_e)*scale
@@ -167,8 +169,18 @@ def plot_spital_map(file_paths, var_names, time_s, time_e, file_paths2=None, loc
     # Plot windspeed
 
     # clevs = np.linspace( 0.,1500., num=31)
-    clevs1  = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
-    plt.contourf(lons1, lats1, var, levels=clevs1, transform=ccrs.PlateCarree(), extend='both',cmap=plt.cm.BrBG) # clevs,
+    # clevs1  = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
+    clevs1  = [0,50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800,850,900,950,1000]
+    
+    if var_names[0] in ['E','Et','Ei','Es']:
+        print("np.shape(var) ", np.shape(var))
+        print("np.shape(lats1) ", np.shape(lats1))
+        print("np.shape(lons1) ", np.shape(lons1))
+        print("lats1 ", lats1)
+        print("lons1 ", lons1)
+        plt.contourf(lons1, lats1[::-1,:], var, levels=clevs1, transform=ccrs.PlateCarree(), extend='both',cmap=plt.cm.BrBG)
+    else:
+        plt.contourf(lons1, lats1, var, levels=clevs1, transform=ccrs.PlateCarree(), extend='both',cmap=plt.cm.BrBG) # clevs,
     plt.title(var_names[0], size=16)
     cb = plt.colorbar(ax=ax, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
     # cb.set_label(units,size=14,rotation=270,labelpad=15)
@@ -300,12 +312,12 @@ if __name__ == "__main__":
     # #######################
 
     DOLCE_path = "/g/data/w97/mm3972/data/DOLCE/v3/"
-    GLEAM_path = "/g/data/w97/W35_GDATA_MOVED/Shared_data/Observations/Global_ET_products/GLEAM_v3_3/3_3a/monthly/"
+    GLEAM_path = "/g/data/ua8/GLEAM_v3-5/v3-6a/monthly/"
     GRACE_path = "/g/data/w97/mm3972/data/GRACE/GRACE_JPL_RL06/V3/TELLUS_GRAC-GRFO_MASCON_CRI_GRID_RL06.1_V3/"
     AWRA_path  = "/g/data/w97/mm3972/data/AWRA/SM/"
 
     DOLCE_file = DOLCE_path + "DOLCE_v3_2000-2018.nc"
-    GLEAM_file = GLEAM_path + "E_1980_2018_GLEAM_v3.3a_MO.nc"
+    GLEAM_file = GLEAM_path + "E_1980-2021_GLEAM_v3.6a_MO.nc"
     GRACE_file = GRACE_path + "GRCTellus.JPL.200204_202211.GLO.RL06.1M.MSCNv03CRI.nc"
 
 
@@ -322,7 +334,7 @@ if __name__ == "__main__":
     # #######################
     #   plot_spital_map     #
     # #######################
-    if 1:
+    if 0:
         ## plot SM/ssat vs AWRA ###
 
         print("plot SM/ssat vs AWRA")
@@ -344,19 +356,50 @@ if __name__ == "__main__":
         plot_spital_map(file_name, var_name, year_s, year_e, file_paths2=None, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
                         lon_names=lon_names,message=message)
 
-        # ### plot Qle vs DOLCE ###
-        # print("plot Qle vs DOLCE")
-        # file_paths2 = [DOLCE_file]
-        # var_name    = ["Qle_tavg","hfls"]
-        # lat_names   = ["lat","lat"]#"lat"
-        # lon_names   = ["lon","lon"]#"lon"
-        # message     = "LIS-DOLCE_Qle_2017"
 
-        # plot_spital_map(file_paths1, var_name, year_s, year_e, file_paths2=file_paths2, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
-        #                 lon_names=lon_names,message=message)
+    if 1:
+        ### plot Evap vs GLEAM ###
+
+        print("plot Evap vs GLEAM")
+        file_paths2 = [GLEAM_file]
+        
+        year_s      = datetime(2019,9,1)
+        year_e      = datetime(2020,1,1)
+
+        var_name    = ["Evap"]
+        lat_names   = ["latitude"]#"lat"
+        lon_names   = ["longitude"]#"lon"
+        message     = "Evap_2019_fire_ctl"
+        plot_spital_map(file_name, var_name, year_s, year_e, file_paths2=None, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+                       lon_names=lon_names,message=message)
+                        
+        var_name    = ["E"]
+        lat_names   = ["lat"]#"lat"
+        lon_names   = ["lon"]#"lon"
+        message     = "Evap_2019_fire_GLEAM"
+        plot_spital_map(file_paths2, var_name, year_s, year_e, file_paths2=None, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+                        lon_names=lon_names,message=message)
 
 
-
+    if 0:
+        ### plot Qle vs DOLCE ###
+        print("plot Qle vs DOLCE")
+        file_paths2 = [DOLCE_file]
+        # var_name    = ["Qle","hfls"]
+        
+        var_name    = ["Qle"]
+        lat_names   = ["latitude","lat"]#"lat"
+        lon_names   = ["longitude","lon"]#"lon"
+        message     = "Qle_2019_fire_ctl"
+        plot_spital_map(file_name, var_name, year_s, year_e, file_paths2=None, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+                        lon_names=lon_names,message=message)
+                        
+        var_name    = ["hfls"]
+        lat_names   = ["lat"]#"lat"
+        lon_names   = ["lon"]#"lon"
+        message     = "Qle_2019_fire_GLEAM"
+        plot_spital_map(file_paths2, var_name, year_s, year_e, file_paths2=None, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+                        lon_names=lon_names,message=message)
 
     # #################################
     #   plot_map_temperal_metrics     #
