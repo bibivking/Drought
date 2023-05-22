@@ -666,7 +666,7 @@ if __name__ == "__main__":
     # Plot WRF-CABLE vs AWAP temperal metrics
     # #################################
     if 1:
-        case_names = [ #"drght_2017_2019_bl_pbl2_mp4_sf_sfclay2",
+        case_names = [ "drght_2017_2019_bl_pbl2_mp4_sf_sfclay2",
                        "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB" ]
 
         time_s     = datetime(2017,1,1,0,0,0,0)
@@ -680,7 +680,7 @@ if __name__ == "__main__":
         for case_name in case_names:
             message    = "WRF_vs_AWAP_" + case_name + "_2017-2019"
             wrf_path   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/WRF_output/wrfout_d01_2017-02-01_06:00:00"
-            file_paths = ["/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201701-202006_met.nc" ]
+            file_paths = ["/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/Tair_f_inst/LIS.CABLE.201701-201912.nc" ]
                         #  "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201701-201701.d01.nc",
             print(file_paths)
 
@@ -694,7 +694,7 @@ if __name__ == "__main__":
                                 loc_lat=loc_lat, loc_lon=loc_lon, lat_obs_name=lat_obs_name, lon_obs_name=lon_obs_name,
                                 lat_var_name=lat_var_name, lon_var_name=lon_var_name, message=message)
             
-            file_paths = ["/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201701-202006_water.nc" ]
+            file_paths = ["/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/Rainf_tavg/LIS.CABLE.201701-201912.nc" ]
             # 'plot Rainf'
             obs_path       = [ AWAP_path+'/Rainf/AWAP.Rainf.3hr.2017.nc',
                                AWAP_path+'/Rainf/AWAP.Rainf.3hr.2018.nc',

@@ -144,9 +144,16 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
         Var_daily_diff = Var_daily_sen - Var_daily_ctl
 
     if iveg != None:
-        LC_file        = ["/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/LIS_output/LIS.CABLE.201701-202006_ALB_LAI.nc"]
+        LC_file        = ["/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/LIS_output/LIS.CABLE.201702-201702.d01.nc"]
         time_lc, LC    = read_var_multi_file(LC_file, "Landcover_inst", loc_lat, loc_lon, lat_name, lon_name)
-        landcover      = time_clip_to_day(time_lc, LC, time_s, time_e, seconds=None)
+        landcover_tmp  = time_clip_to_day(time_lc, LC,  datetime(2017,2,1,0,0,0,0),  datetime(2017,3,1,0,0,0,0), seconds=None)
+        ntime          = np.shape(Var_daily_ctl)[0]
+        nlat           = len(landcover_tmp[0,:,0])
+        nlon           = len(landcover_tmp[0,0,:])
+        print("ntime = ",ntime,", nlat = ",nlat,", nlon = ",nlon)
+        landcover      = np.zeros((ntime,nlat,nlon))
+        for i in np.arange(ntime):
+            landcover[i,:,:]= landcover_tmp[0,:,:]
 
     colors        = [ "forestgreen", "yellowgreen","orange","red","black",]
                     # [ "black", "grey","lightcoral","red","orange","gold",
@@ -176,17 +183,21 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
             if iveg == None:
                 var_ctl = np.nanmean(Var_daily_ctl[:,:,:],axis=(1,2))
                 var_sen = np.nanmean(Var_daily_sen[:,:,:],axis=(1,2))
-                ax.plot(np.arange(len(var_ctl)), var_ctl, c = "red",  label=var_name+"_ctl", alpha=0.5)
-                ax.plot(np.arange(len(var_sen)), var_sen, c = "blue", label=var_name+"_sen", alpha=0.5)
-                
+                df_ctl  = pd.DataFrame({'ctl': var_ctl})
+                df_sen  = pd.DataFrame({'sen': var_sen})
+                ax.plot(df_ctl['ctl'].rolling(window=30).mean(), c = "red",  label=var_name+"_ctl", alpha=0.5) # np.arange(len(var_ctl)),
+                ax.plot(df_sen['sen'].rolling(window=30).mean(), c = "blue", label=var_name+"_sen", alpha=0.5) # np.arange(len(var_sen)), 
             elif np.shape(iveg)[0]>1:
                 for i,pft in enumerate(iveg):
                     var_ctl = np.nanmean(np.where(landcover == pft, Var_daily_ctl, np.nan),axis=(1,2))
                     var_sen = np.nanmean(np.where(landcover == pft, Var_daily_sen, np.nan),axis=(1,2))
                     df_ctl  = pd.DataFrame({'ctl': var_ctl})
                     df_sen  = pd.DataFrame({'sen': var_sen})
-                    ax.plot( df_ctl['ctl'].rolling(window=30).mean(), c = colors[i],  label=var_name+"_ctl PFT="+str(pft), alpha=0.8)
-                    ax.plot( df_sen['sen'].rolling(window=30).mean(), c = colors[i], label=var_name+"_sen PFT="+str(pft), alpha=0.5)
+                    ax.plot( df_ctl['ctl'].rolling(window=30).mean(), c = colors[i], label=var_name+"_ctl PFT="+str(pft), alpha=0.8) # .rolling(window=30).mean()
+                    ax.plot( df_sen['sen'].rolling(window=30).mean(), c = colors[i], label=var_name+"_sen PFT="+str(pft), alpha=0.5) # .rolling(window=30).mean()
+                    print("iveg = ",pft)
+                    for j in np.arange(len(df_ctl['ctl'])):
+                        print("day = ", j, ", values = ", df_ctl['ctl'][j], " & ", df_sen['sen'][j])
             else:
                 var_ctl = np.nanmean(np.where(landcover == iveg, Var_daily_ctl, np.nan),axis=(1,2))
                 var_sen = np.nanmean(np.where(landcover == iveg, Var_daily_sen, np.nan),axis=(1,2))
@@ -291,30 +302,40 @@ if __name__ == "__main__":
         loc_lat    = [-52.36,3.87]
         loc_lon    = [89.25,180]
 
+
+    loc_lat    = [-33,-29]
+    loc_lon    = [147,149]
+    PFT        = False
+
     ####################################
     #         plot_time_series         #
     ####################################
     if 0:
-        case_names = [ "drght_2017_2019_bl_pbl2_mp4_sf_sfclay2",
+        case_names = [ "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2",
                        "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB"]
 
-        time_s     = datetime(2017,2,1,0,0,0,0)
-        time_e     = datetime(2017,7,31,23,59,0,0)
+        time_s     = datetime(2017,1,1,0,0,0,0)
+        time_e     = datetime(2018,1,1,0,0,0,0)
 
         for case_name in case_names:
-            wrf_path   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/WRF_output/wrfout_d01_2017-02-01_06:00:00"
-            LIS_path   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/"
+            wrf_path   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/WRF_output/wrfout_d01_2017-02-01_06:00:00"
+            LIS_path   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/"
 
             file_paths = [
-                          LIS_path+"LIS.CABLE.201701-201701.d01.nc",
+                           LIS_path+"LIS.CABLE.201701-201701.d01.nc",
                            LIS_path+"LIS.CABLE.201702-201702.d01.nc",
                            LIS_path+"LIS.CABLE.201703-201703.d01.nc",
                            LIS_path+"LIS.CABLE.201704-201704.d01.nc",
                            LIS_path+"LIS.CABLE.201705-201705.d01.nc",
                            LIS_path+"LIS.CABLE.201706-201706.d01.nc",
-                           LIS_path+"LIS.CABLE.201707-201707.d01.nc",]
+                           LIS_path+"LIS.CABLE.201707-201707.d01.nc",
+                           LIS_path+"LIS.CABLE.201708-201708.d01.nc",
+                           LIS_path+"LIS.CABLE.201709-201709.d01.nc",
+                           LIS_path+"LIS.CABLE.201710-201710.d01.nc",
+                           LIS_path+"LIS.CABLE.201711-201711.d01.nc",
+                           LIS_path+"LIS.CABLE.201712-201712.d01.nc",]
 
-            message    = case_name+"_Jan_2017-Jul_2017"
+            message    = case_name+"_2017"
             var_names  = [ "FWsoil_tavg", "SoilMoist_inst","GWwb_tavg","Evap_tavg","TVeg_tavg","ESoil_tavg","ECanop_tavg","Qs_tavg","Qsb_tavg",
                            "WaterTableD_tavg","Qle_tavg","Qh_tavg", "Qg_tavg","AvgSurfT_tavg","VegT_tavg",]
             lat_name   = "lat"
@@ -323,41 +344,37 @@ if __name__ == "__main__":
                 plot_time_series(file_paths, var_name, time_s=time_s,time_e=time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_name=lat_name, lon_name=lon_name, message=message)
 
     if 1:
-        message        = "bl_pbl2_mp4_sf_sfclay2_CTL_ALB"
+        message        = "bl_pbl2_mp4_sf_sfclay2_new_small_region"
         lat_name       = "lat"
         lon_name       = "lon"
-        iveg           = [2,5,6,9,14] #2
+        iveg           = None #[2,5,6,9,14] #2
         
-        case_name_ctl  = "drght_2017_2019_bl_pbl2_mp4_sf_sfclay2"
+        case_name_ctl  = "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2"
         case_name_sen  = "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB"
-        case_name_sen_2= "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB_HR"
-
+        case_name_sen_2= None
+        
         time_s         = datetime(2017,1,1,0,0,0,0)
-        time_e         = datetime(2020,7,1,0,0,0,0)
+        time_e         = datetime(2020,1,1,0,0,0,0)
 
-        wrf_path       = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name_ctl+"/WRF_output/wrfout_d01_2017-02-01_06:00:00"
-        LIS_path_ctl   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name_ctl+"/LIS_output/"
-        LIS_path_sen   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name_sen+"/LIS_output/"
-        LIS_path_sen_2 = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name_sen_2+"/LIS_output/"
+        wrf_path       = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name_ctl+"/WRF_output/wrfout_d01_2017-02-01_06:00:00"
+        
+        LIS_path_ctl   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name_ctl+"/LIS_output/"
+        LIS_path_sen   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name_sen+"/LIS_output/"
+        LIS_path_sen_2 = None
 
-        file_paths_ctl  = [
-                            LIS_path_ctl+"LIS.CABLE.201701-202006_met.nc"
-                            ]
-
-        file_paths_sen = [
-                            LIS_path_sen+"LIS.CABLE.201701-202006_met.nc"
-                            ]
-
-        file_paths_sen_2 = None
-                        #    [LIS_path_sen_2+"LIS.CABLE.201701-201701.d01.nc",]
-
-        var_names  = ["Qair_f_inst"]
-                    # ["Qh_tavg","EF","Qle_tavg"]
-                    #[ "Evap_tavg","Rainf_tavg"]#,"TVeg_tavg","ESoil_tavg"]
+        var_names  =[ "Qle_tavg","Qh_tavg","Evap_tavg","TVeg_tavg","ESoil_tavg",
+                      'Tair_f_inst',"Rainf_tavg","FWsoil_tavg","SoilMoist_inst", 
+                      "WaterTableD_tavg","GWwb_tavg",  ]
+                      # "AvgSurfT_tavg", "VegT_tavg","Qair_f_inst","Qs_tavg", "Qsb_tavg","Qg_tavg",  "GWwb_tavg","Qs_tavg","Qsb_tavg"]
+                    #[ ]#,]
                     #    "WaterTableD_tavg","Qle_tavg","Qh_tavg", "Qg_tavg","AvgSurfT_tavg","VegT_tavg",'Albedo_inst',
                     #    'Tair_f_inst',"SoilMoist_inst", "FWsoil_tavg", "GWwb_tavg",,"ECanop_tavg","Qs_tavg","Qsb_tavg",]
+                    # "EF", "SoilMoist_inst"]
 
         for var_name in var_names:
+            file_paths_ctl = [ LIS_path_ctl+var_name+'/LIS.CABLE.201701-201912.nc' ]
+            file_paths_sen = [ LIS_path_sen+var_name+'/LIS.CABLE.201701-201912.nc' ]
+            file_paths_sen_2 = None
             plot_time_series_diff(file_paths_ctl,file_paths_sen,file_paths_sen_2, var_name,
                                   time_s=time_s,time_e=time_e, loc_lat=loc_lat, loc_lon=loc_lon,
                                   lat_name=lat_name, lon_name=lon_name, message=message,

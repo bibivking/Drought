@@ -60,7 +60,7 @@ end
 begin
 
 case_name   = (/"outputs"/) ; CTL
-path        = "/g/data/w97/mm3972/model/cable/runs/runs_4_coupled/gw_after_sp30yrx3/"
+path        = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/"
 pic_message = "CTL" ; FD ; DR ; FD+DR
 
 Soil_thickness = (/0.022, 0.058, 0.154, 0.409, 1.085, 2.872/)
@@ -145,7 +145,7 @@ if cable_version .eq. "LIS-CABLE" then
     delete(f)
 else if cable_version .eq. "OFF-CABLE" then
     
-    filename = path+case_name(0)+"/cable_out_1990.nc" ; MMY
+    filename = path+case_name(0)+"/cable_out_2000.nc" ; MMY
     f = addfile (filename,"r")
 
     lat_size  = dimsizes(f->y)
@@ -191,7 +191,7 @@ end if
 
 if grace_version .eq. "Original-fill-nan" then
 
-  filename        = "/g/data/w97/W35_GDATA_MOVED/Shared_data/Observations/GRACE/GRACE_JPLRL06M_MASCON/GRCTellus.JPL.2002_2020_gap-fill_MMY.nc"
+  filename        = "/g/data/w97/Shared_data/Observations/GRACE/GRACE_JPLRL06M_MASCON/GRCTellus.JPL.2002_2020_gap-fill_MMY.nc"
   f               = addfile (filename,"r")
 
   tot_grace       = (GRACE_end_year-GRACE_start_year+1)*12 ; how many year will be read from GRACE
@@ -289,7 +289,7 @@ if cable_version .eq. "OFF-CABLE" then
        print(case_name(case_num))
        counter = 0
        date    = 0
-       filename1 = path+case_name(case_num)+"/cable_out_2000-2019.nc"
+       filename1 = path+case_name(case_num)+"/cable_out_2000_2019.nc"
        f1 = addfile (filename1,"r")
        GWMoist_tmp  = f1->GWMoist(:,:,:)
        CanopInt_tmp = f1->CanopInt(:,:,:)

@@ -662,7 +662,7 @@ def plot_map_temperal_metrics(wrf_path, obs_path, obs_name, file_paths, var_name
     else:
         message = message + "_" + var_name
 
-    plt.savefig('./plots/weather/spatial_map_temperal_metrics_'+message+'.png',dpi=300)
+    plt.savefig('./plots/model_evaluation/spatial_map_temperal_metrics_'+message+'.png',dpi=300)
 
 if __name__ == "__main__":
 
@@ -670,7 +670,7 @@ if __name__ == "__main__":
     region = "SE Aus" #"SE Aus" #"CORDEX" #"SE Aus"
 
     # ====================== Pre-load =======================
-    AWAP_path    = '/g/data/w97/W35_GDATA_MOVED/Shared_data/AWAP_3h_v1'
+    AWAP_path    = '/g/data/w97/Shared_data/AWAP_3h_v1'
     AWAP_T_file  = AWAP_path + '/Tair/AWAP.Tair.3hr.2017.nc'     # air temperature
     AWAP_R_file  = AWAP_path + '/Rainf/AWAP.Rainf.3hr.2017.nc'   # Daily rainfall
     AWAP_LW_file = AWAP_path + '/LWdown/AWAP.LWdown.3hr.2017.nc'   # Downward Longwave Radiation
@@ -698,50 +698,50 @@ if __name__ == "__main__":
     # Plot WRF-CABLE vs AWAP temperal metrics
     # #################################
     if 1:
-        case_names =[ "drght_2017_2019_bl_pbl2_mp4_sf_sfclay2",
-                      "drght_2017_2019_bl_pbl5_mp6_sf_sfclay1",]
+        case_names =[ "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2",
+                      "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB",]   
         time_s     = datetime(2017,1,1,0,0,0,0)
-        time_e     = datetime(2019,12,31,23,59,0,0)
-        # time_e     = datetime(2017,12,31,23,59,0,0)
+        # time_e     = datetime(2019,12,31,23,59,0,0)
+        time_e     = datetime(2019,1,1,0,0,0,0)
         for case_name in case_names:
             message    = "WRF_vs_AWAP_" + case_name + "_201701-201912"
-            wrf_path   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/WRF_output/wrfout_d01_2017-02-01_06:00:00"
-            file_paths = ["/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201701-201701.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201702-201702.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201703-201703.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201704-201704.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201705-201705.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201706-201706.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201707-201707.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201708-201708.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201709-201709.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201710-201710.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201711-201711.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201712-201712.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201801-201801.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201802-201802.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201803-201803.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201804-201804.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201805-201805.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201806-201806.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201807-201807.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201808-201808.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201809-201809.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201810-201810.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201811-201811.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201812-201812.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201901-201901.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201902-201902.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201903-201903.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201904-201904.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201905-201905.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201906-201906.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201907-201907.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201908-201908.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201909-201909.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201910-201910.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201911-201911.d01.nc",
-                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201912-201912.d01.nc",]
+            wrf_path   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/wrfout_d01_2017-02-01_06:00:00"
+            file_paths = ["/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201701-201701.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201702-201702.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201703-201703.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201704-201704.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201705-201705.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201706-201706.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201707-201707.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201708-201708.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201709-201709.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201710-201710.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201711-201711.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201712-201712.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201801-201801.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201802-201802.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201803-201803.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201804-201804.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201805-201805.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201806-201806.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201807-201807.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201808-201808.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201809-201809.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201810-201810.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201811-201811.d01.nc",
+                          "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name+"/LIS_output/LIS.CABLE.201812-201812.d01.nc",]
+                        #   "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201901-201901.d01.nc",
+                        #   "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201902-201902.d01.nc",
+                        #   "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201903-201903.d01.nc",
+                        #   "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201904-201904.d01.nc",
+                        #   "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201905-201905.d01.nc",
+                        #   "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201906-201906.d01.nc",
+                        #   "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201907-201907.d01.nc",
+                        #   "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201908-201908.d01.nc",
+                        #   "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201909-201909.d01.nc",
+                        #   "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201910-201910.d01.nc",
+                        #   "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201911-201911.d01.nc",
+                        #   "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.201912-201912.d01.nc",]
                           # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.202001-202001.d01.nc",
                           # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.202002-202002.d01.nc",
                           # "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/"+case_name+"/LIS_output/LIS.CABLE.202003-202003.d01.nc",
@@ -755,8 +755,8 @@ if __name__ == "__main__":
             # 'plot Evap'
             if 1:
                 obs_path       = [ GLEAM_path + "2017/E_2017_GLEAM_v3.6a.nc",
-                                   GLEAM_path + "2018/E_2018_GLEAM_v3.6a.nc",
-                                   GLEAM_path + "2019/E_2019_GLEAM_v3.6a.nc",]
+                                   GLEAM_path + "2018/E_2018_GLEAM_v3.6a.nc",]
+                                #    GLEAM_path + "2019/E_2019_GLEAM_v3.6a.nc",]
                                 #  GLEAM_path + "2019/E_2020_GLEAM_v3.6a.nc"    ]
                 obs_name       = 'E'
                 var_name       = 'Evap_tavg'
@@ -774,8 +774,8 @@ if __name__ == "__main__":
             # 'plot Tair'
             if 1:
                 obs_path       = [ AWAP_path+'/Tair/AWAP.Tair.3hr.2017.nc',
-                                   AWAP_path+'/Tair/AWAP.Tair.3hr.2018.nc',
-                                   AWAP_path+'/Tair/AWAP.Tair.3hr.2019.nc' ] #[AWAP_R_file] #
+                                   AWAP_path+'/Tair/AWAP.Tair.3hr.2018.nc',]
+                                #    AWAP_path+'/Tair/AWAP.Tair.3hr.2019.nc' ] #[AWAP_R_file] #
                 obs_name       = 'Tair' # 'Rainf'        #
                 var_name       = 'Tair_f_inst' # 'Rainf_tavg'   #
 
@@ -791,8 +791,8 @@ if __name__ == "__main__":
             # 'plot Rainf'
             if 1:
                 obs_path       = [ AWAP_path+'/Rainf/AWAP.Rainf.3hr.2017.nc',
-                                   AWAP_path+'/Rainf/AWAP.Rainf.3hr.2018.nc',
-                                   AWAP_path+'/Rainf/AWAP.Rainf.3hr.2019.nc' ] #[AWAP_R_file] #
+                                   AWAP_path+'/Rainf/AWAP.Rainf.3hr.2018.nc',]
+                                #    AWAP_path+'/Rainf/AWAP.Rainf.3hr.2019.nc' ] #[AWAP_R_file] #
                 obs_name       = 'Rainf' # 'Rainf'        #
                 var_name       = 'Rainf_tavg' # 'Rainf_tavg'   #
 

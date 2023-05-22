@@ -51,34 +51,42 @@ from cartopy.feature import NaturalEarthFeature
 plot a simple spatial difference map
 '''
 
-file_name1 = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/outputs/cable_out_2017.nc"
+file_name1 =  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/detrended_Tair_VPD/outputs/cable_out_2017.nc"
+#"/g/data/w97/mm3972/model/cable/runs/runs_4_coupled/gw_after_sp30yrx3/outputs/cable_out_2000-2019.nc"
+# "/g/data/w97/mm3972/model/cable/runs/VPD_drought/outputs/cable_out_2017.nc"
 #"/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/coupled_run/OUTPUT/SURFACEMODEL/LIS_HIST_201701011200.d01.nc"
 #"/g/data/w97/mm3972/model/cable/runs/VPD_drought/outputs/cable_out_2017.nc"
 #"/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/coupled_run/OUTPUT/SURFACEMODEL/LIS_HIST_201701011200.d01.nc"
 #"/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI/LIS_output/LIS.CABLE.201701-201701.d01.nc"
-file_name2 = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/outputs/cable_out_2017_lai_thres.nc"
+file_name2 =  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/100th_check/outputs/cable_out_2017.nc"
+# "/g/data/w97/mm3972/model/cable/runs/VPD_drought/outputs/cable_out_2017_lai_thres.nc"
 # "/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/coupled_run/2017_01_real_time/OUTPUT/SURFACEMODEL/LIS_HIST_201701011200.d01.nc"
 #"/g/data/w97/mm3972/model/cable/runs/runs_4_coupled/gw_after_sp30yrx3/outputs/cable_out_2000-2019.nc"
 #"/scratch/w97/mm3972/model/NUWRF/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/coupled_run/2017_01_real_time/OUTPUT/SURFACEMODEL/LIS_HIST_201701011200.d01.nc"
-var_name = "Evap"
+var_name = "Qle"
+# "Evap"
 #"Albedo_inst"
 #"Evap" # "TVeg"
-scale    = 3600*24*365
+scale    = 1 
+#3600*24*365
 #1
 #3600*24*365
-message  = "lai_thres"
+message  = "Qle"
+#"lai_thres"
 #"WRF"
 #"VPD_drought"
-clevs    = [-100,-80,-60,-40,-20,-10,10,20,40,60,80,100]
+clevs    = [-10,-1,-0.01,0.01,1,10]
+#[-0.1,-0.09,-0.08,-0.07,-0.06,-0.05,-0.04,-0.03,-0.02,-0.01,-0.005,0.005,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1]
+#[-100,-80,-60,-40,-20,-10,10,20,40,60,80,100]
 #[-300,-250,-200,-150,-100,-50,50,100,150,200,250,300]
 #np.arange(-500,550,50)
 
 f1         = Dataset(file_name1, mode='r')
 f2         = Dataset(file_name2, mode='r')
 
-var1       = np.mean(f1.variables[var_name],axis=0)
+var1       = np.mean(f1.variables[var_name][:,:,:],axis=0)
 #np.mean(f1.variables[var_name][:,:,:],axis=0)
-var2       = np.mean(f2.variables[var_name][:],axis=0)
+var2       = np.mean(f2.variables[var_name][:,:,:],axis=0)
 #np.mean(f2.variables[var_name][6210:6574,:,:],axis=0)
 var_diff   = (var2-var1)*scale
 
@@ -86,7 +94,7 @@ print(var_diff)
 
 fig, ax = plt.subplots()
 
-plot    = ax.contourf(var_diff,clevs,cmap="BrBG")
+plot    = ax.contourf(var_diff,clevs,cmap="BrBG")#"viridis_r") #"BrBG")
 cb      = plt.colorbar(plot)#, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
 
 plt.show()
