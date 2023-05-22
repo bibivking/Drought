@@ -1,0 +1,28 @@
+S
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+Traceback (most recent call last):
+  File "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD/spatial_map_single_plot.py", line 848, in <module>
+    sen_vs_ctl(case_ctl,case_sen,loc_lat,loc_lon,config_set)
+  File "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD/spatial_map_single_plot.py", line 738, in sen_vs_ctl
+    spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
+  File "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD/spatial_map_single_plot.py", line 200, in spatial_map_single_plot_diff_multifile
+    time, Ctl_tmp = read_var_multi_file(land_ctl_files, var_name, loc_lat, loc_lon, lat_names, lon_names)
+  File "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD/common_utils.py", line 281, in read_var_multi_file
+    tmp = var_file.variables[var_name][:]
+KeyError: 'S'
+
+======================================================================================
+                  Resource Usage on 2023-05-11 10:19:40:
+   Job Id:             83115392.gadi-pbs
+   Project:            w97
+   Exit Status:        1
+   Service Units:      0.46
+   NCPUs Requested:    1                      NCPUs Used: 1               
+                                           CPU Time Used: 00:00:12        
+   Memory Requested:   90.0GB                Memory Used: 1.32GB          
+   Walltime requested: 02:20:00            Walltime Used: 00:00:44        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================

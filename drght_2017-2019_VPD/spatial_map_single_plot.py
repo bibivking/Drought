@@ -191,6 +191,11 @@ def spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_n
             time, Qair_sen = read_var_multi_file(land_sen_files, "Qair", loc_lat, loc_lon, lat_names, lon_names)
             time, Pres_sen = read_var_multi_file(land_sen_files, "PSurf", loc_lat, loc_lon, lat_names, lon_names)
             Sen_tmp        = qair_to_vpd(Qair_sen, Tair_sen, Pres_sen)
+        elif var_name == "SM35":
+            time, Var_ctl_SM = read_var_multi_file(land_ctl_files, "SoilMoist", loc_lat, loc_lon, lat_names, lon_names)
+            time, Var_sen_SM = read_var_multi_file(land_sen_files, "SoilMoist", loc_lat, loc_lon, lat_names, lon_names)
+            Ctl_tmp          = (Var_ctl_SM[:,0,:,:]*0.022+Var_ctl_SM[:,1,:,:]*0.058+Var_ctl_SM[:,2,:,:]*0.154+Var_ctl_SM[:,3,:,:]*0.116)/0.35
+            Sen_tmp          = (Var_sen_SM[:,0,:,:]*0.022+Var_sen_SM[:,1,:,:]*0.058+Var_sen_SM[:,2,:,:]*0.154+Var_sen_SM[:,3,:,:]*0.116)/0.35
         else:
             time, Ctl_tmp = read_var_multi_file(land_ctl_files, var_name, loc_lat, loc_lon, lat_names, lon_names)
             time, Sen_tmp = read_var_multi_file(land_sen_files, var_name, loc_lat, loc_lon, lat_names, lon_names)
@@ -230,10 +235,10 @@ def spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_n
         if var_name in ["Gs"]:
             s2d       = 3600*24. # s-1 to d-1
             Ctl_var   = Ctl_var*s2d
-            Sen_var   = Sen_var*s2d      
-        if var_name in ["VPD_rate"]:  
+            Sen_var   = Sen_var*s2d
+        if var_name in ["VPD_rate"]:
             var_diff  = (Sen_var - Ctl_var)/Ctl_var*100
-        else:    
+        else:
             var_diff  = Sen_var - Ctl_var
 
         # read lat and lon outs
@@ -249,7 +254,7 @@ def spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_n
             clevs = [-2.,-1.8,-1.6,-1.4,-1.2,-1.,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.,1.2,1.4,1.6,1.8,2]
             # clevs = [-20,-18,-16,-14,-12,-10,-8,-6,-4,-2,2,4,6,8,10,12,14,16,18,20]
             # clevs = [-1,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
-        elif var_name in ['SoilMoist_inst','SoilMoist']:
+        elif var_name in ['SoilMoist_inst','SoilMoist',"SM35"]:
             clevs = [-0.1,-0.09,-0.08,-0.07,-0.06,-0.05,-0.04,-0.03,-0.02,-0.01,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1]
         elif var_name in ['ESoil_tavg','Evap_tavg',"ECanop_tavg",'TVeg_tavg',"Rainf_tavg","Snowf_tavg","Qs_tavg","Qsb_tavg",
                           'ESoil','Evap',"ECanop",'TVeg',"Rainf","Snowf","Qs","Qsb"]:
@@ -260,7 +265,7 @@ def spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_n
             clevs = [-50,-45,-40,-35,-30,-25,-20,-15,-10,-5,5,10,15,20.,25,30,35,40,45,50]
             cmap  = plt.cm.RdBu_r #plt.cm.GnBu
             # clevs = [-50,-45,-40,-35,-30,-25,-20,-15,-10,-5, 5,10,15,20,25,30,35,40,45,50]
-        elif var_name in ["VPD_rate"]:  
+        elif var_name in ["VPD_rate"]:
             clevs = [-50,-45,-40,-35,-30,-25,-20,-15,-10,-5,5,10,15,20.,25,30,35,40,45,50]
         elif var_name in ["PotEvap"]:
             clevs = [-200,-180,-160,-140,-120,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,10,20.,30,40,50,60,70,80,90,100,120,140,160,180,200]
@@ -508,7 +513,7 @@ def spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=None,
             clevs = [-20,-18,-16,-14,-12,-10,-8,-6,-4,-2,2,4,6,8,10,12,14,16,18,20]
             # clevs = [-1,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
         elif var_name in ['SoilMoist_inst','SoilMoist']:
-            clevs = [-0.3,-0.25,-0.2,-0.15,-0.1,-0.05,0.05,0.1,0.15,0.2,0.25,0.3]
+            clevs = [-0.05,0,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4]
         elif var_name in ['ESoil_tavg','Evap_tavg',"ECanop_tavg",'TVeg_tavg',"Rainf_tavg","Snowf_tavg","Qs_tavg","Qsb_tavg",
                           'ESoil','Evap',"ECanop",'TVeg',"Rainf","Snowf","Qs","Qsb","PotEvap"]:
             clevs = np.arange(0,1000,20)
@@ -722,8 +727,9 @@ def sen_vs_ctl(case_ctl,case_sen,loc_lat=None,loc_lon=None,sen_vs_ctl=None):
                        land_sen_path+"cable_out_2019.nc",
                        ]
 
-    var_names      =  [ "Gs","GPP","Qle","Qh","RadT","Rnet","VegT","Evap","TVeg",
-                        "ESoil","Fwsoil","Tair","Qair","VPD","VPD_rate"] #"SoilMoist",
+    var_names      = ["SM35"]
+                    #   [ "Gs","GPP","Qle","Qh","RadT","Rnet","VegT","Evap","TVeg",
+                    #     "ESoil","Fwsoil","Tair","Qair","VPD","VPD_rate"] #"SoilMoist",
 
     period         = "2019_fire"
     time_s         = datetime(2019,9,1,0,0,0,0)
@@ -732,19 +738,19 @@ def sen_vs_ctl(case_ctl,case_sen,loc_lat=None,loc_lon=None,sen_vs_ctl=None):
     spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
                                     lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message, case_sen =case_sen+"/"+config_set[1])
 
-    # period         = "2017"
-    # time_s         = datetime(2017,1,1,0,0,0,0)
-    # time_e         = datetime(2018,1,1,0,0,0,0)
-    # message        = period+"-"+case_sen+"-"+case_ctl+"_"+config_set[1]
-    # spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
-    #                                 lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message,case_sen=case_sen)
+    period         = "2017"
+    time_s         = datetime(2017,1,1,0,0,0,0)
+    time_e         = datetime(2018,1,1,0,0,0,0)
+    message        = period+"-"+case_sen+"-"+case_ctl+"_"+config_set[1]
+    spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
+                                    lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message,case_sen=case_sen)
 
-    # period         = "2018"
-    # time_s         = datetime(2018,1,1,0,0,0,0)
-    # time_e         = datetime(2019,1,1,0,0,0,0)
-    # message        =  period+"-"+case_sen+"-"+case_ctl+"_"+config_set[1]
-    # spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
-    #                                 lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message,case_sen=case_sen)
+    period         = "2018"
+    time_s         = datetime(2018,1,1,0,0,0,0)
+    time_e         = datetime(2019,1,1,0,0,0,0)
+    message        =  period+"-"+case_sen+"-"+case_ctl+"_"+config_set[1]
+    spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
+                                    lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message,case_sen=case_sen)
 
     period         = "2019"
     time_s         = datetime(2019,1,1,0,0,0,0)
@@ -785,10 +791,10 @@ if __name__ == "__main__":
     #######################################################
 
 
-    if 1:
+    if 0:
         # ctl sim
         case_ctl       = "ctl"
-        config_set     = "litter_on_PM"
+        config_set     = "litter_on_PM-20SM"
         land_ctl_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_ctl+"/"+config_set+"/outputs/"
         land_ctl_files = [ land_ctl_path+"cable_out_2017.nc",
                            land_ctl_path+"cable_out_2018.nc",
@@ -832,14 +838,14 @@ if __name__ == "__main__":
         spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
                                         lon_names="longitude",loc_lat=loc_lat, loc_lon=loc_lon, shape_path=shape_path, message=message,config_set=config_set)
 
-    if 0:
+    if 1:
         config_set     = ["litter_on_PM","litter_on_PM"]
         #["litter_off_HDM","litter_off_HDM"]
-        
-        case_ctl       = "ctl"
-        case_sen       = "T_Q_LWdown_detrend_2017_2019"
 
-        sen_vs_ctl(case_ctl,case_sen,config_set) #loc_lat,loc_lon,
+        case_ctl       = "ctl"
+        case_sen       = "T_Q_LWdown_detrend_2000_2019"
+
+        sen_vs_ctl(case_ctl,case_sen,loc_lat,loc_lon,config_set)
 
         # case_sen       = "Q_detrend_2000_2019"
         # sen_vs_ctl(case_ctl,case_sen)

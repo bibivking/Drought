@@ -1,0 +1,19 @@
+/g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD/common_utils.py:711: RuntimeWarning: Mean of empty slice
+  var       = np.nanmean(Var[time_cood],axis=0)
+/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/lib/python3.9/site-packages/cartopy/mpl/gridliner.py:451: UserWarning: The .xlabels_top attribute is deprecated. Please use .top_labels to toggle visibility instead.
+  warnings.warn('The .xlabels_top attribute is deprecated. Please '
+/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/lib/python3.9/site-packages/cartopy/mpl/gridliner.py:487: UserWarning: The .ylabels_right attribute is deprecated. Please use .right_labels to toggle visibility instead.
+  warnings.warn('The .ylabels_right attribute is deprecated. Please '
+
+======================================================================================
+                  Resource Usage on 2023-05-11 10:43:25:
+   Job Id:             83118500.gadi-pbs
+   Project:            w97
+   Exit Status:        271 (Linux Signal 15 SIGTERM Termination)
+   Service Units:      2.95
+   NCPUs Requested:    1                      NCPUs Used: 1               
+                                           CPU Time Used: 00:02:12        
+   Memory Requested:   90.0GB                Memory Used: 35.42GB         
+   Walltime requested: 02:20:00            Walltime Used: 00:04:43        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================

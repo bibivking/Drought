@@ -1,0 +1,2901 @@
+/g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD/common_utils.py:711: RuntimeWarning: Mean of empty slice
+  var       = np.nanmean(Var[time_cood],axis=0)
+/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/lib/python3.9/site-packages/cartopy/mpl/gridliner.py:451: UserWarning: The .xlabels_top attribute is deprecated. Please use .top_labels to toggle visibility instead.
+  warnings.warn('The .xlabels_top attribute is deprecated. Please '
+/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/lib/python3.9/site-packages/cartopy/mpl/gridliner.py:487: UserWarning: The .ylabels_right attribute is deprecated. Please use .right_labels to toggle visibility instead.
+  warnings.warn('The .ylabels_right attribute is deprecated. Please '
+Gs
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Gs
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+GPP
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+GPP
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Qle
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qle
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Qh
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qh
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+RadT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+RadT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Rnet
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Rnet
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+VegT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+VegT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Evap
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Evap
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+TVeg
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+TVeg
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+ESoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+ESoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Fwsoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Fwsoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Gs
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Gs
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+GPP
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+GPP
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Qle
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qle
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Qh
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qh
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+RadT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+RadT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Rnet
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Rnet
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+/g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD/spatial_map_single_plot.py:390: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`).
+  fig = plt.figure(figsize=(6,5))
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+VegT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+VegT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Evap
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Evap
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+TVeg
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+TVeg
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+ESoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+ESoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Fwsoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Fwsoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Gs
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Gs
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+GPP
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+GPP
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Qle
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qle
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Qh
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qh
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+RadT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+RadT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Rnet
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Rnet
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+VegT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+VegT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Evap
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Evap
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+TVeg
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+TVeg
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+ESoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+ESoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Fwsoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Fwsoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Gs
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Gs
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+GPP
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+GPP
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Qle
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qle
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Qh
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qh
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+RadT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+RadT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Rnet
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Rnet
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+VegT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+VegT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Evap
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Evap
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+TVeg
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+TVeg
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+ESoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+ESoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Fwsoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Fwsoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Gs
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Gs
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+GPP
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+GPP
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Qle
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qle
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Qh
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qh
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+RadT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+RadT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Rnet
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Rnet
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+VegT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+VegT
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Evap
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Evap
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+TVeg
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+TVeg
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+ESoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+ESoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Fwsoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Fwsoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Tair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+Qair
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+PSurf
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+
+======================================================================================
+                  Resource Usage on 2023-05-01 20:51:28:
+   Job Id:             82396176.gadi-pbs
+   Project:            w97
+   Exit Status:        0
+   Service Units:      14.21
+   NCPUs Requested:    1                      NCPUs Used: 1               
+                                           CPU Time Used: 00:14:44        
+   Memory Requested:   90.0GB                Memory Used: 34.86GB         
+   Walltime requested: 02:20:00            Walltime Used: 00:22:44        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================

@@ -114,10 +114,10 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
     if var_name == "EF":
         time_ctl, Var_ctl_Qle = read_var_multi_file(file_paths_ctl, "Qle_tavg", loc_lat, loc_lon, lat_name, lon_name)
         time_ctl, Var_ctl_Qh  = read_var_multi_file(file_paths_ctl, "Qh_tavg", loc_lat, loc_lon, lat_name, lon_name)
-        
+
         time_sen, Var_sen_Qle = read_var_multi_file(file_paths_sen, "Qle_tavg", loc_lat, loc_lon, lat_name, lon_name)
         time_sen, Var_sen_Qh  = read_var_multi_file(file_paths_sen, "Qh_tavg", loc_lat, loc_lon, lat_name, lon_name)
-        
+
         ctl_QleQh = Var_ctl_Qle+Var_ctl_Qh
         sen_QleQh = Var_sen_Qle+Var_sen_Qh
         Var_ctl = np.where(abs(ctl_QleQh)>0.01, Var_ctl_Qle/ctl_QleQh,np.nan)
@@ -132,12 +132,17 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
         time_sen, Qair_sen = read_var_multi_file(file_paths_sen, "Qair", loc_lat, loc_lon, lat_name, lon_name)
         time_sen, Pres_sen = read_var_multi_file(file_paths_sen, "PSurf", loc_lat, loc_lon, lat_name, lon_name)
         Var_sen            = qair_to_vpd(Qair_sen, Tair_sen, Pres_sen)
+    elif var_name == "SM35":
+        time_ctl, Var_ctl_SM = read_var_multi_file(file_paths_ctl, "SoilMoist", loc_lat, loc_lon, lat_name, lon_name)
+        time_sen, Var_sen_SM = read_var_multi_file(file_paths_sen, "SoilMoist", loc_lat, loc_lon, lat_name, lon_name)
+        Var_ctl              = (Var_ctl_SM[:,0,:,:]*0.022+Var_ctl_SM[:,1,:,:]*0.058+Var_ctl_SM[:,2,:,:]*0.154+Var_ctl_SM[:,3,:,:]*0.116)/0.35
+        Var_sen              = (Var_sen_SM[:,0,:,:]*0.022+Var_sen_SM[:,1,:,:]*0.058+Var_sen_SM[:,2,:,:]*0.154+Var_sen_SM[:,3,:,:]*0.116)/0.35
     else:
         time_ctl, Var_ctl = read_var_multi_file(file_paths_ctl, var_name, loc_lat, loc_lon, lat_name, lon_name)
         time_sen, Var_sen = read_var_multi_file(file_paths_sen, var_name, loc_lat, loc_lon, lat_name, lon_name)
-        
+
     if file_paths_sen_2 != None:
-        
+
         if var_name == "EF":
             time_sen_2, Var_sen_2_Qle = read_var_multi_file(file_paths_sen_2, "Qle_tavg", loc_lat, loc_lon, lat_name, lon_name)
             time_sen_2, Var_sen_2_Qh  = read_var_multi_file(file_paths_sen_2, "Qh_tavg", loc_lat, loc_lon, lat_name, lon_name)
@@ -147,7 +152,10 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
             time_sen_2, Tair_sen_2 = read_var_multi_file(file_paths_sen_2, "Tair", loc_lat, loc_lon, lat_name, lon_name)
             time_sen_2, Qair_sen_2 = read_var_multi_file(file_paths_sen_2, "Qair", loc_lat, loc_lon, lat_name, lon_name)
             time_sen_2, Pres_sen_2 = read_var_multi_file(file_paths_sen_2, "PSurf", loc_lat, loc_lon, lat_name, lon_name)
-            Var_sen_2            = qair_to_vpd(Qair_sen_2, Tair_sen_2, Pres_sen_2)
+            Var_sen_2              = qair_to_vpd(Qair_sen_2, Tair_sen_2, Pres_sen_2)
+        elif var_name == "SM35":
+            time_sen_2, Var_sen_2_SM = read_var_multi_file(file_paths_sen_2, "SoilMoist", loc_lat, loc_lon, lat_name, lon_name)
+            Var_sen_2                = (Var_sen_2_SM[:,0,:,:]*0.022+Var_sen_2_SM[:,1,:,:]*0.058+Var_sen_2_SM[:,2,:,:]*0.154+Var_sen_2_SM[:,3,:,:]*0.116)/0.35
         else:
             time_sen_2, Var_sen_2 = read_var_multi_file(file_paths_sen_2, var_name, loc_lat, loc_lon, lat_name, lon_name)
 
@@ -185,7 +193,7 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
         Var_daily_diff = Var_daily_sen - Var_daily_ctl
 
     if iveg != None:
-        LC_file        = nc.Dataset(file_paths_ctl[0], mode='r') 
+        LC_file        = nc.Dataset(file_paths_ctl[0], mode='r')
         LC             = LC_file.variables["iveg"][:,:]
         mask           = mask_by_lat_lon(file_paths_ctl[0], loc_lat, loc_lon, lat_name, lon_name)
         LC_temp        = np.where(mask,LC,np.nan)
@@ -229,15 +237,15 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
                 var_sen = np.nanmean(Var_daily_sen[:,:,:],axis=(1,2))
                 ax.plot(np.arange(len(var_ctl)), var_ctl, c = "red",  label=var_name+"_ctl", alpha=0.5)
                 ax.plot(np.arange(len(var_sen)), var_sen, c = "blue", label=var_name+"_sen", alpha=0.5)
-                 
+
             elif np.shape(iveg)[0]>1:
                 for i,pft in enumerate(iveg):
                     var_ctl = np.nanmean(np.where(landcover == pft, Var_daily_ctl, np.nan),axis=(1,2))
                     var_sen = np.nanmean(np.where(landcover == pft, Var_daily_sen, np.nan),axis=(1,2))
                     df_ctl  = pd.DataFrame({'ctl': var_ctl})
                     df_sen  = pd.DataFrame({'sen': var_sen})
-                    ax.plot( df_ctl['ctl'].rolling(window=30).mean(), c = colors[i],  label=var_name+"_ctl PFT="+str(pft), alpha=0.8)
-                    ax.plot( df_sen['sen'].rolling(window=30).mean(), c = colors[i], label=var_name+"_sen PFT="+str(pft), alpha=0.5)
+                    ax.plot( df_ctl['ctl'].rolling(window=90).mean(), c = colors[i],  label=var_name+"_ctl PFT="+str(pft), alpha=0.8)
+                    ax.plot( df_sen['sen'].rolling(window=90).mean(), c = colors[i], label=var_name+"_sen PFT="+str(pft), alpha=0.5)
             else:
                 var_ctl = np.nanmean(np.where(landcover == iveg, Var_daily_ctl, np.nan),axis=(1,2))
                 var_sen = np.nanmean(np.where(landcover == iveg, Var_daily_sen, np.nan),axis=(1,2))
@@ -354,21 +362,61 @@ if __name__ == "__main__":
     ####################################
 
     if 1:
-        message               = "T_Q_detrend_vs_ctl"
-        var_names             = ["Fwsoil","VPD",] #"SoilMoist",
+        message               = "T_Q_LWdown_detrend_vs_ctl_litter_on_PM"
+        var_names             = ["SM35","Evap","Qle","Qh","GPP","Fwsoil","SoilMoist",] #"SoilMoist","Fwsoil","VPD",
         iveg                  = [2,5,6,9,14] #2#[2]#
-        time_s                = datetime(2017,1,1,0,0,0,0)
-        time_e                = datetime(2020,1,1,0,0,0,0)        
+        time_s                = datetime(2000,1,1,0,0,0,0)
+        time_e                = datetime(2020,1,1,0,0,0,0)
         lat_name              = "latitude"
         lon_name              = "longitude"
 
-        file_paths_ctl        = ["/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/outputs/cable_out_2017.nc",
-                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/outputs/cable_out_2018.nc",
-                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/outputs/cable_out_2019.nc"]
+        file_paths_ctl        = ["/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2000.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2001.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2002.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2003.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2004.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2005.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2006.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2007.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2008.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2009.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2010.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2011.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2012.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2013.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2014.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2015.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2016.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc",
+                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc",]
+                                 #"/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/outputs/cable_out_2017.nc",
+                                 #"/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/outputs/cable_out_2018.nc",
+                                 #"/g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/outputs/cable_out_2019.nc"]
 
-        file_paths_sen        = ["/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_detrend_2000_2019/outputs/cable_out_2017.nc",
-                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_detrend_2000_2019/outputs/cable_out_2018.nc",
-                                 "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_detrend_2000_2019/outputs/cable_out_2019.nc"]
+        file_paths_sen        = [ "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2000.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2001.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2002.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2003.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2004.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2005.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2006.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2007.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2008.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2009.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2010.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2011.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2012.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2013.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2014.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2015.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2016.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc",
+                                  "/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc",]
+                                 #"/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_detrend_2000_2019/outputs/cable_out_2017.nc",
+                                 #"/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_detrend_2000_2019/outputs/cable_out_2018.nc",
+                                 #"/g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_detrend_2000_2019/outputs/cable_out_2019.nc"]
 
         for var_name in var_names:
             plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None, var_name=var_name, time_s=time_s, time_e=time_e, loc_lat=loc_lat, loc_lon=loc_lon,

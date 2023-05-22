@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD/spatial_map_single_plot.py", line 848, in <module>
+    sen_vs_ctl(case_ctl,case_sen,loc_lat,loc_lon,config_set)
+  File "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD/spatial_map_single_plot.py", line 738, in sen_vs_ctl
+    spatial_map_single_plot_diff_multifile(land_ctl_files, land_sen_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
+  File "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD/spatial_map_single_plot.py", line 195, in spatial_map_single_plot_diff_multifile
+    time, Var_ctl_SM = read_var_multi_file(file_paths_ctl, "SoilMoist", loc_lat, loc_lon, lat_name, lon_name)
+NameError: name 'file_paths_ctl' is not defined
+
+======================================================================================
+                  Resource Usage on 2023-05-11 10:22:30:
+   Job Id:             83115614.gadi-pbs
+   Project:            w97
+   Exit Status:        1
+   Service Units:      0.11
+   NCPUs Requested:    1                      NCPUs Used: 1               
+                                           CPU Time Used: 00:00:07        
+   Memory Requested:   90.0GB                Memory Used: 179.29MB        
+   Walltime requested: 02:20:00            Walltime Used: 00:00:11        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================

@@ -1,0 +1,179 @@
+/g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD/common_utils.py:711: RuntimeWarning: Mean of empty slice
+  var       = np.nanmean(Var[time_cood],axis=0)
+/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/lib/python3.9/site-packages/cartopy/mpl/gridliner.py:451: UserWarning: The .xlabels_top attribute is deprecated. Please use .top_labels to toggle visibility instead.
+  warnings.warn('The .xlabels_top attribute is deprecated. Please '
+/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/lib/python3.9/site-packages/cartopy/mpl/gridliner.py:487: UserWarning: The .ylabels_right attribute is deprecated. Please use .right_labels to toggle visibility instead.
+  warnings.warn('The .ylabels_right attribute is deprecated. Please '
+SoilMoist
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+SoilMoist
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+SoilMoist
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+SoilMoist
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+SoilMoist
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+SoilMoist
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+SoilMoist
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+SoilMoist
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+SoilMoist
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+SoilMoist
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/T_Q_LWdown_detrend_2000_2019/litter_on_PM/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(var_diff)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+
+======================================================================================
+                  Resource Usage on 2023-05-11 10:49:43:
+   Job Id:             83119402.gadi-pbs
+   Project:            w97
+   Exit Status:        0
+   Service Units:      3.15
+   NCPUs Requested:    1                      NCPUs Used: 1               
+                                           CPU Time Used: 00:04:29        
+   Memory Requested:   90.0GB                Memory Used: 35.98GB         
+   Walltime requested: 02:20:00            Walltime Used: 00:05:02        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================

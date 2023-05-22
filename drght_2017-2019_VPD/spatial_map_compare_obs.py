@@ -95,9 +95,11 @@ def plot_spital_map(file_paths, var_names, time_s, time_e, file_paths2=None, loc
         time1, Var1     = read_var_multi_file(file_paths, var_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
 
     if var_names[0] in ['Evap','TVeg','ESoil','ECanop']:
-        var1        = spital_var_sum(time1,Var1,time_s,time_e)*3600.*24
+        print("var_names[0] in ['Evap','TVeg','ESoil','ECanop']")
+        var1        = spital_var_mean(time1,Var1,time_s,time_e)*(time_e-time_s).days*3600.*24
     elif var_names[0] in ['E','Et','Ei','Es']:
-        var1        = spital_var_sum(time1,Var1,time_s,time_e)
+        print("var_names[0] in ['E','Et','Ei','Es']")
+        var1        = spital_var_mean(time1,Var1,time_s,time_e)*4
     else:
         scale       = get_scale(var_names[0])
         var1        = spital_var_mean(time1,Var1,time_s,time_e)*scale
@@ -141,7 +143,7 @@ def plot_spital_map(file_paths, var_names, time_s, time_e, file_paths2=None, loc
     # np.savetxt("test_var.txt",var,delimiter=",")
 
     fig = plt.figure(figsize=(6,5))
-    ax = plt.axes(projection=ccrs.PlateCarree())
+    ax  = plt.axes(projection=ccrs.PlateCarree())
 
     if loc_lat == None:
         ax.set_extent([140,154,-40,-28])
@@ -169,16 +171,14 @@ def plot_spital_map(file_paths, var_names, time_s, time_e, file_paths2=None, loc
     # Plot windspeed
 
     # clevs = np.linspace( 0.,1500., num=31)
-    # clevs1  = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
-    clevs1  = [0,50,100,150,200,250,300,350,400,450,500,550,600,650,700,750,800,850,900,950,1000]
+    clevs1  = [0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
+    #clevs1  = [0,50,100,150,200,250,300,350,400,450,500,550,600]
+    # 
     
     if var_names[0] in ['E','Et','Ei','Es']:
-        print("np.shape(var) ", np.shape(var))
-        print("np.shape(lats1) ", np.shape(lats1))
-        print("np.shape(lons1) ", np.shape(lons1))
-        print("lats1 ", lats1)
-        print("lons1 ", lons1)
-        plt.contourf(lons1, lats1[::-1,:], var, levels=clevs1, transform=ccrs.PlateCarree(), extend='both',cmap=plt.cm.BrBG)
+        print("var_names[0] in ['E','Et','Ei','Es']")
+        
+        plt.contourf(lons1, lats1, var, levels=clevs1, transform=ccrs.PlateCarree(), extend='both',cmap=plt.cm.BrBG)
     else:
         plt.contourf(lons1, lats1, var, levels=clevs1, transform=ccrs.PlateCarree(), extend='both',cmap=plt.cm.BrBG) # clevs,
     plt.title(var_names[0], size=16)
@@ -324,17 +324,20 @@ if __name__ == "__main__":
     # #######################
     #       case info       #
     # #######################
-    case_name  = "ctl/litter_on_PM"
-    file_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_name+"/outputs/"
-    file_name  = [ file_path+"cable_out_2019.nc",]
-
+    case_name = "spinup"
+    #case_name  = "ctl/litter_on_PM"
+    file_path  = "/g/data/w97/mm3972/model/cable/runs/runs_4_coupled/gw_after_sp30yrx3/outputs/"
+    #file_path  = "/g/data/w97/mm3972/model/cable/runs/VPD_drought/"+case_name+"/outputs/"
+    #file_name  = [ file_path+"cable_out_2019.nc",]
+    file_name  = [ file_path+"cable_out_2000-2019.nc",]
+    
     awra_layer = "root_zone_0_1m/sm" # "deep_layer_1_6m/sd","lower_layer_01_1m_ss","upper_layer_0_01m_s0"
     AWRA_file  = [AWRA_path + awra_layer + "_pct_2019.nc"]
 
     # #######################
     #   plot_spital_map     #
     # #######################
-    if 0:
+    if 1:
         ## plot SM/ssat vs AWRA ###
 
         print("plot SM/ssat vs AWRA")
@@ -343,42 +346,57 @@ if __name__ == "__main__":
         year_e      = datetime(2020,1,1)
 
         # var_name    = ["RM","sm_pct"] # RM & sm_pct: relative soil moisture = available water content / total soil water holding capacity.
-        lat_names   = ["latitude","latitude"]#"lat"
-        lon_names   = ["longitude","longitude"]#"lon"
+        lat_names   = ["latitude"]#"lat","latitude"
+        lon_names   = ["longitude"]#"lon","longitude"
 
-        var_name    = ["sm_pct"]
-        message     = "Relative_Soil_Moisture_2019_fire_AWRA"
-        plot_spital_map(AWRA_file, var_name, year_s, year_e, file_paths2=None, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
-                        lon_names=lon_names,message=message)
+        #var_name    = ["sm_pct"]
+        #message     = "Relative_Soil_Moisture_2019_fire_AWRA"
+        #plot_spital_map(AWRA_file, var_name, year_s, year_e, file_paths2=None, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+        #                lon_names=lon_names,message=message)
+
+        #var_name    = ["RM"]
+        #message     = "Relative_Soil_Moisture_2019_fire_ctl"
+        #plot_spital_map(file_name, var_name, year_s, year_e, file_paths2=None, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+        #                lon_names=lon_names,message=message)
 
         var_name    = ["RM"]
-        message     = "Relative_Soil_Moisture_2019_fire_ctl"
+        message     = "Relative_Soil_Moisture_2019_fire_spinup"
         plot_spital_map(file_name, var_name, year_s, year_e, file_paths2=None, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
                         lon_names=lon_names,message=message)
 
-
-    if 1:
+    if 0:
         ### plot Evap vs GLEAM ###
 
         print("plot Evap vs GLEAM")
+
         file_paths2 = [GLEAM_file]
         
         year_s      = datetime(2019,9,1)
         year_e      = datetime(2020,1,1)
 
+        lat_names   = ["latitude",]#"lat"
+        lon_names   = ["longitude",]#"lon"
+
         var_name    = ["Evap"]
-        lat_names   = ["latitude"]#"lat"
-        lon_names   = ["longitude"]#"lon"
-        message     = "Evap_2019_fire_ctl"
+        message     = "Evap_2019_fire_spinup"
         plot_spital_map(file_name, var_name, year_s, year_e, file_paths2=None, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
                        lon_names=lon_names,message=message)
+
+        #lat_names   = ["latitude",]#"lat"
+        #lon_names   = ["longitude",]#"lon"
+        
+        #var_name    = ["Evap"]
+        #message     = "Evap_2019_fire_ctl"
+        #plot_spital_map(file_name, var_name, year_s, year_e, file_paths2=None, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+        #               lon_names=lon_names,message=message)
                         
-        var_name    = ["E"]
-        lat_names   = ["lat"]#"lat"
-        lon_names   = ["lon"]#"lon"
-        message     = "Evap_2019_fire_GLEAM"
-        plot_spital_map(file_paths2, var_name, year_s, year_e, file_paths2=None, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
-                        lon_names=lon_names,message=message)
+        #lat_names   = ["lat",]#"lat"
+        #lon_names   = ["lon",]#"lon"
+
+        #var_name    = ["E"]
+        #message     = "Evap_2019_fire_GLEAM"
+        #plot_spital_map(file_paths2, var_name, year_s, year_e, file_paths2=None, loc_lat=loc_lat, loc_lon=loc_lon, lat_names=lat_names,
+        #                lon_names=lon_names,message=message)
 
 
     if 0:
