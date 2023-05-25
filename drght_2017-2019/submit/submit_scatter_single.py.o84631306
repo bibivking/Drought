@@ -1,0 +1,27 @@
+Tair_f_inst
+file_path =  /
+Traceback (most recent call last):
+  File "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/scatter_single_plot.py", line 192, in <module>
+    plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+  File "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/scatter_single_plot.py", line 97, in plot_spatial_land_days
+    df_ctl = read_data(land_path,case_names[0],var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+  File "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/scatter_single_plot.py", line 44, in read_data
+    time, Var = read_var_multi_file(file_path, "Tair_f_inst", loc_lat, loc_lon, lat_name, lon_name)
+  File "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/common_utils.py", line 235, in read_var_multi_file
+    var_file   = Dataset(file_path, mode='r')
+  File "src/netCDF4/_netCDF4.pyx", line 2307, in netCDF4._netCDF4.Dataset.__init__
+  File "src/netCDF4/_netCDF4.pyx", line 1925, in netCDF4._netCDF4._ensure_nc_success
+OSError: [Errno -51] NetCDF: Unknown file format: b'/'
+
+======================================================================================
+                  Resource Usage on 2023-05-22 18:28:22:
+   Job Id:             84631306.gadi-pbs
+   Project:            w97
+   Exit Status:        1
+   Service Units:      0.74
+   NCPUs Requested:    1                      NCPUs Used: 1               
+                                           CPU Time Used: 00:00:08        
+   Memory Requested:   190.0GB               Memory Used: 1.23GB          
+   Walltime requested: 03:30:00            Walltime Used: 00:00:28        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================

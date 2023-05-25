@@ -277,10 +277,12 @@ def plot_LAI(LAI_obs_path, LAI_one_path, LAI_two_path, LIS_PFT_file, wrf_path, t
     nlon       = 529
 
     LAI_obs       = read_LAI(LAI_obs_path,LAI_types[0],year_s,year_e,time_s,time_e,nlat,nlon)
+    LAI_obs       = np.where(LAI_obs >0.0001, LAI_obs, np.nan)
     LAI_obs_mean  = np.nanmean(LAI_obs,axis=0)
     LAI_obs_time_series = np.nanmean(LAI_obs,axis=(1,2))
 
     LAI_one       = read_LAI(LAI_one_path,LAI_types[1],year_s,year_e,time_s,time_e,nlat,nlon)
+    LAI_one       = np.where(LAI_one >0.0001, LAI_one, np.nan)
     LAI_one_mean  = np.nanmean(LAI_one,axis=0)
     LAI_one_time_series = np.nanmean(LAI_one,axis=(1,2))
 
@@ -289,6 +291,7 @@ def plot_LAI(LAI_obs_path, LAI_one_path, LAI_two_path, LIS_PFT_file, wrf_path, t
 
     if LAI_two_path != None:
         LAI_two    = read_LAI(LAI_two_path,LAI_types[2],year_s,year_e,time_s,time_e,nlat,nlon)
+        LAI_two    = np.where(LAI_two >0.0001, LAI_two, np.nan)
         LAI_two_mean  = np.nanmean(LAI_two,axis=0)
         LAI_two_time_series = np.nanmean(LAI_two,axis=(1,2))
         ntime_two  = len(LAI_two[:,0,0])
@@ -520,10 +523,12 @@ def plot_ALBEDO(ALB_obs_paths, ALB_one_path, ALB_two_path, LIS_PFT_file, wrf_pat
 
     # ========== read ALBEDO ==========
     ALB_obs       = read_ALBEDO(ALB_obs_paths,ALB_types[0],year_s,year_e,time_s,time_e,loc_lat, loc_lon, lat_name, lon_name)
+    ALB_obs       = np.where(ALB_obs > 0.0001, ALB_obs, np.nan)
     ALB_obs_mean  = np.nanmean(ALB_obs,axis=0)
     ALB_obs_time_series = np.nanmean(ALB_obs,axis=(1,2))
 
     ALB_one       = read_ALBEDO(ALB_one_path,ALB_types[1],year_s,year_e,time_s,time_e,loc_lat, loc_lon, lat_name, lon_name)
+    ALB_one       = np.where(ALB_one > 0.0001, ALB_one, np.nan)    
     ALB_one_mean  = np.nanmean(ALB_one,axis=0)
     ALB_one_time_series = np.nanmean(ALB_one,axis=(1,2))
 
@@ -532,6 +537,7 @@ def plot_ALBEDO(ALB_obs_paths, ALB_one_path, ALB_two_path, LIS_PFT_file, wrf_pat
 
     if ALB_two_path != None:
         ALB_two       = read_ALBEDO(ALB_two_path,ALB_types[2],year_s,year_e,time_s,time_e,loc_lat, loc_lon, lat_name, lon_name)
+        ALB_two       = np.where(ALB_two > 0.0001, ALB_two, np.nan)    
         ALB_two_mean  = np.nanmean(ALB_two,axis=0)
         ALB_two_time_series = np.nanmean(ALB_two,axis=(1,2))
         ntime_two     = len(ALB_two[:,0,0])
@@ -876,8 +882,13 @@ if __name__ == "__main__":
 
 
     # small box 
-    loc_lat    = [-33,-29]
-    loc_lon    = [147,149]
+    # loc_lat    = [-33,-29]
+    # loc_lon    = [147,149]
+
+    # east coast
+    loc_lat    = [-33,-27]
+    loc_lon    = [152,154]
+
     PFT        = False
     if 1:
         '''
@@ -905,7 +916,7 @@ if __name__ == "__main__":
             time_s        = datetime(2017,1,1,0,0,0,0)
             time_e        = datetime(2017,12,31,0,0,0,0)
 
-            message       = "obs_new_ctl_alb-lai_2017_small_region"
+            message       = "obs_new_ctl_alb-lai_2017_east_coast"
 
             plot_LAI( LAI_obs_path, LAI_one_path, LAI_two_path, LIS_PFT_file, wrf_path, time_s, time_e, LAI_types,PFT=PFT,message=message)
 
@@ -913,7 +924,7 @@ if __name__ == "__main__":
             time_s        = datetime(2018,1,1,0,0,0,0)
             time_e        = datetime(2018,12,31,0,0,0,0)
 
-            message       = "obs_new_ctl_alb-lai_2018_small_region"
+            message       = "obs_new_ctl_alb-lai_2018_east_coast"
 
             plot_LAI( LAI_obs_path, LAI_one_path, LAI_two_path, LIS_PFT_file, wrf_path, time_s, time_e, LAI_types,PFT=PFT,message=message)
 
@@ -921,7 +932,7 @@ if __name__ == "__main__":
             time_s        = datetime(2019,1,1,0,0,0,0)
             time_e        = datetime(2019,12,31,0,0,0,0)
 
-            message       = "obs_new_ctl_alb-lai_2019_small_region"
+            message       = "obs_new_ctl_alb-lai_2019_east_coast"
 
             plot_LAI( LAI_obs_path, LAI_one_path, LAI_two_path, LIS_PFT_file, wrf_path, time_s, time_e, LAI_types,PFT=PFT,message=message)
 
@@ -945,7 +956,7 @@ if __name__ == "__main__":
             LIS_PFT_file  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/LIS_output/LIS.CABLE.201701-201701.d01.nc"
             wrf_path      = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/wrfout_d01_2017-02-01_06:00:00"
 
-            message       = "blue_sky_albedo_2017_small_region"
+            message       = "blue_sky_albedo_2017_east_coast"
 
             time_s        = datetime(2017,1,1,0,0,0,0)
             time_e        = datetime(2017,12,31,0,0,0,0)
@@ -953,7 +964,7 @@ if __name__ == "__main__":
             plot_ALBEDO(ALB_obs_paths, ALB_one_path, ALB_two_path, LIS_PFT_file, wrf_path, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon,
                                   lat_name=lat_name, lon_name=lon_name, ALB_types=ALB_types,PFT=PFT,message=message)
 
-            message       = "blue_sky_albedo_2018_small_region"
+            message       = "blue_sky_albedo_2018_east_coast"
 
             time_s        = datetime(2018,1,1,0,0,0,0)
             time_e        = datetime(2018,12,31,0,0,0,0)
@@ -961,7 +972,7 @@ if __name__ == "__main__":
             plot_ALBEDO(ALB_obs_paths, ALB_one_path, ALB_two_path, LIS_PFT_file, wrf_path, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon,
                                   lat_name=lat_name, lon_name=lon_name, ALB_types=ALB_types,PFT=PFT,message=message)
 
-            message       = "blue_sky_albedo_2019_small_region"
+            message       = "blue_sky_albedo_2019_east_coast"
 
             time_s        = datetime(2019,1,1,0,0,0,0)
             time_e        = datetime(2019,12,31,0,0,0,0)
@@ -969,158 +980,4 @@ if __name__ == "__main__":
             plot_ALBEDO(ALB_obs_paths, ALB_one_path, ALB_two_path, LIS_PFT_file, wrf_path, time_s, time_e, loc_lat=loc_lat, loc_lon=loc_lon,
                                   lat_name=lat_name, lon_name=lon_name, ALB_types=ALB_types,PFT=PFT,message=message)
 
-    if 0:
-        # LAI
-        if 0:
-            '''
-            Compare LIS LAI with time-varying MODIS LAI
-            '''
-
-            LAI_types     = ["obs","modis_clim","modis_clim"]
-                            # "obs"            # use time-varying modis
-                            # "lis"            # use lis_input
-                            # "modis_clim"     # use modis daily climatology
-
-            LAI_one_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_LAI/regrid_daily_fill/MCD15A3H_c61_bigWRFroi_LAI_AVHRR_fill_for_WRF_daily_climatology_2003_2022_filter.nc"
-            LAI_two_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_LAI/regrid_daily_fill/daily_climatology_2003_2022/leap_year/MCD15A3H_c61_bigWRFroi_LAI_AVHRR_fill_for_WRF_monthly_climatology_2003_2022_filter_leap_year.nc"
-            LAI_obs_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_LAI/regrid_daily_fill/MCD15A3H_c61_bigWRFroi_LAI_AVHRR_fill_for_WRF_daily_20170101_20201231.nc"
-            LIS_PFT_file  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght_2017_2019_bl_pbl5_mp6_sf_sfclay1/LIS_output/LIS.CABLE.201701-201701.d01.nc"
-            wrf_path      = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght_2017_2019_bl_pbl5_mp6_sf_sfclay1/WRF_output/wrfout_d01_2017-01-01_11:00:00"
-
-            time_s        = datetime(2017,1,1,0,0,0,0)
-            time_e        = datetime(2019,12,31,23,59,0,0)
-
-            plot_LAI( LAI_obs_path, LAI_one_path, LAI_two_path, LIS_PFT_file, wrf_path, time_s, time_e, LAI_types)
-
-        # ALBEDO
-        if 0:
-            '''
-            Compare LIS ALBEDO with time-varying MODIS ALBEDO
-            '''
-            time_s        = datetime(2017,1,1,0,0,0,0)
-            time_e        = datetime(2019,12,31,23,59,0,0)
-
-            ALB_types     = ["obs","modis_clim","modis_clim"]
-                            # "obs"            # use time-varying modis
-                            # "lis"            # use lis_input
-                            # "modis_clim"     # use modis daily climatology
-            LIS_PFT_file  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght_2017_2019_bl_pbl5_mp6_sf_sfclay1/LIS_output/LIS.CABLE.201701-201701.d01.nc"
-            wrf_path      = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght_2017_2019_bl_pbl5_mp6_sf_sfclay1/WRF_output/wrfout_d01_2017-01-01_11:00:00"
-
-
-            # vis BSA
-            vis_nir       = "vis"
-            BSA_WSA       = "BSA"
-
-            ALB_obs_paths = ["/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/regrid_daily/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_for_WRF_daily_20170101_20201231.nc"]
-            ALB_one_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/regrid_daily/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_for_WRF_daily_climatology_2003_2022_filter.nc"
-            ALB_two_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/regrid_daily/daily_climatology_2003_2022/leap_year/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_for_WRF_daily_climatology_2003_2022_filter_leap_year.nc"
-            message       = vis_nir+"_"+BSA_WSA
-            plot_ALBEDO(ALB_obs_paths, ALB_one_path, ALB_two_path, LIS_PFT_file, wrf_path, time_s, time_e, ALB_types,PFT=True,message=message)
-
-
-            # nir BSA
-            vis_nir       = "nir"
-            BSA_WSA       = "BSA"
-
-            ALB_obs_paths = ["/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/regrid_daily/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_for_WRF_daily_20170101_20201231.nc"]
-            ALB_one_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/regrid_daily/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_for_WRF_daily_climatology_2003_2022_filter.nc"
-            ALB_two_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/regrid_daily/daily_climatology_2003_2022/leap_year/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_for_WRF_daily_climatology_2003_2022_filter_leap_year.nc"
-            message       = vis_nir+"_"+BSA_WSA
-            plot_ALBEDO(ALB_obs_paths, ALB_one_path, ALB_two_path, LIS_PFT_file, wrf_path, time_s, time_e, ALB_types,PFT=True,message=message)
-
-
-            # vis WSA
-            vis_nir       = "vis"
-            BSA_WSA       = "WSA"
-
-            ALB_obs_paths = ["/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/regrid_daily/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_for_WRF_daily_20170101_20201231.nc"]
-            ALB_one_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/regrid_daily/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_for_WRF_daily_climatology_2003_2022_filter.nc"
-            ALB_two_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/regrid_daily/daily_climatology_2003_2022/leap_year/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_for_WRF_daily_climatology_2003_2022_filter_leap_year.nc"
-            message       = vis_nir+"_"+BSA_WSA
-            plot_ALBEDO(ALB_obs_paths, ALB_one_path, ALB_two_path, LIS_PFT_file, wrf_path, time_s, time_e, ALB_types,PFT=True,message=message)
-
-
-            # nir WSA
-            vis_nir       = "nir"
-            BSA_WSA       = "WSA"
-
-            ALB_obs_paths = ["/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/regrid_daily/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_for_WRF_daily_20170101_20201231.nc"]
-            ALB_one_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/regrid_daily/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_for_WRF_daily_climatology_2003_2022_filter.nc"
-            ALB_two_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/regrid_daily/daily_climatology_2003_2022/leap_year/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_for_WRF_daily_climatology_2003_2022_filter_leap_year.nc"
-            message       = vis_nir+"_"+BSA_WSA
-            plot_ALBEDO(ALB_obs_paths, ALB_one_path, ALB_two_path, LIS_PFT_file, wrf_path, time_s, time_e, ALB_types,PFT=True,message=message)
-
-    # compare periods
-    if 0:
-        '''
-        Compare 2003-2016 and 2016-2020 and new 2003-2022 data
-        '''
-        if 0:
-            "LAI"
-            LIS_PFT_file  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI/LIS_output/LIS.CABLE.201701-201701.d01.nc"
-            wrf_path      = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/WRF_output/wrfout_d01_2017-01-01_11:00:00"
-
-            LAI_obs_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_LAI/refuse/MCD15A3H_c61_bigWRFroi_LAI_5000m_2003_2016.nc"
-            LAI_one_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_LAI/refuse/whittakerSmoothed_MCD15A3H_c61_LAI_for_WRF_2016_2020.nc"
-            LAI_two_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_LAI/MCD15A3H_c61_bigWRFroi_LAI_5000m_2003_2022.nc"
-
-            message       = "LAI_periods_ave"
-
-            plot_periods(LAI_obs_path, LAI_one_path, LAI_two_path, LIS_PFT_file, wrf_path,var_name="LAI", PFT=False,message=message)
-
-
-        if 1:
-            LIS_PFT_file  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI/LIS_output/LIS.CABLE.201701-201701.d01.nc"
-            wrf_path      = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/drght_2017_2019_bl_pbl2_mp4_sf_sfclay2/WRF_output/wrfout_d01_2017-01-01_11:00:00"
-
-            # vis BSA
-            vis_nir       = "vis"
-            BSA_WSA       = "BSA"
-
-            ALB_obs_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/refuse/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_2003_2016.nc"
-            ALB_one_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/refuse/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_2016_2020.nc"
-            ALB_two_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_2003_2022.nc"
-
-            message       = vis_nir+"_"+BSA_WSA+"_periods_ave"
-
-            plot_periods(ALB_obs_path, ALB_one_path, ALB_two_path, LIS_PFT_file, wrf_path,var_name=vis_nir, PFT=False,message=message)
-
-
-            # nir BSA
-            vis_nir       = "nir"
-            BSA_WSA       = "BSA"
-
-            ALB_obs_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/refuse/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_2003_2016.nc"
-            ALB_one_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/refuse/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_2016_2020.nc"
-            ALB_two_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_2003_2022.nc"
-
-            message       = vis_nir+"_"+BSA_WSA+"_periods_ave"
-
-            plot_periods(ALB_obs_path, ALB_one_path, ALB_two_path, LIS_PFT_file, wrf_path,var_name=vis_nir, PFT=False,message=message)
-
-
-            # nir WSA
-            vis_nir       = "nir"
-            BSA_WSA       = "WSA"
-
-            ALB_obs_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/refuse/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_2003_2016.nc"
-            ALB_one_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/refuse/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_2016_2020.nc"
-            ALB_two_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_2003_2022.nc"
-
-            message       = vis_nir+"_"+BSA_WSA+"_periods_ave"
-
-            plot_periods(ALB_obs_path, ALB_one_path, ALB_two_path, LIS_PFT_file, wrf_path,var_name=vis_nir, PFT=False,message=message)
-
-
-            # nir WSA
-            vis_nir       = "nir"
-            BSA_WSA       = "WSA"
-
-            ALB_obs_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/refuse/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_2003_2016.nc"
-            ALB_one_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/refuse/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_2016_2020.nc"
-            ALB_two_path  = "/g/data/w97/mm3972/data/MODIS/MODIS_Albedo/MCD43C3_bigWRFroi_smoothed-Albedo_"+BSA_WSA+"_"+vis_nir+"_5000m_2003_2022.nc"
-
-            message       = vis_nir+"_"+BSA_WSA+"_periods_ave"
-
-            plot_periods(ALB_obs_path, ALB_one_path, ALB_two_path, LIS_PFT_file, wrf_path,var_name=vis_nir, PFT=False,message=message)
+ 

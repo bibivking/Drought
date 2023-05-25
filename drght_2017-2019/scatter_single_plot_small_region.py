@@ -71,13 +71,20 @@ def read_data(land_path,case_name,var_name,pft,time_s,time_e,loc_lat=None,loc_lo
         file_path = [land_path + case_name + '/LIS_output/Tair_f_inst/LIS.CABLE.201701-201912.nc']
         time, Var = read_var_multi_file(file_path, "Tair_f_inst", loc_lat, loc_lon, lat_name, lon_name)
         var       = time_clip_to_day_min(time,Var,time_s,time_e)
-    elif var_name =='VPD':
+    elif var_name =='VPDmax':
         file_path  = [land_path + case_name + '/LIS_output/Tair_f_inst/LIS.CABLE.201701-201912.nc']
         time, Tair = read_var_multi_file(file_path, "Tair_f_inst", loc_lat, loc_lon, lat_name, lon_name)
         file_path  = [land_path + case_name + '/LIS_output/Qair_f_inst/LIS.CABLE.201701-201912.nc']
         time, Qair = read_var_multi_file(file_path, "Qair_f_inst", loc_lat, loc_lon, lat_name, lon_name)
         Var        = qair_to_vpd(Qair, Tair, 1000.)
-        var        = time_clip_to_day(time,Var,time_s,time_e)
+        var        = time_clip_to_day_max(time,Var,time_s,time_e)
+    elif var_name =='VPDmin':
+        file_path  = [land_path + case_name + '/LIS_output/Tair_f_inst/LIS.CABLE.201701-201912.nc']
+        time, Tair = read_var_multi_file(file_path, "Tair_f_inst", loc_lat, loc_lon, lat_name, lon_name)
+        file_path  = [land_path + case_name + '/LIS_output/Qair_f_inst/LIS.CABLE.201701-201912.nc']
+        time, Qair = read_var_multi_file(file_path, "Qair_f_inst", loc_lat, loc_lon, lat_name, lon_name)
+        Var        = qair_to_vpd(Qair, Tair, 1000.)
+        var        = time_clip_to_day_min(time,Var,time_s,time_e)
     else:
         file_path = [land_path + case_name + '/LIS_output/' + var_name + '/LIS.CABLE.201701-201912.nc']
         time, Var = read_var_multi_file(file_path, var_name, loc_lat, loc_lon, lat_name, lon_name)
@@ -237,73 +244,73 @@ if __name__ == "__main__":
         # pft      = ["BEF","crop","shrub","grass","barren"]
         # iveg_num = [2, 9, 5, 6, 14]
 
-        # east coast
-        loc_lat    = [-33,-27]
-        loc_lon    = [152,154]
+        # small region
+        loc_lat    = [-33,-29]
+        loc_lon    = [147,149]
 
-        time_s  = datetime(2017,11,1,0,0,0,0)
+        time_s  = datetime(2017,12,1,0,0,0,0)
         time_e  = datetime(2018,3,1,0,0,0,0)
-        var_names  = ['Tmax','VPD']
-        message    = "2017_18_Nov_Feb_east_coast"+var_names[0]+"_vs_"+var_names[1]
+        var_names  = ['Tmax','VPDmax']
+        message    = "201718_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
         plot_spatial_land_days(land_path,case_names,var_names,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
                                lat_name=lat_name, lon_name=lon_name, message=message)
 
-        var_name   = ['Tmin','VPD'] #'Tair_f_inst'
-        message    = "2017_18_Nov_Feb_east_coast"+var_names[0]+"_vs_"+var_names[1]
+        var_names  = ['Tmin','VPDmin'] #'Tair_f_inst'
+        message    = "201718_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
         plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
                                lat_name=lat_name, lon_name=lon_name, message=message)
 
-        # time_s  = datetime(2018,11,1,0,0,0,0)
-        # time_e  = datetime(2019,3,1,0,0,0,0)
-        # message    = "2018_19_Nov_Feb_east_coast"
-        # var_name   = 'Tmax' #'Tair_f_inst'
-        # plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
-        #                        lat_name=lat_name, lon_name=lon_name, message=message)
-        # var_name   = 'Tmin' #'Tair_f_inst'
-        # plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
-        #                        lat_name=lat_name, lon_name=lon_name, message=message)
-        #
-        # time_s  = datetime(2019,11,1,0,0,0,0)
-        # time_e  = datetime(2020,2,1,0,0,0,0)
-        # message    = "2019_20_Nov_Jan_east_coast"
-        # var_name   = 'Tmax' #'Tair_f_inst'
-        # plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
-        #                        lat_name=lat_name, lon_name=lon_name, message=message)
-        # var_name   = 'Tmin' #'Tair_f_inst'
-        # plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
-        #                        lat_name=lat_name, lon_name=lon_name, message=message)
-        #
-        #
-        # # # small region
-        # # loc_lat    = [-33,-29]
-        # # loc_lon    = [147,149]
-        #
-        # # time_s  = datetime(2017,11,1,0,0,0,0)
-        # # time_e  = datetime(2018,3,1,0,0,0,0)
-        # # message    = "2017_18_Nov_Feb_small_region"
-        # # var_name   = 'Tmax' #'Tair_f_inst'
-        # # plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
-        # #                        lat_name=lat_name, lon_name=lon_name, message=message)
-        # # var_name   = 'Tmin' #'Tair_f_inst'
-        # # plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
-        # #                        lat_name=lat_name, lon_name=lon_name, message=message)
-        #
-        # # time_s  = datetime(2018,11,1,0,0,0,0)
-        # # time_e  = datetime(2019,3,1,0,0,0,0)
-        # # message    = "2018_19_Nov_Feb_small_region"
-        # # var_name   = 'Tmax' #'Tair_f_inst'
-        # # plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
-        # #                        lat_name=lat_name, lon_name=lon_name, message=message)
-        # # var_name   = 'Tmin' #'Tair_f_inst'
-        # # plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
-        # #                        lat_name=lat_name, lon_name=lon_name, message=message)
-        #
-        # # time_s  = datetime(2019,11,1,0,0,0,0)
-        # # time_e  = datetime(2020,2,1,0,0,0,0)
-        # # message    = "2019_20_Nov_Jan_small_region"
-        # # var_name   = 'Tmax' #'Tair_f_inst'
-        # # plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
-        # #                        lat_name=lat_name, lon_name=lon_name, message=message)
-        # # var_name   = 'Tmin' #'Tair_f_inst'
-        # # plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
-        # #                        lat_name=lat_name, lon_name=lon_name, message=message)
+        var_names  = ['Tmax','FWsoil_tavg']
+        message    = "201718_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
+        plot_spatial_land_days(land_path,case_names,var_names,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+                               lat_name=lat_name, lon_name=lon_name, message=message)
+
+        var_names  = ['Tmin','FWsoil_tavg'] #'Tair_f_inst'
+        message    = "201718_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
+        plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+                               lat_name=lat_name, lon_name=lon_name, message=message)
+
+
+        time_s  = datetime(2018,12,1,0,0,0,0)
+        time_e  = datetime(2019,3,1,0,0,0,0)
+        var_names  = ['Tmax','VPDmax']
+        message    = "201819_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
+        plot_spatial_land_days(land_path,case_names,var_names,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+                               lat_name=lat_name, lon_name=lon_name, message=message)
+
+        var_names  = ['Tmin','VPDmin'] #'Tair_f_inst'
+        message    = "201819_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
+        plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+                               lat_name=lat_name, lon_name=lon_name, message=message)
+
+        var_names  = ['Tmax','FWsoil_tavg']
+        message    = "201819_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
+        plot_spatial_land_days(land_path,case_names,var_names,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+                               lat_name=lat_name, lon_name=lon_name, message=message)
+
+        var_names  = ['Tmin','FWsoil_tavg'] #'Tair_f_inst'
+        message    = "201819_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
+        plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+                               lat_name=lat_name, lon_name=lon_name, message=message)
+
+        time_s  = datetime(2019,12,1,0,0,0,0)
+        time_e  = datetime(2020,2,1,0,0,0,0)
+        var_names  = ['Tmax','VPDmax']
+        message    = "201920_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
+        plot_spatial_land_days(land_path,case_names,var_names,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+                               lat_name=lat_name, lon_name=lon_name, message=message)
+
+        var_names  = ['Tmin','VPDmin'] #'Tair_f_inst'
+        message    = "201920_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
+        plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+                               lat_name=lat_name, lon_name=lon_name, message=message)
+
+        var_names  = ['Tmax','FWsoil_tavg']
+        message    = "201920_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
+        plot_spatial_land_days(land_path,case_names,var_names,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+                               lat_name=lat_name, lon_name=lon_name, message=message)
+
+        var_names  = ['Tmin','FWsoil_tavg'] #'Tair_f_inst'
+        message    = "201920_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
+        plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+                               lat_name=lat_name, lon_name=lon_name, message=message)

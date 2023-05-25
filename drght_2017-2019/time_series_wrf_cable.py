@@ -98,17 +98,21 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
         sen_QleQh = Var_sen_Qle+Var_sen_Qh
         Var_ctl = np.where(abs(ctl_QleQh)>0.01, Var_ctl_Qle/ctl_QleQh,np.nan)
         Var_sen = np.where(abs(sen_QleQh)>0.01, Var_sen_Qle/sen_QleQh,np.nan)
+    elif var_name in ["Tmax","Tmin"]:
+        time_ctl, Var_ctl = read_var_multi_file(file_paths_ctl, "Tair_f_inst", loc_lat, loc_lon, lat_name, lon_name)
+        time_sen, Var_sen = read_var_multi_file(file_paths_sen, "Tair_f_inst", loc_lat, loc_lon, lat_name, lon_name)
     else:
         time_ctl, Var_ctl = read_var_multi_file(file_paths_ctl, var_name, loc_lat, loc_lon, lat_name, lon_name)
         time_sen, Var_sen = read_var_multi_file(file_paths_sen, var_name, loc_lat, loc_lon, lat_name, lon_name)
         
-    if file_paths_sen_2 != None:
-        
+    if file_paths_sen_2 != None:  
         if var_name == "EF":
             time_sen_2, Var_sen_2_Qle = read_var_multi_file(file_paths_sen_2, "Qle_tavg", loc_lat, loc_lon, lat_name, lon_name)
             time_sen_2, Var_sen_2_Qh  = read_var_multi_file(file_paths_sen_2, "Qh_tavg", loc_lat, loc_lon, lat_name, lon_name)
             sen_2_QleQh = Var_sen_2_Qle+Var_sen_2_Qh
             Var_sen_2 = np.where(abs(sen_2_QleQh)>0.01, Var_sen_2_Qle/sen_2_QleQh,np.nan)
+        elif var_name in ["Tmax","Tmin"]:
+            time_sen_2, Var_sen_2 = read_var_multi_file(file_paths_sen_2, "Tair_f_inst", loc_lat, loc_lon, lat_name, lon_name)
         else:
             time_sen_2, Var_sen_2 = read_var_multi_file(file_paths_sen_2, var_name, loc_lat, loc_lon, lat_name, lon_name)
 
@@ -118,6 +122,12 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
     elif var_name in ["WaterTableD_tavg"]:
         Var_daily_ctl = time_clip_to_day(time_ctl, Var_ctl, time_s, time_e, seconds=None)
         Var_daily_ctl = Var_daily_ctl/1000.
+    elif var_name in ["Tmax"]:
+        Var_daily_ctl = time_clip_to_day_max(time_ctl, Var_ctl, time_s, time_e, seconds=None)
+        Var_daily_ctl = Var_daily_ctl-273.15
+    elif var_name in ["Tmin"]:
+        Var_daily_ctl = time_clip_to_day_min(time_ctl, Var_ctl, time_s, time_e, seconds=None)
+        Var_daily_ctl = Var_daily_ctl-273.15
     else:
         Var_daily_ctl = time_clip_to_day(time_ctl, Var_ctl, time_s, time_e, seconds=None)
 
@@ -127,6 +137,12 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
     elif var_name in ["WaterTableD_tavg"]:
         Var_daily_sen = time_clip_to_day(time_sen, Var_sen, time_s, time_e, seconds=None)
         Var_daily_sen = Var_daily_sen/1000.
+    elif var_name in ["Tmax"]:
+        Var_daily_sen = time_clip_to_day_max(time_sen, Var_sen, time_s, time_e, seconds=None)
+        Var_daily_sen = Var_daily_sen-273.15
+    elif var_name in ["Tmin"]:
+        Var_daily_sen = time_clip_to_day_min(time_sen, Var_sen, time_s, time_e, seconds=None)
+        Var_daily_sen = Var_daily_sen-273.15
     else:
         Var_daily_sen = time_clip_to_day(time_sen, Var_sen, time_s, time_e, seconds=None)
 
@@ -137,6 +153,12 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
         elif var_name in ["WaterTableD_tavg"]:
             Var_daily_sen_2 = time_clip_to_day(time_sen_2, Var_sen_2, time_s, time_e, seconds=None)
             Var_daily_sen_2 = Var_daily_sen_2/1000.
+        elif var_name in ["Tmax"]:
+            Var_daily_sen_2 = time_clip_to_day_max(time_sen_2, Var_sen_2, time_s, time_e, seconds=None)
+            Var_daily_sen_2 = Var_daily_sen_2-273.15
+        elif var_name in ["Tmin"]:
+            Var_daily_sen_2 = time_clip_to_day_min(time_sen_2, Var_sen_2, time_s, time_e, seconds=None)
+            Var_daily_sen_2 = Var_daily_sen_2-273.15
         else:
             Var_daily_sen_2 = time_clip_to_day(time_sen_2, Var_sen_2, time_s, time_e, seconds=None)
 
@@ -303,8 +325,13 @@ if __name__ == "__main__":
         loc_lon    = [89.25,180]
 
 
-    loc_lat    = [-33,-29]
-    loc_lon    = [147,149]
+    # small box 
+    # loc_lat    = [-33,-29]
+    # loc_lon    = [147,149]
+
+    # east coast
+    loc_lat    = [-33,-27]
+    loc_lon    = [152,154]
     PFT        = False
 
     ####################################
@@ -344,7 +371,7 @@ if __name__ == "__main__":
                 plot_time_series(file_paths, var_name, time_s=time_s,time_e=time_e, loc_lat=loc_lat, loc_lon=loc_lon, lat_name=lat_name, lon_name=lon_name, message=message)
 
     if 1:
-        message        = "bl_pbl2_mp4_sf_sfclay2_new_small_region"
+        message        = "bl_pbl2_mp4_sf_sfclay2_new_east_coast"
         lat_name       = "lat"
         lon_name       = "lon"
         iveg           = None #[2,5,6,9,14] #2
@@ -362,9 +389,11 @@ if __name__ == "__main__":
         LIS_path_sen   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name_sen+"/LIS_output/"
         LIS_path_sen_2 = None
 
-        var_names  =[ "Qle_tavg","Qh_tavg","Evap_tavg","TVeg_tavg","ESoil_tavg",
-                      'Tair_f_inst',"Rainf_tavg","FWsoil_tavg","SoilMoist_inst", 
-                      "WaterTableD_tavg","GWwb_tavg",  ]
+        var_names      = [ "Tmax","Tmin", "GPP_tavg","NPP_tavg",
+                           "Qle_tavg","Qh_tavg","Evap_tavg","TVeg_tavg","ESoil_tavg",
+                           "Tair_f_inst","Rainf_tavg","FWsoil_tavg","SoilMoist_inst", 
+                           "WaterTableD_tavg","GWwb_tavg",  ]
+                    
                       # "AvgSurfT_tavg", "VegT_tavg","Qair_f_inst","Qs_tavg", "Qsb_tavg","Qg_tavg",  "GWwb_tavg","Qs_tavg","Qsb_tavg"]
                     #[ ]#,]
                     #    "WaterTableD_tavg","Qle_tavg","Qh_tavg", "Qg_tavg","AvgSurfT_tavg","VegT_tavg",'Albedo_inst',
@@ -372,9 +401,14 @@ if __name__ == "__main__":
                     # "EF", "SoilMoist_inst"]
 
         for var_name in var_names:
-            file_paths_ctl = [ LIS_path_ctl+var_name+'/LIS.CABLE.201701-201912.nc' ]
-            file_paths_sen = [ LIS_path_sen+var_name+'/LIS.CABLE.201701-201912.nc' ]
-            file_paths_sen_2 = None
+            if var_name in ["Tmax","Tmin"]:
+                file_paths_ctl = [ LIS_path_ctl+'Tair_f_inst/LIS.CABLE.201701-201912.nc' ]
+                file_paths_sen = [ LIS_path_sen+'Tair_f_inst/LIS.CABLE.201701-201912.nc' ]
+                file_paths_sen_2 = None                
+            else:
+                file_paths_ctl = [ LIS_path_ctl+var_name+'/LIS.CABLE.201701-201912.nc' ]
+                file_paths_sen = [ LIS_path_sen+var_name+'/LIS.CABLE.201701-201912.nc' ]
+                file_paths_sen_2 = None
             plot_time_series_diff(file_paths_ctl,file_paths_sen,file_paths_sen_2, var_name,
                                   time_s=time_s,time_e=time_e, loc_lat=loc_lat, loc_lon=loc_lon,
                                   lat_name=lat_name, lon_name=lon_name, message=message,

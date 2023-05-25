@@ -1,8 +1,11 @@
-case_name="drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2"
+case_name="drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB"
 #"drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB" 
 #"drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2"
 
-var_names=("Landcover_inst" "Albedo_inst" "LAI_inst" "Qle_tavg" "Qh_tavg" "Qg_tavg" "Evap_tavg" "TVeg_tavg" "ESoil_tavg" "FWsoil_tavg" "WaterTableD_tavg" "GWwb_tavg" "SoilMoist_inst" "Rainf_tavg" "Tair_f_inst") 
+var_names=("Qair_f_inst")
+        #("AvgSurfT_tavg")
+        #("Wind_f_inst" "Swnet_tavg" "Lwnet_tavg" "GPP_tavg" "NPP_tavg" "VegT_tavg")
+        #("Landcover_inst" "Albedo_inst" "LAI_inst" "Qle_tavg" "Qh_tavg" "Qg_tavg" "Evap_tavg" "TVeg_tavg" "ESoil_tavg" "FWsoil_tavg" "WaterTableD_tavg" "GWwb_tavg" "SoilMoist_inst" "Rainf_tavg" "Tair_f_inst") 
         #    "ECanop_tavg","Snowf_tavg","VegT_tavg","AvgSurfT_tavg","SoilTemp_inst",\
         #    "Qs_tavg","Qsb_tavg","Psurf_f_inst","Qair_f_inst","Tair_f_inst","Wind_f_inst",\
         #    "LWdown_f_inst","SWdown_f_inst","Swnet_tavg","Lwnet_tavg",] 
