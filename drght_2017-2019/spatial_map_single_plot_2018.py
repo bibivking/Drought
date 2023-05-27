@@ -620,7 +620,7 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
         elif var_name in ['ESoil_tavg','Evap_tavg',"ECanop_tavg",'TVeg_tavg',"Rainf_tavg","Snowf_tavg","Qs_tavg","Qsb_tavg"]:
             # clevs = [-30,-28,-26,-24,-22,-20,-18,-16,-14,-12,-10,-8,-6,-4,-2,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30]
             # clevs = [-5.,-4.5,-4.,-3.5,-3.,-2.5,-2,-1.5,-1,-0.5,0.5,1.,1.5,2.,2.5,3.,3.5,4.,4.5,5.]
-            clevs = [-120,-110,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,-5,5,10,20.,30,40,50,60,70,80,90,100,110,120]
+            clevs = [-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,-5,5,10,20.,30,40,50,60,70,80,90,100]
             # clevs = [-140,-120,-100,-80,-60,-40,-20,20,40,60,80,100,120,140]
         elif var_name in ["GPP_tavg","NPP_tavg",]:
             clevs = [-200,-190,-180,-170,-160,-150,-140,-130,-120,-110,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,
@@ -649,11 +649,12 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
         elif var_name in ["LAI_inst"]:
             clevs = [-1,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
         elif var_name in ["Albedo_inst"]:
-            clevs = [-0.05,-0.045,0.04,-0.035,-0.03,-0.025,-0.02,-0.015,-0.01,-0.005,0.005,0.01,0.015,0.02,0.025,0.03,0.035,0.04,0.045,0.05]
+            clevs = [-0.05,-0.045,-0.04,-0.035,-0.03,-0.025,-0.02,-0.015,-0.01,-0.005,0.005,0.01,0.015,0.02,0.025,0.03,0.035,0.04,0.045,0.05]
         else:
             clevs = [-0.5,-0.4,-0.3,-0.2,-0.1,-0.05,0.05,0.1,0.2,0.3,0.4,0.5]
 
-        clevs_percentage =  [-90,-80,-70,-60,-50,-40,-30,-20,-10,-5,5,10,20.,30,40,50,60,70,80,90]
+
+        clevs_percentage =  [-50,-45,-40,-35,-30,-25,-20,-15,-10,-5,5,10,15,20,25,30,35,40,45,50]
 
         print("len(np.shape(var_diff))",len(np.shape(var_diff)))
 
@@ -783,53 +784,90 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             # set the box type of sequence number
             props = dict(boxstyle="round", facecolor='white', alpha=0.0, ec='white')
 
+            states= NaturalEarthFeature(category="cultural", scale="50m",
+                                                facecolor="none",
+                                                name="admin_1_states_provinces_shp")
+
             # =============== CHANGE HERE ===============
             # choose colormap
             cmap  = plt.cm.seismic
 
             #hot_r # BrBG
+            # for i in np.arange(2):
+            #     # start plotting
+            #     if loc_lat == None:
+            #         axs[i].set_extent([135,155,-40,-25])
+            #     else:
+            #         axs[i].set_extent([loc_lon[0],loc_lon[1],loc_lat[0],loc_lat[1]])
 
-            # start plotting
-            if loc_lat == None:
-                axs[0].set_extent([135,155,-40,-25])
-                axs[1].set_extent([135,155,-40,-25])
-            else:
-                axs[0].set_extent([loc_lon[0],loc_lon[1],loc_lat[0],loc_lat[1]])
-                axs[1].set_extent([loc_lon[0],loc_lon[1],loc_lat[0],loc_lat[1]])
+            #     axs[i].coastlines(resolution="50m",linewidth=1)
 
-            axs[0].coastlines(resolution="50m",linewidth=1)
-            axs[1].coastlines(resolution="50m",linewidth=1)
+            #     # Add gridlines
+            #     gl = axs[i].gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=1, color='black', linestyle='--')
+            #     gl.xlabels_bottom= True
+            #     gl.ylabels_left  = True
+            #     gl.xlabels_top   = False
+            #     gl.ylabels_right = False
+            #     gl.xlines        = True
 
-            # Add gridlines
-            gl = axs[0].gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=1, color='black', linestyle='--')
-            gl = axs[1].gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=1, color='black', linestyle='--')
-            gl.xlabels_top   = False
-            gl.ylabels_right = False
-            gl.xlines        = True
+            #     if loc_lat == None:
+            #         gl.xlocator  = mticker.FixedLocator([135,140,145,150,155])
+            #         gl.ylocator  = mticker.FixedLocator([-40,-35,-30,-25])
+            #     else:
+            #         gl.xlocator  = mticker.FixedLocator(loc_lon)
+            #         gl.ylocator  = mticker.FixedLocator(loc_lat)
 
-            if loc_lat == None:
-                gl.xlocator  = mticker.FixedLocator([135,140,145,150,155])
-                gl.ylocator  = mticker.FixedLocator([-40,-35,-30,-25])
-            else:
-                gl.xlocator  = mticker.FixedLocator(loc_lon)
-                gl.ylocator  = mticker.FixedLocator(loc_lat)
+            #     gl.xformatter = LONGITUDE_FORMATTER
+            #     gl.yformatter = LATITUDE_FORMATTER
+            #     gl.xlabel_style = {'size':10, 'color':'black'}
+            #     gl.ylabel_style = {'size':10, 'color':'black'}
 
-            gl.xformatter = LONGITUDE_FORMATTER
-            gl.yformatter = LATITUDE_FORMATTER
-            gl.xlabel_style = {'size':10, 'color':'black'}
-            gl.ylabel_style = {'size':10, 'color':'black'}
 
+            for i in np.arange(2):
+
+                axs[i].coastlines(resolution="50m",linewidth=1)
+                axs[i].set_extent([135,155,-39,-23])
+                axs[i].add_feature(states, linewidth=.5, edgecolor="black")
+
+                # Add gridlines
+                gl = axs[i].gridlines(crs=ccrs.PlateCarree(), draw_labels=True, linewidth=1, color=almost_black, linestyle='--')
+                gl.xlabels_top  = False
+                gl.ylabels_right= False
+                gl.xlines       = True
+                gl.ylines       = True
+                gl.xlocator     = mticker.FixedLocator(np.arange(125,160,1))
+                gl.ylocator     = mticker.FixedLocator(np.arange(-40,-20,1))
+                # gl.xlocator     = mticker.FixedLocator([130,135,140,145,150,155,160])
+                # gl.ylocator     = mticker.FixedLocator([-40,-35,-30,-25,-20])
+                gl.xformatter   = LONGITUDE_FORMATTER
+                gl.yformatter   = LATITUDE_FORMATTER
+                gl.xlabel_style = {'size':12, 'color':almost_black}#,'rotation': 90}
+                gl.ylabel_style = {'size':12, 'color':almost_black}
+
+                gl.xlabels_bottom = True
+                gl.ylabels_left   = True
+
+            # print("any(not np.isnan(var_diff))",any(not np.isnan(var_diff)))
             plot1 = axs[0].contourf(lons, lats, var_diff, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
-            cb    = plt.colorbar(ax=axs[0], orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
-            cb.axs[0].tick_params(labelsize=10)
+            cbar = plt.colorbar(plot1, ax=axs[0], ticklocation="right", pad=0.08, orientation="horizontal",
+                    aspect=40, shrink=1) # cax=cax,
+            cbar.ax.tick_params(labelsize=8)
+            plt.title(var_name, size=16)
+            if shape_path != None:
+                # Requires the pyshp package
+                sf = shp.Reader(shape_path)
+
+                for shape in sf.shapeRecords():
+                    x = [i[0] for i in shape.shape.points[:]]
+                    y = [i[1] for i in shape.shape.points[:]]
+                    plt.plot(x,y,c="black")
 
             rate = np.where( ctl_in != 0, var_diff/ctl_in, np.nan)
-            plot1 = axs[1].contourf(lons, lats, rate, clevs_percentage, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
-            cb    = plt.colorbar(ax=axs[1], orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
-            cb.axs[1].tick_params(labelsize=10)
-
-            print(var_diff)
-            plt.title(var_name, size=16)
+            plot2 = axs[1].contourf(lons, lats, rate*100., clevs_percentage, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
+            cbar  = plt.colorbar(plot2, ax=axs[1], ticklocation="right", pad=0.08, orientation="horizontal",
+                    aspect=40, shrink=1) # cax=cax,
+            cbar.ax.tick_params(labelsize=8)
+            plt.title(var_name+"_diff_percentage", size=16)
 
             if shape_path != None:
                 # Requires the pyshp package
@@ -1307,42 +1345,19 @@ if __name__ == "__main__":
             Difference plot yearly
             '''
 
-            var_names  = ["Rnet",
-                          "Rainf_tavg",
-                          "TVeg_tavg","Evap_tavg","ESoil_tavg",
-                          "VegT_tavg","Tair_f_inst",
-                          "Tmax","Tmin","VegTmax","VegTmin",
-                          "Qle_tavg","Qh_tavg","Qg_tavg",
-                          "GPP_tavg","NPP_tavg",
-                          "LAI_inst","Albedo_inst","FWsoil_tavg",
-                          "AvgSurfT_tavg","SurfTmax","SurfTmin",
+            var_names  = [
+                        #   "GPP_tavg","NPP_tavg",
+                        #   "Tmax","Tmin","VegTmax","VegTmin",
+                        #   "TVeg_tavg","VegT_tavg","Tair_f_inst",
+                        #   "Evap_tavg","ESoil_tavg",
+                        #   "Qle_tavg","Qh_tavg","Qg_tavg",
+                        #   "LAI_inst",
+                          # "Albedo_inst","FWsoil_tavg",
+                          # "AvgSurfT_tavg","SurfTmax","SurfTmin",
+                          # "Rainf_tavg",
+                          "Rnet",
                           # "SM_top50cm",
                           ]
-
-            # period     = "2017_fall"
-            # time_s     = datetime(2017,3,1,0,0,0,0)
-            # time_e     = datetime(2017,6,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-            #
-            # period     = "2017_winter"
-            # time_s     = datetime(2017,6,1,0,0,0,0)
-            # time_e     = datetime(2017,9,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-            #
-            # period     = "2017_spring"
-            # time_s     = datetime(2017,9,1,0,0,0,0)
-            # time_e     = datetime(2017,12,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-            #
 
             # period     = "201718_summer"
             # time_s     = datetime(2017,12,1,0,0,0,0)
@@ -1351,6 +1366,46 @@ if __name__ == "__main__":
             # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
             #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
             #                     message=message)
+
+            # period     = "2017_spring"
+            # time_s     = datetime(2017,9,1,0,0,0,0)
+            # time_e     = datetime(2017,12,1,0,0,0,0)
+            # message    = case_name+"_"+period
+            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+            #                     message=message)
+
+            # period     = "2017_fall"
+            # time_s     = datetime(2017,3,1,0,0,0,0)
+            # time_e     = datetime(2017,6,1,0,0,0,0)
+            # message    = case_name+"_"+period
+            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+            #                     message=message)
+
+            # period     = "2017_winter"
+            # time_s     = datetime(2017,6,1,0,0,0,0)
+            # time_e     = datetime(2017,9,1,0,0,0,0)
+            # message    = case_name+"_"+period
+            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+            #                     message=message)
+
+            period     = "201819_summer"
+            time_s     = datetime(2018,12,1,0,0,0,0)
+            time_e     = datetime(2019,3,1,0,0,0,0)
+            message    = case_name+"_"+period
+            spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+                                message=message)
+
+            period     = "2018_spring"
+            time_s     = datetime(2018,9,1,0,0,0,0)
+            time_e     = datetime(2018,12,1,0,0,0,0)
+            message    = case_name+"_"+period
+            spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+                                message=message)
 
             period     = "2018_fall"
             time_s     = datetime(2018,3,1,0,0,0,0)
@@ -1367,22 +1422,8 @@ if __name__ == "__main__":
             spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
                                 lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
                                 message=message)
+            #
 
-            period     = "2018_spring"
-            time_s     = datetime(2018,9,1,0,0,0,0)
-            time_e     = datetime(2018,12,1,0,0,0,0)
-            message    = case_name+"_"+period
-            spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-                                message=message)
-
-            period     = "201819_summer"
-            time_s     = datetime(2018,12,1,0,0,0,0)
-            time_e     = datetime(2019,3,1,0,0,0,0)
-            message    = case_name+"_"+period
-            spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-                                message=message)
 
             # period     = "2019_fall"
             # time_s     = datetime(2019,3,1,0,0,0,0)

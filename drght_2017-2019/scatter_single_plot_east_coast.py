@@ -207,7 +207,7 @@ def plot_spatial_land_days(land_path,case_names,var_names,pft,time_s,time_e,loc_
             sct         = ax.plot(time_series, dsen-dctl, c='blue', lw=1.0, alpha=1, label='median')
         else:
             sct         = ax.scatter(df_ctl['var2'], df_sen['var']-df_ctl['var'], color='none', edgecolors='red', s=9, marker=markers[0], alpha=0.05, cmap=cmap, label='ctl')
-
+            sct         = ax.axhline(y=0, color="black", lw=1.0, alpha=1, linestyle='-')
     if pft is not None:
         fig.savefig("./plots/scatter_"+message+"_pft="+str(pft)+"_Tmax",bbox_inches='tight')
     else:
@@ -257,7 +257,7 @@ if __name__ == "__main__":
 
         var_names  = ['Tmin','VPDmin'] #'Tair_f_inst'
         message    = "201718_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
-        plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+        plot_spatial_land_days(land_path,case_names,var_names,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
                                lat_name=lat_name, lon_name=lon_name, message=message)
 
         var_names  = ['Tmax','FWsoil_tavg']
@@ -267,7 +267,7 @@ if __name__ == "__main__":
 
         var_names  = ['Tmin','FWsoil_tavg'] #'Tair_f_inst'
         message    = "201718_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
-        plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+        plot_spatial_land_days(land_path,case_names,var_names,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
                                lat_name=lat_name, lon_name=lon_name, message=message)
 
 
@@ -280,7 +280,7 @@ if __name__ == "__main__":
 
         var_names  = ['Tmin','VPDmin'] #'Tair_f_inst'
         message    = "201819_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
-        plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+        plot_spatial_land_days(land_path,case_names,var_names,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
                                lat_name=lat_name, lon_name=lon_name, message=message)
 
         var_names  = ['Tmax','FWsoil_tavg']
@@ -290,7 +290,7 @@ if __name__ == "__main__":
 
         var_names  = ['Tmin','FWsoil_tavg'] #'Tair_f_inst'
         message    = "201819_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
-        plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+        plot_spatial_land_days(land_path,case_names,var_names,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
                                lat_name=lat_name, lon_name=lon_name, message=message)
 
         time_s  = datetime(2019,12,1,0,0,0,0)
@@ -302,7 +302,7 @@ if __name__ == "__main__":
 
         var_names  = ['Tmin','VPDmin'] #'Tair_f_inst'
         message    = "201920_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
-        plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+        plot_spatial_land_days(land_path,case_names,var_names,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
                                lat_name=lat_name, lon_name=lon_name, message=message)
 
         var_names  = ['Tmax','FWsoil_tavg']
@@ -312,5 +312,5 @@ if __name__ == "__main__":
 
         var_names  = ['Tmin','FWsoil_tavg'] #'Tair_f_inst'
         message    = "201920_summer_east_coast_"+var_names[0]+"_vs_"+var_names[1]
-        plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
+        plot_spatial_land_days(land_path,case_names,var_names,pft,time_s,time_e,loc_lat=loc_lat,loc_lon=loc_lon,
                                lat_name=lat_name, lon_name=lon_name, message=message)

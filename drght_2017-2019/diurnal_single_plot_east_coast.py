@@ -140,8 +140,8 @@ def plot_spatial_land_days(land_path,case_names,var_name,pft,time_s,time_e,loc_l
         sct     = ax.scatter(df_ctl[mask_1D]['time'], df_sen[mask_1D]['var']-df_ctl[mask_1D]['var'],  color='none', edgecolors='red',  s=9, 
                             marker=markers[0], alpha=0.05, cmap=cmap, label='ctl') #edgecolor='none', c='red'
     else: 
-        sct     = ax.plot(np.arange(0,24), ctl_diurnal-273.25, color='red', s=9, marker=markers[0], cmap=cmap, label='ctl')
-        sct     = ax.plot(np.arange(0,24), sen_diurnal-273.25, color='blue', s=9, marker=markers[0], cmap=cmap, label='sen')
+        sct     = ax.plot(np.arange(0,24), ctl_diurnal-273.25, color='red', label='ctl')
+        sct     = ax.plot(np.arange(0,24), sen_diurnal-273.25, color='blue', label='sen')
 
     if pft is not None:
         fig.savefig("./plots/diurnal_"+message+"_pft="+str(pft)+"_Tmax",bbox_inches='tight')

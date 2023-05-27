@@ -1,5 +1,5 @@
-case_name="drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB"
-case_short_name="sen"
+case_name="drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2"
+case_short_name="ctl"
 #"drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB" 
 #"drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2"
 
@@ -7,7 +7,7 @@ var_names=("Qair_f_inst" "AvgSurfT_tavg" "Wind_f_inst" "Swnet_tavg" "Lwnet_tavg"
 
 for var_name in "${var_names[@]}"; do
 
-cat > ./compress_LIS_${case_short_name}_${var_name}.pbs << EOF_compress
+cat > ./compress_LIS_output_${case_short_name}_${var_name}.pbs << EOF_compress
 #!/bin/bash
 
 #PBS -m ae
@@ -31,7 +31,7 @@ nccompress -r -o -np 8 /g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderb
 
 EOF_compress
 
-qsub ./compress_LIS_${case_short_name}_${var_name}.pbs
+qsub ./compress_LIS_output_${case_short_name}_${var_name}.pbs
 
 done
 

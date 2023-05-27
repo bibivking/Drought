@@ -592,8 +592,8 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
         if var_name in ['ESoil_tavg','Evap_tavg',"ECanop_tavg",'TVeg_tavg',"Rainf_tavg","Snowf_tavg","Qs_tavg","Qsb_tavg"]:
             t_s        = time_s - datetime(2000,1,1,0,0,0,0)
             t_e        = time_e - datetime(2000,1,1,0,0,0,0)
-            ctl_in     = ctl_in*3600*24*(t_e.days - t_s.days)
-            sen_in     = sen_in*3600*24*(t_e.days - t_s.days)
+            ctl_in     = ctl_in*3600*24 #*(t_e.days - t_s.days)
+            sen_in     = sen_in*3600*24 #*(t_e.days - t_s.days)
         if var_name in ['Qair_f_inst']:
             ctl_in     = ctl_in*1000
             sen_in     = sen_in*1000
@@ -602,8 +602,8 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             t_e        = time_e - datetime(2000,1,1,0,0,0,0)
             s2d        = 3600*24.          # s-1 to d-1
             GPP_scale  = -0.000001*12*s2d   # umol s-1 to g d-1
-            ctl_in     = ctl_in*GPP_scale*(t_e.days - t_s.days)
-            sen_in     = sen_in*GPP_scale*(t_e.days - t_s.days)
+            ctl_in     = ctl_in*GPP_scale #*(t_e.days - t_s.days)
+            sen_in     = sen_in*GPP_scale #*(t_e.days - t_s.days)
         var_diff     = sen_in - ctl_in
 
         # read lat and lon outs
@@ -619,13 +619,13 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             clevs = [-0.3,-0.25,-0.2,-0.15,-0.1,-0.05,0.05,0.1,0.15,0.2,0.25,0.3]
         elif var_name in ['ESoil_tavg','Evap_tavg',"ECanop_tavg",'TVeg_tavg',"Rainf_tavg","Snowf_tavg","Qs_tavg","Qsb_tavg"]:
             # clevs = [-30,-28,-26,-24,-22,-20,-18,-16,-14,-12,-10,-8,-6,-4,-2,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30]
-            # clevs = [-5.,-4.5,-4.,-3.5,-3.,-2.5,-2,-1.5,-1,-0.5,0.5,1.,1.5,2.,2.5,3.,3.5,4.,4.5,5.]
-            clevs = [-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,-5,5,10,20.,30,40,50,60,70,80,90,100]
+            clevs = [-5.,-4.5,-4.,-3.5,-3.,-2.5,-2,-1.5,-1,-0.5,0.5,1.,1.5,2.,2.5,3.,3.5,4.,4.5,5.]
+            # clevs = [-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,-5,5,10,20.,30,40,50,60,70,80,90,100]
             # clevs = [-140,-120,-100,-80,-60,-40,-20,20,40,60,80,100,120,140]
         elif var_name in ["GPP_tavg","NPP_tavg",]:
-            clevs = [-200,-190,-180,-170,-160,-150,-140,-130,-120,-110,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,
-                     -5,5,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200]
-            # clevs = [-2.0,-1.8,-1.6,-1.4,-1.2,-1.0,-0.8,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.0,1.2,1.4,1.6,1.8,2.0]
+            # clevs = [-200,-190,-180,-170,-160,-150,-140,-130,-120,-110,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,
+            #          -5,5,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200]
+            clevs = [-2.0,-1.8,-1.6,-1.4,-1.2,-1.0,-0.8,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.0,1.2,1.4,1.6,1.8,2.0]
         elif var_name in ["CanopInt_inst","SnowCover_inst"]:
             clevs = [-2.,-1.8,-1.6,-1.4,-1.2,-1.,-0.8,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.,1.2,1.4,1.6,1.8,2.]
             # clevs = [-4,-3,-2,-1.5,-1,-0.5,0.5,1,1.5,2,3,4]
@@ -652,7 +652,6 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             clevs = [-0.05,-0.045,-0.04,-0.035,-0.03,-0.025,-0.02,-0.015,-0.01,-0.005,0.005,0.01,0.015,0.02,0.025,0.03,0.035,0.04,0.045,0.05]
         else:
             clevs = [-0.5,-0.4,-0.3,-0.2,-0.1,-0.05,0.05,0.1,0.2,0.3,0.4,0.5]
-
 
         clevs_percentage =  [-50,-45,-40,-35,-30,-25,-20,-15,-10,-5,5,10,15,20,25,30,35,40,45,50]
 
@@ -803,9 +802,9 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             #     axs[i].coastlines(resolution="50m",linewidth=1)
 
             #     # Add gridlines
-            #     gl = axs[i].gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=1, color='black', linestyle='--')
+            #     gl = axs[i].gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=1, color='black', linestyle='--')     
             #     gl.xlabels_bottom= True
-            #     gl.ylabels_left  = True
+            #     gl.ylabels_left  = True       
             #     gl.xlabels_top   = False
             #     gl.ylabels_right = False
             #     gl.xlines        = True
@@ -1352,106 +1351,42 @@ if __name__ == "__main__":
                         #   "Evap_tavg","ESoil_tavg",
                         #   "Qle_tavg","Qh_tavg","Qg_tavg",
                         #   "LAI_inst",
-                          # "Albedo_inst","FWsoil_tavg",
-                          # "AvgSurfT_tavg","SurfTmax","SurfTmin",
-                          # "Rainf_tavg",
+                          "Albedo_inst","FWsoil_tavg",
+                          "AvgSurfT_tavg","SurfTmax","SurfTmin",
+                          "Rainf_tavg",
                           "Rnet",
                           # "SM_top50cm",
                           ]
 
-            # period     = "201718_summer"
-            # time_s     = datetime(2017,12,1,0,0,0,0)
-            # time_e     = datetime(2018,3,1,0,0,0,0)
+            # period     = "2019_preHW_8_12Jan"
+            # time_s     = datetime(2019,1,8,0,0,0,0)
+            # time_e     = datetime(2019,1,13,0,0,0,0)
             # message    = case_name+"_"+period
             # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
             #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
             #                     message=message)
 
-            # period     = "2017_spring"
-            # time_s     = datetime(2017,9,1,0,0,0,0)
-            # time_e     = datetime(2017,12,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-
-            # period     = "2017_fall"
-            # time_s     = datetime(2017,3,1,0,0,0,0)
-            # time_e     = datetime(2017,6,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-
-            # period     = "2017_winter"
-            # time_s     = datetime(2017,6,1,0,0,0,0)
-            # time_e     = datetime(2017,9,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-
-            #
-            # period     = "2018_fall"
-            # time_s     = datetime(2018,3,1,0,0,0,0)
-            # time_e     = datetime(2018,6,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-            #
-            # period     = "2018_winter"
-            # time_s     = datetime(2018,6,1,0,0,0,0)
-            # time_e     = datetime(2018,9,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-            #
-            # period     = "2018_spring"
-            # time_s     = datetime(2018,9,1,0,0,0,0)
-            # time_e     = datetime(2018,12,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-            #
-            # period     = "201819_summer"
-            # time_s     = datetime(2018,12,1,0,0,0,0)
-            # time_e     = datetime(2019,3,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-
-            period     = "2019_Dec_2020_Jan"
-            time_s     = datetime(2019,12,1,0,0,0,0)
-            time_e     = datetime(2020,2,1,0,0,0,0)
+            period     = "2019_HW_14_18Jan"
+            time_s     = datetime(2019,1,14,0,0,0,0)
+            time_e     = datetime(2019,1,19,0,0,0,0)
             message    = case_name+"_"+period
             spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
                                 lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
                                 message=message)
 
-            period     = "2019_spring"
-            time_s     = datetime(2019,9,1,0,0,0,0)
-            time_e     = datetime(2019,12,1,0,0,0,0)
+            period     = "2019_HW_22_26Jan"
+            time_s     = datetime(2019,1,22,0,0,0,0)
+            time_e     = datetime(2019,1,27,0,0,0,0)
             message    = case_name+"_"+period
             spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
                                 lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
                                 message=message)
-
-            period     = "2019_fall"
-            time_s     = datetime(2019,3,1,0,0,0,0)
-            time_e     = datetime(2019,6,1,0,0,0,0)
+        
+            period     = "2019_postHW_28_1Feb"
+            time_s     = datetime(2019,1,28,0,0,0,0)
+            time_e     = datetime(2019,2,2,0,0,0,0)
             message    = case_name+"_"+period
             spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
                                 lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
                                 message=message)
-
-            period     = "2019_winter"
-            time_s     = datetime(2019,6,1,0,0,0,0)
-            time_e     = datetime(2019,9,1,0,0,0,0)
-            message    = case_name+"_"+period
-            spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-                                message=message)
+                                
