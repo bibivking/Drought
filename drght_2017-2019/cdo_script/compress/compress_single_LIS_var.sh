@@ -1,5 +1,5 @@
-case_name="drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2"
-case_short_name="ctl"
+case_name="drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB"
+case_short_name="sen"
 #"drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB" 
 #"drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2"
 

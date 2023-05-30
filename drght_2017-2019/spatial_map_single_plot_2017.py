@@ -19,6 +19,7 @@ import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 import matplotlib.ticker as mticker
 import scipy.ndimage as ndimage
+from scipy.interpolate import griddata, interp1d
 from netCDF4 import Dataset,num2date
 from datetime import datetime, timedelta
 from matplotlib.cm import get_cmap
@@ -28,6 +29,30 @@ from cartopy.feature import NaturalEarthFeature
 from wrf import (to_np, getvar, smooth2d, get_cartopy, cartopy_xlim,
                         cartopy_ylim, latlon_coords, ALL_TIMES)
 from common_utils import *
+
+
+def qair_to_vpd(qair, tair, press):
+    '''
+    calculate vpd
+    '''
+    DEG_2_KELVIN = 273.15
+    PA_TO_KPA    = 0.001
+    PA_TO_HPA    = 0.01
+
+    # convert back to Pa
+    press        /= PA_TO_HPA
+    tair         -= DEG_2_KELVIN
+
+    # saturation vapor pressure
+    es = 100.0 * 6.112 * np.exp((17.67 * tair) / (243.5 + tair))
+
+    # vapor pressure
+    ea = (qair * press) / (0.622 + (1.0 - 0.622) * qair)
+
+    vpd = (es - ea) * PA_TO_KPA
+    vpd = np.where(vpd < 0.05, 0.05, vpd)
+
+    return vpd
 
 def read_LIS_vars(var_type):
 
@@ -558,6 +583,39 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             land_sen_files= [land_sen_path+'SoilMoist_inst/LIS.CABLE.201701-201912.nc']
             time, Ctl_tmp = read_var_multi_file(land_ctl_files, 'SoilMoist_inst', loc_lat, loc_lon, lat_names, lon_names)
             time, Sen_tmp = read_var_multi_file(land_sen_files, 'SoilMoist_inst', loc_lat, loc_lon, lat_names, lon_names)
+        elif var_name in ['VPD']:
+            tair_ctl_files= [land_ctl_path+'Tair_f_inst/LIS.CABLE.201701-201912.nc']
+            tair_sen_files= [land_sen_path+'Tair_f_inst/LIS.CABLE.201701-201912.nc']
+            qair_ctl_files= [land_ctl_path+'Qair_f_inst/LIS.CABLE.201701-201912.nc']
+            qair_sen_files= [land_sen_path+'Qair_f_inst/LIS.CABLE.201701-201912.nc']
+            pres_ctl_files= ['/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/'
+                             +'WRF_output/slp/wrfout_201701-201912.nc']
+            pres_sen_files= ['/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/'
+                             +'WRF_output/slp/wrfout_201701-201912.nc']
+
+            time, Tair_ctl    = read_var_multi_file(tair_ctl_files, "Tair_f_inst", loc_lat, loc_lon, lat_names, lon_names)
+            time, Tair_sen    = read_var_multi_file(tair_sen_files, "Tair_f_inst", loc_lat, loc_lon, lat_names, lon_names)
+            time, Qair_ctl    = read_var_multi_file(qair_ctl_files, "Qair_f_inst", loc_lat, loc_lon, lat_names, lon_names)
+            time, Qair_sen    = read_var_multi_file(qair_sen_files, "Qair_f_inst", loc_lat, loc_lon, lat_names, lon_names)
+            time_wrf, Pres_ctl_tmp= read_var_multi_file(pres_ctl_files, "slp", loc_lat, loc_lon, lat_names, lon_names)
+            time_wrf, Pres_sen_tmp= read_var_multi_file(pres_sen_files, "slp", loc_lat, loc_lon, lat_names, lon_names)
+
+            time_in = []
+            time_out= []
+            for t in time_wrf:
+                time_in.append(t.total_seconds())
+            for t in time:
+                time_out.append(t.total_seconds())     
+
+            print("type(time_in)",type(time_in),"time=",time_in)
+            print("type(time_out)",type(time_out),"time_out=",time_out)
+            
+            f_ctl             = interp1d(np.array(time_in), Pres_ctl_tmp[:], kind='linear',fill_value='extrapolate', axis=0)
+            f_sen             = interp1d(np.array(time_in), Pres_sen_tmp[:],kind='linear', fill_value='extrapolate', axis=0)
+            Pres_ctl          = f_ctl(np.array(time_out))
+            Pres_sen          = f_sen(np.array(time_out))
+            Ctl_tmp           = qair_to_vpd(Qair_ctl, Tair_ctl, Pres_ctl)
+            Sen_tmp           = qair_to_vpd(Qair_sen, Tair_sen, Pres_sen)
         else:
             land_ctl_files= [land_ctl_path+var_name+'/LIS.CABLE.201701-201912.nc']
             land_sen_files= [land_sen_path+var_name+'/LIS.CABLE.201701-201912.nc']
@@ -631,7 +689,7 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             # clevs = [-4,-3,-2,-1.5,-1,-0.5,0.5,1,1.5,2,3,4]
         elif var_name in ["Qle_tavg","Qh_tavg","Qg_tavg","Rnet",]:
             clevs = [-140,-120,-100,-80,-60,-40,-20,-10,-5,5,10,20,40,60,80,100,120,140]
-        elif var_name in ["Swnet_tavg","Lwnet_tavg","SWdown_f_inst","LWdown_f_inst"]:
+        elif var_name in ["Swnet_tavg","Lwnet_tavg","SWdown_f_inst","LWdown_f_inst","Rnet"]:
             clevs = [-22,-18,-14,-10,-6,-2,2,6,10,14,18,22]
         elif var_name in ["Wind_f_inst",]:
             clevs = [-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4]
@@ -648,12 +706,14 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             clevs = [-0.5,-0.45,-0.4,-0.35,-0.3,-0.25,-0.2,-0.15,-0.1,-0.05,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5]
         elif var_name in ["LAI_inst"]:
             clevs = [-1,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
+        elif var_name in ["VPD"]:
+            clevs = [-0.1,-0.09,-0.08,-0.07,-0.06,-0.05,-0.04,-0.03,-0.02,-0.01,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1]
         elif var_name in ["Albedo_inst"]:
             clevs = [-0.05,-0.045,-0.04,-0.035,-0.03,-0.025,-0.02,-0.015,-0.01,-0.005,0.005,0.01,0.015,0.02,0.025,0.03,0.035,0.04,0.045,0.05]
         else:
             clevs = [-0.5,-0.4,-0.3,-0.2,-0.1,-0.05,0.05,0.1,0.2,0.3,0.4,0.5]
 
-        clevs_percentage =  [-50,-45,-40,-35,-30,-25,-20,-15,-10,-5,5,10,15,20,25,30,35,40,45,50]
+        clevs_percentage =  [-50,-45,-40,-35,-30,-25,-20,-15,-10,-5,-4,-3,-2,-1,1,2,3,4,5,10,15,20,25,30,35,40,45,50]
 
         print("len(np.shape(var_diff))",len(np.shape(var_diff)))
 
@@ -705,11 +765,12 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
 
                 ax.coastlines(resolution="50m",linewidth=1)
 
-                # Add gridlines
+                # # Add gridlines
                 gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=1, color='black', linestyle='--')
                 gl.xlabels_top   = False
                 gl.ylabels_right = False
-                gl.xlines        = True
+                gl.xlines        = False
+                gl.ylines        = False
 
                 if loc_lat == None:
                     gl.xlocator  = mticker.FixedLocator([135,140,145,150,155])
@@ -791,37 +852,6 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             # choose colormap
             cmap  = plt.cm.seismic
 
-            #hot_r # BrBG
-            # for i in np.arange(2):
-            #     # start plotting
-            #     if loc_lat == None:
-            #         axs[i].set_extent([135,155,-40,-25])
-            #     else:
-            #         axs[i].set_extent([loc_lon[0],loc_lon[1],loc_lat[0],loc_lat[1]])
-
-            #     axs[i].coastlines(resolution="50m",linewidth=1)
-
-            #     # Add gridlines
-            #     gl = axs[i].gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=1, color='black', linestyle='--')
-            #     gl.xlabels_bottom= True
-            #     gl.ylabels_left  = True
-            #     gl.xlabels_top   = False
-            #     gl.ylabels_right = False
-            #     gl.xlines        = True
-
-            #     if loc_lat == None:
-            #         gl.xlocator  = mticker.FixedLocator([135,140,145,150,155])
-            #         gl.ylocator  = mticker.FixedLocator([-40,-35,-30,-25])
-            #     else:
-            #         gl.xlocator  = mticker.FixedLocator(loc_lon)
-            #         gl.ylocator  = mticker.FixedLocator(loc_lat)
-
-            #     gl.xformatter = LONGITUDE_FORMATTER
-            #     gl.yformatter = LATITUDE_FORMATTER
-            #     gl.xlabel_style = {'size':10, 'color':'black'}
-            #     gl.ylabel_style = {'size':10, 'color':'black'}
-
-
             for i in np.arange(2):
 
                 axs[i].coastlines(resolution="50m",linewidth=1)
@@ -832,12 +862,12 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
                 gl = axs[i].gridlines(crs=ccrs.PlateCarree(), draw_labels=True, linewidth=1, color=almost_black, linestyle='--')
                 gl.xlabels_top  = False
                 gl.ylabels_right= False
-                gl.xlines       = True
-                gl.ylines       = True
-                gl.xlocator     = mticker.FixedLocator(np.arange(125,160,1))
-                gl.ylocator     = mticker.FixedLocator(np.arange(-40,-20,1))
-                # gl.xlocator     = mticker.FixedLocator([130,135,140,145,150,155,160])
-                # gl.ylocator     = mticker.FixedLocator([-40,-35,-30,-25,-20])
+                gl.xlines       = False
+                gl.ylines       = False
+                # gl.xlocator     = mticker.FixedLocator(np.arange(125,160,1))
+                # gl.ylocator     = mticker.FixedLocator(np.arange(-40,-20,1))
+                gl.xlocator     = mticker.FixedLocator([130,135,140,145,150,155,160])
+                gl.ylocator     = mticker.FixedLocator([-40,-35,-30,-25,-20])
                 gl.xformatter   = LONGITUDE_FORMATTER
                 gl.yformatter   = LATITUDE_FORMATTER
                 gl.xlabel_style = {'size':12, 'color':almost_black}#,'rotation': 90}
@@ -1345,16 +1375,20 @@ if __name__ == "__main__":
             '''
 
             var_names  = [
+                        #   "Rnet",
+                          "VPD",
                         #   "GPP_tavg","NPP_tavg",
                         #   "Tmax","Tmin","VegTmax","VegTmin",
-                        #   "TVeg_tavg","VegT_tavg","Tair_f_inst",
-                        #   "Evap_tavg","ESoil_tavg",
-                        #   "Qle_tavg","Qh_tavg","Qg_tavg",
-                        #   "LAI_inst",
+                        #   "Qle_tavg","Qh_tavg","LAI_inst",
+                        #   "Albedo_inst","FWsoil_tavg",
+                          # "TVeg_tavg","VegT_tavg","Tair_f_inst",
+                          # "Evap_tavg","ESoil_tavg",
+                          # "Qle_tavg","Qh_tavg","Qg_tavg",
+                          # "LAI_inst",
                           # "Albedo_inst","FWsoil_tavg",
                           # "AvgSurfT_tavg","SurfTmax","SurfTmin",
                           # "Rainf_tavg",
-                          "Rnet",
+
                           # "SM_top50cm",
                           ]
 
@@ -1365,30 +1399,30 @@ if __name__ == "__main__":
             spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
                                 lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
                                 message=message)
-
-            period     = "2017_spring"
-            time_s     = datetime(2017,9,1,0,0,0,0)
-            time_e     = datetime(2017,12,1,0,0,0,0)
-            message    = case_name+"_"+period
-            spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-                                message=message)
-
-            period     = "2017_fall"
-            time_s     = datetime(2017,3,1,0,0,0,0)
-            time_e     = datetime(2017,6,1,0,0,0,0)
-            message    = case_name+"_"+period
-            spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-                                message=message)
-
-            period     = "2017_winter"
-            time_s     = datetime(2017,6,1,0,0,0,0)
-            time_e     = datetime(2017,9,1,0,0,0,0)
-            message    = case_name+"_"+period
-            spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-                                message=message)
+            #
+            # period     = "2017_spring"
+            # time_s     = datetime(2017,9,1,0,0,0,0)
+            # time_e     = datetime(2017,12,1,0,0,0,0)
+            # message    = case_name+"_"+period
+            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+            #                     message=message)
+            # 
+            # period     = "2017_fall"
+            # time_s     = datetime(2017,3,1,0,0,0,0)
+            # time_e     = datetime(2017,6,1,0,0,0,0)
+            # message    = case_name+"_"+period
+            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+            #                     message=message)
+            #
+            # period     = "2017_winter"
+            # time_s     = datetime(2017,6,1,0,0,0,0)
+            # time_e     = datetime(2017,9,1,0,0,0,0)
+            # message    = case_name+"_"+period
+            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+            #                     message=message)
 
             #
             # period     = "2018_fall"
