@@ -1,0 +1,167 @@
+mkdir: cannot create directory 'ESoil_tavg': File exists
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 167206320 values from 44 variables over 720 timesteps [17.90s 74MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 156059232 values from 44 variables over 672 timesteps [7.62s 75MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [9.13s 83MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 167206320 values from 44 variables over 720 timesteps [7.08s 82MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [10.49s 84MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 167206320 values from 44 variables over 720 timesteps [5.92s 83MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [5.68s 76MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [5.73s 82MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 167206320 values from 44 variables over 720 timesteps [4.46s 78MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [8.18s 81MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 167206320 values from 44 variables over 720 timesteps [8.73s 81MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [6.16s 75MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [6.22s 80MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 156059232 values from 44 variables over 672 timesteps [4.60s 80MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [9.57s 77MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 167206320 values from 44 variables over 720 timesteps [4.97s 76MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [5.62s 75MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 167206320 values from 44 variables over 720 timesteps [5.20s 76MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [7.28s 79MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [5.24s 77MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 167206320 values from 44 variables over 720 timesteps [4.16s 81MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [4.86s 75MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 167206320 values from 44 variables over 720 timesteps [4.78s 78MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [4.97s 83MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [4.50s 76MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 156059232 values from 44 variables over 672 timesteps [4.04s 75MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [4.40s 76MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 167206320 values from 44 variables over 720 timesteps [4.66s 80MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [4.73s 78MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 167206320 values from 44 variables over 720 timesteps [4.82s 78MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [4.71s 79MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [4.54s 79MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 167206320 values from 44 variables over 720 timesteps [8.66s 75MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [4.09s 75MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 167206320 values from 44 variables over 720 timesteps [4.18s 75MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [4.39s 76MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 172779864 values from 44 variables over 744 timesteps [4.60s 81MB].
+cdo    selname (Warning): Variable name lat not found!
+cdo    selname (Warning): Variable name lon not found!
+cdo    selname (Warning): Variable name time not found!
+cdo    selname: Processed 161632776 values from 44 variables over 696 timesteps [4.19s 84MB].
+cdo    mergetime: Processed 6431869776 values from 38 variables over 27696 timesteps [55.41s 106MB].
+
+======================================================================================
+                  Resource Usage on 2023-05-31 09:04:29:
+   Job Id:             85767477.gadi-pbs
+   Project:            w97
+   Exit Status:        0
+   Service Units:      2.87
+   NCPUs Requested:    1                      NCPUs Used: 1               
+                                           CPU Time Used: 00:03:32        
+   Memory Requested:   256.0GB               Memory Used: 58.87GB         
+   Walltime requested: 02:30:00            Walltime Used: 00:04:51        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================

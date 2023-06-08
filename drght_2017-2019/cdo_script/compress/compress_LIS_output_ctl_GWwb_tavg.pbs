@@ -17,5 +17,5 @@ rm *.d01.nc
 
 module use /g/data/hh5/public/modules 
 module load conda/analysis3-22.04
-nccompress -r -o -np 8 /g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/LIS_output/GWwb_tavg/LIS.CABLE.201701-201912.nc
+nccompress -r -o -np 8 /g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/LIS_output/GWwb_tavg/LIS.CABLE.201701-202002.nc
 

@@ -255,7 +255,7 @@ def spatial_map_single_plot(file_path, var_name, time_s, time_e, lat_name, lon_n
     plt.contourf(lons, lats, var,clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
 
     cb = plt.colorbar(ax=ax, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
-    cb.ax.tick_params(labelsize=10)
+    cb.ax.tick_params(labelsize=10, labelrotation=45)
     plt.title(var_name, size=16)
 
     if message == None:
@@ -431,7 +431,7 @@ def spatial_map_single_plot_diff(file_paths, var_names, time_s=None, time_e=None
             plt.contourf(lons, lats, var[j,:,:], clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
 
             cb = plt.colorbar(ax=ax, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
-            cb.ax.tick_params(labelsize=10)
+            cb.ax.tick_params(labelsize=10, labelrotation=45)
             plt.title(var_names[0], size=16)
 
             if shape_path != None:
@@ -521,7 +521,7 @@ def spatial_map_single_plot_diff(file_paths, var_names, time_s=None, time_e=None
         plt.contourf(lons, lats, var, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
         print(var)
         cb = plt.colorbar(ax=ax, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
-        cb.ax.tick_params(labelsize=10)
+        cb.ax.tick_params(labelsize=10, labelrotation=45)
         plt.title(var_names[0], size=16)
 
         if shape_path != None:
@@ -553,45 +553,45 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
         print("plotting "+var_name)
 
         if var_name in ["Tmax","Tmin",]:
-            land_ctl_files= [land_ctl_path+'Tair_f_inst/LIS.CABLE.201701-201912.nc']
-            land_sen_files= [land_sen_path+'Tair_f_inst/LIS.CABLE.201701-201912.nc']
+            land_ctl_files= [land_ctl_path+'Tair_f_inst/LIS.CABLE.201701-202002.nc']
+            land_sen_files= [land_sen_path+'Tair_f_inst/LIS.CABLE.201701-202002.nc']
             time, Ctl_tmp = read_var_multi_file(land_ctl_files, 'Tair_f_inst', loc_lat, loc_lon, lat_names, lon_names)
             time, Sen_tmp = read_var_multi_file(land_sen_files, 'Tair_f_inst', loc_lat, loc_lon, lat_names, lon_names)
         elif var_name in ["VegTmax","VegTmin"]:
-            land_ctl_files= [land_ctl_path+'VegT_tavg/LIS.CABLE.201701-201912.nc']
-            land_sen_files= [land_sen_path+'VegT_tavg/LIS.CABLE.201701-201912.nc']
+            land_ctl_files= [land_ctl_path+'VegT_tavg/LIS.CABLE.201701-202002.nc']
+            land_sen_files= [land_sen_path+'VegT_tavg/LIS.CABLE.201701-202002.nc']
             time, Ctl_tmp = read_var_multi_file(land_ctl_files, 'VegT_tavg', loc_lat, loc_lon, lat_names, lon_names)
             time, Sen_tmp = read_var_multi_file(land_sen_files, 'VegT_tavg', loc_lat, loc_lon, lat_names, lon_names)
         elif var_name in ["SurfTmax","SurfTmin"]:
-            land_ctl_files= [land_ctl_path+'AvgSurfT_tavg/LIS.CABLE.201701-201912.nc']
-            land_sen_files= [land_sen_path+'AvgSurfT_tavg/LIS.CABLE.201701-201912.nc']
+            land_ctl_files= [land_ctl_path+'AvgSurfT_tavg/LIS.CABLE.201701-202002.nc']
+            land_sen_files= [land_sen_path+'AvgSurfT_tavg/LIS.CABLE.201701-202002.nc']
             time, Ctl_tmp = read_var_multi_file(land_ctl_files, 'AvgSurfT_tavg', loc_lat, loc_lon, lat_names, lon_names)
             time, Sen_tmp = read_var_multi_file(land_sen_files, 'AvgSurfT_tavg', loc_lat, loc_lon, lat_names, lon_names)
         elif var_name in ["Rnet",]:
-            land_ctl_files= [land_ctl_path+'Lwnet_tavg/LIS.CABLE.201701-201912.nc']
-            land_sen_files= [land_sen_path+'Lwnet_tavg/LIS.CABLE.201701-201912.nc']
+            land_ctl_files= [land_ctl_path+'Lwnet_tavg/LIS.CABLE.201701-202002.nc']
+            land_sen_files= [land_sen_path+'Lwnet_tavg/LIS.CABLE.201701-202002.nc']
             time, Ctl_Lwnet_tmp = read_var_multi_file(land_ctl_files, 'Lwnet_tavg', loc_lat, loc_lon, lat_names, lon_names)
             time, Sen_Lwnet_tmp = read_var_multi_file(land_sen_files, 'Lwnet_tavg', loc_lat, loc_lon, lat_names, lon_names)
-            land_ctl_files= [land_ctl_path+'Swnet_tavg/LIS.CABLE.201701-201912.nc']
-            land_sen_files= [land_sen_path+'Swnet_tavg/LIS.CABLE.201701-201912.nc']
+            land_ctl_files= [land_ctl_path+'Swnet_tavg/LIS.CABLE.201701-202002.nc']
+            land_sen_files= [land_sen_path+'Swnet_tavg/LIS.CABLE.201701-202002.nc']
             time, Ctl_Swnet_tmp = read_var_multi_file(land_ctl_files, 'Swnet_tavg', loc_lat, loc_lon, lat_names, lon_names)
             time, Sen_Swnet_tmp = read_var_multi_file(land_sen_files, 'Swnet_tavg', loc_lat, loc_lon, lat_names, lon_names)
             Ctl_tmp = Ctl_Lwnet_tmp+Ctl_Swnet_tmp
             Sen_tmp = Sen_Lwnet_tmp+Sen_Swnet_tmp
         elif var_name in ["SM_top50cm",]:
-            land_ctl_files= [land_ctl_path+'SoilMoist_inst/LIS.CABLE.201701-201912.nc']
-            land_sen_files= [land_sen_path+'SoilMoist_inst/LIS.CABLE.201701-201912.nc']
+            land_ctl_files= [land_ctl_path+'SoilMoist_inst/LIS.CABLE.201701-202002.nc']
+            land_sen_files= [land_sen_path+'SoilMoist_inst/LIS.CABLE.201701-202002.nc']
             time, Ctl_tmp = read_var_multi_file(land_ctl_files, 'SoilMoist_inst', loc_lat, loc_lon, lat_names, lon_names)
             time, Sen_tmp = read_var_multi_file(land_sen_files, 'SoilMoist_inst', loc_lat, loc_lon, lat_names, lon_names)
         elif var_name in ['VPD']:
-            tair_ctl_files= [land_ctl_path+'Tair_f_inst/LIS.CABLE.201701-201912.nc']
-            tair_sen_files= [land_sen_path+'Tair_f_inst/LIS.CABLE.201701-201912.nc']
-            qair_ctl_files= [land_ctl_path+'Qair_f_inst/LIS.CABLE.201701-201912.nc']
-            qair_sen_files= [land_sen_path+'Qair_f_inst/LIS.CABLE.201701-201912.nc']
+            tair_ctl_files= [land_ctl_path+'Tair_f_inst/LIS.CABLE.201701-202002.nc']
+            tair_sen_files= [land_sen_path+'Tair_f_inst/LIS.CABLE.201701-202002.nc']
+            qair_ctl_files= [land_ctl_path+'Qair_f_inst/LIS.CABLE.201701-202002.nc']
+            qair_sen_files= [land_sen_path+'Qair_f_inst/LIS.CABLE.201701-202002.nc']
             pres_ctl_files= ['/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/'
-                             +'WRF_output/slp/wrfout_201701-201912.nc']
+                             +'WRF_output/slp/wrfout_201701-202002.nc']
             pres_sen_files= ['/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/'
-                             +'WRF_output/slp/wrfout_201701-201912.nc']
+                             +'WRF_output/slp/wrfout_201701-202002.nc']
 
             time, Tair_ctl    = read_var_multi_file(tair_ctl_files, "Tair_f_inst", loc_lat, loc_lon, lat_names, lon_names)
             time, Tair_sen    = read_var_multi_file(tair_sen_files, "Tair_f_inst", loc_lat, loc_lon, lat_names, lon_names)
@@ -605,11 +605,11 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             for t in time_wrf:
                 time_in.append(t.total_seconds())
             for t in time:
-                time_out.append(t.total_seconds())     
+                time_out.append(t.total_seconds())
 
             print("type(time_in)",type(time_in),"time=",time_in)
             print("type(time_out)",type(time_out),"time_out=",time_out)
-            
+
             f_ctl             = interp1d(np.array(time_in), Pres_ctl_tmp[:], kind='linear',fill_value='extrapolate', axis=0)
             f_sen             = interp1d(np.array(time_in), Pres_sen_tmp[:],kind='linear', fill_value='extrapolate', axis=0)
             Pres_ctl          = f_ctl(np.array(time_out))
@@ -617,8 +617,8 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             Ctl_tmp           = qair_to_vpd(Qair_ctl, Tair_ctl, Pres_ctl)
             Sen_tmp           = qair_to_vpd(Qair_sen, Tair_sen, Pres_sen)
         else:
-            land_ctl_files= [land_ctl_path+var_name+'/LIS.CABLE.201701-201912.nc']
-            land_sen_files= [land_sen_path+var_name+'/LIS.CABLE.201701-201912.nc']
+            land_ctl_files= [land_ctl_path+var_name+'/LIS.CABLE.201701-202002.nc']
+            land_sen_files= [land_sen_path+var_name+'/LIS.CABLE.201701-202002.nc']
             time, Ctl_tmp = read_var_multi_file(land_ctl_files, var_name, loc_lat, loc_lon, lat_names, lon_names)
             time, Sen_tmp = read_var_multi_file(land_sen_files, var_name, loc_lat, loc_lon, lat_names, lon_names)
 
@@ -626,16 +626,25 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             # average of daily max
             ctl_in       = spital_var_max(time,Ctl_tmp,time_s,time_e)
             sen_in       = spital_var_max(time,Sen_tmp,time_s,time_e)
+            ctl_in       = ctl_in -273.15
+            sen_in       = sen_in -273.15
         elif var_name in ["SurfTmin","Tmin","VegTmin"]:
             # average of daily min
             ctl_in       = spital_var_min(time,Ctl_tmp,time_s,time_e)
             sen_in       = spital_var_min(time,Sen_tmp,time_s,time_e)
+            ctl_in       = ctl_in -273.15
+            sen_in       = sen_in -273.15
         elif var_name in ["SM_top50cm",]:
             # top 1m soil moisture [.022, .058, .154, .409, 1.085, 2.872]
             c_tmp        = Ctl_tmp[:,0,:,:]*0.022 + Ctl_tmp[:,1,:,:]*0.058 + Ctl_tmp[:,2,:,:]*0.154 + Ctl_tmp[:,3,:,:]*0.266
             s_tmp        = Sen_tmp[:,0,:,:]*0.022 + Sen_tmp[:,1,:,:]*0.058 + Sen_tmp[:,2,:,:]*0.154 + Sen_tmp[:,3,:,:]*0.266
             ctl_in       = spital_var_min(time,c_tmp,time_s,time_e)
             sen_in       = spital_var_min(time,s_tmp,time_s,time_e)
+        elif var_name in ["VegT_tavg","Tair_f_inst","AvgSurfT_tavg"]:
+            ctl_in       = spital_var(time,Ctl_tmp,time_s,time_e)
+            sen_in       = spital_var(time,Sen_tmp,time_s,time_e)
+            ctl_in       = ctl_in -273.15
+            sen_in       = sen_in -273.15
         else:
             ctl_in       = spital_var(time,Ctl_tmp,time_s,time_e)
             sen_in       = spital_var(time,Sen_tmp,time_s,time_e)
@@ -666,6 +675,10 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
 
         # read lat and lon outs
 
+        # =============== CHANGE HERE ===============
+        cmap  = plt.cm.BrBG
+        clevs_percentage =  [-50,-45,-40,-35,-30,-25,-20,-15,-10,-5,-4,-3,-2,-1,1,2,3,4,5,10,15,20,25,30,35,40,45,50]
+
         if var_name in ['WaterTableD_tavg','WatTable']:
             clevs = [-4,-3,-2,-1.5,-1,-0.5,0.5,1,1.5,2,3,4]
         elif var_name in ['GWwb_tavg','GWMoist']:
@@ -684,6 +697,8 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             clevs = [-200,-190,-180,-170,-160,-150,-140,-130,-120,-110,-100,-90,-80,-70,-60,-50,-40,-30,-20,-10,
                      -5,5,10,20,30,40,50,60,70,80,90,100,110,120,130,140,150,160,170,180,190,200]
             # clevs = [-2.0,-1.8,-1.6,-1.4,-1.2,-1.0,-0.8,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.0,1.2,1.4,1.6,1.8,2.0]
+            clevs_percentage =  [-70,-60,-50,-40,-30,-20,-10,10,20,30,40,50,60,70]
+            cmap  = plt.cm.BrBG
         elif var_name in ["CanopInt_inst","SnowCover_inst"]:
             clevs = [-2.,-1.8,-1.6,-1.4,-1.2,-1.,-0.8,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.,1.2,1.4,1.6,1.8,2.]
             # clevs = [-4,-3,-2,-1.5,-1,-0.5,0.5,1,1.5,2,3,4]
@@ -698,22 +713,26 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
         elif var_name in ["Tair_f_inst","Tmax","Tmin","VegT_tavg","VegTmax","VegTmin",
                           "AvgSurfT_tavg","SurfTmax","SurfTmin","SoilTemp_inst",]:
             # clevs = [-2.,-1.8,-1.6,-1.4,-1.2,-1.,-0.8,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.,1.2,1.4,1.6,1.8,2.]
-            clevs = [-1,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.]
+            clevs = [-1.2,-1.1,-1,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.,1.1,1.2]
             # clevs = [-3,-2.5,-2,-1.5,-1,-0.5,-0.1,0.1,0.5,1.,1.5,2,2.5,3.]
+            cmap  = plt.cm.seismic
         elif var_name in ["Wind_f_inst",]:
             clevs = [-2.,-1.5,-1,-0.5,-0.1,0.1,0.5,1.,1.5,2.]
         elif var_name in ["FWsoil_tavg","SmLiqFrac_inst","SmFrozFrac_inst"]:
             clevs = [-0.5,-0.45,-0.4,-0.35,-0.3,-0.25,-0.2,-0.15,-0.1,-0.05,0.05,0.1,0.15,0.2,0.25,0.3,0.35,0.4,0.45,0.5]
         elif var_name in ["LAI_inst"]:
-            clevs = [-1,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
+            clevs = [-2,-1.8,-1.6,-1.4,-1.2,-1.,-0.8,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.,1.2,1.4,1.6,1.8,2]
+            clevs_percentage =  [-70,-60,-50,-40,-30,-20,-10,-5,5,10,20,30,40,50,60,70]
+            cmap  = plt.cm.BrBG
         elif var_name in ["VPD"]:
             clevs = [-0.1,-0.09,-0.08,-0.07,-0.06,-0.05,-0.04,-0.03,-0.02,-0.01,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1]
         elif var_name in ["Albedo_inst"]:
-            clevs = [-0.05,-0.045,-0.04,-0.035,-0.03,-0.025,-0.02,-0.015,-0.01,-0.005,0.005,0.01,0.015,0.02,0.025,0.03,0.035,0.04,0.045,0.05]
+            clevs = [-0.08,-0.07,-0.06,-0.05,-0.04,-0.03,-0.02,-0.01,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08]
+            clevs_percentage =   [-70,-60,-50,-40,-30,-20,-10,-5,5,10,20,30,40,50,60,70]
+            cmap  = plt.cm.BrBG_r
         else:
             clevs = [-0.5,-0.4,-0.3,-0.2,-0.1,-0.05,0.05,0.1,0.2,0.3,0.4,0.5]
 
-        clevs_percentage =  [-50,-45,-40,-35,-30,-25,-20,-15,-10,-5,-4,-3,-2,-1,1,2,3,4,5,10,15,20,25,30,35,40,45,50]
 
         print("len(np.shape(var_diff))",len(np.shape(var_diff)))
 
@@ -752,9 +771,6 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
                 props = dict(boxstyle="round", facecolor='white', alpha=0.0, ec='white')
                 # choose colormap
 
-                # =============== CHANGE HERE ===============
-                cmap  = plt.cm.seismic
-
                 #hot_r # BrBG
 
                 # start plotting
@@ -786,7 +802,7 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
                 plt.contourf(lons, lats, var_diff[j,:,:], clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
 
                 cb = plt.colorbar(ax=ax, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
-                cb.ax.tick_params(labelsize=10)
+                cb.ax.tick_params(labelsize=10, labelrotation=45)
                 plt.title(var_name, size=16)
 
                 if shape_path != None:
@@ -880,7 +896,251 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             plot1 = axs[0].contourf(lons, lats, var_diff, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
             cbar = plt.colorbar(plot1, ax=axs[0], ticklocation="right", pad=0.08, orientation="horizontal",
                     aspect=40, shrink=1) # cax=cax,
-            cbar.ax.tick_params(labelsize=8)
+            cbar.ax.tick_params(labelsize=10,labelrotation=45)
+            # plt.title(var_name, size=16)
+            # if shape_path != None:
+            #     # Requires the pyshp package
+            #     sf = shp.Reader(shape_path)
+            #
+            #     for shape in sf.shapeRecords():
+            #         x = [i[0] for i in shape.shape.points[:]]
+            #         y = [i[1] for i in shape.shape.points[:]]
+            #         plt.plot(x,y,c="black")
+
+            rate = np.where( ctl_in != 0, var_diff/ctl_in, np.nan)
+            plot2 = axs[1].contourf(lons, lats, rate*100., clevs_percentage, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
+            cbar  = plt.colorbar(plot2, ax=axs[1], ticklocation="right", pad=0.08, orientation="horizontal",
+                    aspect=40, shrink=1) # cax=cax,
+            cbar.ax.tick_params(labelsize=10,labelrotation=45)
+            # plt.title(var_name+"_diff_percentage", size=16)
+
+            # if shape_path != None:
+            #     # Requires the pyshp package
+            #     sf = shp.Reader(shape_path)
+            #
+            #     for shape in sf.shapeRecords():
+            #         x = [i[0] for i in shape.shape.points[:]]
+            #         y = [i[1] for i in shape.shape.points[:]]
+            #         plt.plot(x,y,c="black")
+
+            plt.savefig('./plots/spatial_map_'+message + "_" + var_name+'.png',dpi=300)
+
+def spatial_map_single_plot_WRF_diff(atmo_ctl_path, atmo_sen_path, var_names, time_s=None,
+                                     time_e=None, lat_names="lat", lon_names="lon",loc_lat=None,
+                                     loc_lon=None, wrf_path=None, shape_path=None, message=None):
+
+    '''
+    plot a single spatial map
+    '''
+
+    # WRF-CABLE
+    for var_name in var_names:
+        print("plotting "+var_name)
+
+        atmo_ctl_files= [atmo_ctl_path+var_name+'/wrfout_201701-202002.nc']
+        atmo_sen_files= [atmo_sen_path+var_name+'/wrfout_201701-202002.nc']
+        time, Ctl_tmp = read_var_multi_file(atmo_ctl_files, var_name, loc_lat, loc_lon, lat_names, lon_names)
+        time, Sen_tmp = read_var_multi_file(atmo_sen_files, var_name, loc_lat, loc_lon, lat_names, lon_names)
+        # Ctl_tmp       = Ctl_tmp[14:] # ctl nc file includes 2017-01-01 while sen doesn't
+        print('np.shape(time)',np.shape(time))
+        print('np.shape(Ctl_tmp)',np.shape(Ctl_tmp))
+
+        if var_name in ["cloudfrac", "cape_2d"]:
+            ctl_in = np.zeros((np.shape(Ctl_tmp)[0],np.shape(Ctl_tmp)[2],np.shape(Ctl_tmp)[3]))
+            for i in np.arange(np.shape(Ctl_tmp)[0]):
+                ctl_in[i,:,:] = spital_var(time,Ctl_tmp[i],time_s,time_e)
+                sen_in[i,:,:] = spital_var(time,Sen_tmp[i],time_s,time_e)
+        else:
+            ctl_in       = spital_var(time,Ctl_tmp,time_s,time_e)
+            sen_in       = spital_var(time,Sen_tmp,time_s,time_e)
+        if var_name in ['T2']:
+            ctl_in       = ctl_in-273.15
+            sen_in       = sen_in-273.15
+        var_diff     = sen_in - ctl_in
+
+        wrf            = Dataset(wrf_path,  mode='r')
+        lons           = wrf.variables['XLONG'][0,:,:]
+        lats           = wrf.variables['XLAT'][0,:,:]
+
+
+        # read lat and lon outs
+        if var_name in ["pw"]:
+            clevs = [-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4,0.5,0.6]
+        elif var_name in ['cape_2d']:
+            clevs = [-0.3,-0.25,-0.2,-0.15,-0.1,-0.05,0.05,0.1,0.15,0.2,0.25,0.3]
+        elif var_name in ['rh2',"cloudfrac"]:
+            clevs = [-10,-9,-8,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10]
+        elif var_name in ["slp"]:
+            clevs = [-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10]
+        elif var_name in ["td2","T2"]:
+            clevs = [-2.,-1.8,-1.6,-1.4,-1.2,-1.,-0.8,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.,1.2,1.4,1.6,1.8,2.]
+
+        clevs_percentage =  [-15,-14,-13,-12,-11,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+
+        if len(np.shape(var_diff)) >=3:
+
+            for j in np.arange(np.shape(var_diff)[0]):
+
+                # ================== Start Plotting =================
+                fig = plt.figure(figsize=(6,5))
+                ax = plt.axes(projection=ccrs.PlateCarree())
+
+                plt.rcParams['text.usetex']     = False
+                plt.rcParams['font.family']     = "sans-serif"
+                plt.rcParams['font.serif']      = "Helvetica"
+                plt.rcParams['axes.linewidth']  = 1.5
+                plt.rcParams['axes.labelsize']  = 14
+                plt.rcParams['font.size']       = 14
+                plt.rcParams['legend.fontsize'] = 14
+                plt.rcParams['xtick.labelsize'] = 14
+                plt.rcParams['ytick.labelsize'] = 14
+
+                almost_black                    = '#262626'
+                # change the tick colors also to the almost black
+                plt.rcParams['ytick.color']     = almost_black
+                plt.rcParams['xtick.color']     = almost_black
+
+                # change the text colors also to the almost black
+                plt.rcParams['text.color']      = almost_black
+
+                # Change the default axis colors from black to a slightly lighter black,
+                # and a little thinner (0.5 instead of 1)
+                plt.rcParams['axes.edgecolor']  = almost_black
+                plt.rcParams['axes.labelcolor'] = almost_black
+
+                # set the box type of sequence number
+                props = dict(boxstyle="round", facecolor='white', alpha=0.0, ec='white')
+                # choose colormap
+
+                # =============== CHANGE HERE ===============
+                cmap  = plt.cm.seismic
+
+                #hot_r # BrBG
+
+                # start plotting
+                if loc_lat == None:
+                    ax.set_extent([135,155,-40,-25])
+                else:
+                    ax.set_extent([loc_lon[0],loc_lon[1],loc_lat[0],loc_lat[1]])
+
+                ax.coastlines(resolution="50m",linewidth=1)
+
+                # # Add gridlines
+                gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=1, color='black', linestyle='--')
+                gl.xlabels_top   = False
+                gl.ylabels_right = False
+                gl.xlines        = False
+                gl.ylines        = False
+
+                if loc_lat == None:
+                    gl.xlocator  = mticker.FixedLocator([135,140,145,150,155])
+                    gl.ylocator  = mticker.FixedLocator([-40,-35,-30,-25])
+                else:
+                    gl.xlocator  = mticker.FixedLocator(loc_lon)
+                    gl.ylocator  = mticker.FixedLocator(loc_lat)
+
+                gl.xformatter = LONGITUDE_FORMATTER
+                gl.yformatter = LATITUDE_FORMATTER
+                gl.xlabel_style = {'size':10, 'color':'black'}
+                gl.ylabel_style = {'size':10, 'color':'black'}
+                plt.contourf(lons, lats, var_diff[j,:,:], clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
+
+                cb = plt.colorbar(ax=ax, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
+                cb.ax.tick_params(labelsize=10, labelrotation=45)
+                plt.title(var_name, size=16)
+
+                if shape_path != None:
+                    # Requires the pyshp package
+                    sf = shp.Reader(shape_path)
+
+                    for shape in sf.shapeRecords():
+                        x = [i[0] for i in shape.shape.points[:]]
+                        y = [i[1] for i in shape.shape.points[:]]
+                        plt.plot(x,y,c="black")
+
+                if j == 0:
+                    if message == None:
+                        message = var_name
+                    else:
+                        message = message + "_" + var_name
+
+                plt.savefig('./plots/spatial_map_'+message+'_layer='+str(j)+'.png',dpi=300)
+                cb = None
+                gl = None
+                ax = None
+                fig= None
+
+        elif len(np.shape(var_diff)) ==2:
+            # ================== Start Plotting =================
+            # fig = plt.figure(figsize=(6,5))
+            # ax = plt.axes(projection=ccrs.PlateCarree())
+
+            fig, axs = plt.subplots(nrows=1, ncols=2, figsize=[10,6],sharex=True,
+                        sharey=True, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()})
+
+            plt.rcParams['text.usetex']     = False
+            plt.rcParams['font.family']     = "sans-serif"
+            plt.rcParams['font.serif']      = "Helvetica"
+            plt.rcParams['axes.linewidth']  = 1.5
+            plt.rcParams['axes.labelsize']  = 14
+            plt.rcParams['font.size']       = 14
+            plt.rcParams['legend.fontsize'] = 14
+            plt.rcParams['xtick.labelsize'] = 14
+            plt.rcParams['ytick.labelsize'] = 14
+
+            almost_black                    = '#262626'
+            # change the tick colors also to the almost black
+            plt.rcParams['ytick.color']     = almost_black
+            plt.rcParams['xtick.color']     = almost_black
+
+            # change the text colors also to the almost black
+            plt.rcParams['text.color']      = almost_black
+
+            # Change the default axis colors from black to a slightly lighter black,
+            # and a little thinner (0.5 instead of 1)
+            plt.rcParams['axes.edgecolor']  = almost_black
+            plt.rcParams['axes.labelcolor'] = almost_black
+
+            # set the box type of sequence number
+            props = dict(boxstyle="round", facecolor='white', alpha=0.0, ec='white')
+
+            states= NaturalEarthFeature(category="cultural", scale="50m",
+                                                facecolor="none",
+                                                name="admin_1_states_provinces_shp")
+
+            # =============== CHANGE HERE ===============
+            # choose colormap
+            cmap  = plt.cm.seismic
+
+            for i in np.arange(2):
+
+                axs[i].coastlines(resolution="50m",linewidth=1)
+                axs[i].set_extent([135,155,-39,-23])
+                axs[i].add_feature(states, linewidth=.5, edgecolor="black")
+
+                # Add gridlines
+                gl = axs[i].gridlines(crs=ccrs.PlateCarree(), draw_labels=True, linewidth=1, color=almost_black, linestyle='--')
+                gl.xlabels_top  = False
+                gl.ylabels_right= False
+                gl.xlines       = False
+                gl.ylines       = False
+                # gl.xlocator     = mticker.FixedLocator(np.arange(125,160,1))
+                # gl.ylocator     = mticker.FixedLocator(np.arange(-40,-20,1))
+                gl.xlocator     = mticker.FixedLocator([130,135,140,145,150,155,160])
+                gl.ylocator     = mticker.FixedLocator([-40,-35,-30,-25,-20])
+                gl.xformatter   = LONGITUDE_FORMATTER
+                gl.yformatter   = LATITUDE_FORMATTER
+                gl.xlabel_style = {'size':12, 'color':almost_black}#,'rotation': 90}
+                gl.ylabel_style = {'size':12, 'color':almost_black}
+
+                gl.xlabels_bottom = True
+                gl.ylabels_left   = True
+
+            # print("any(not np.isnan(var_diff))",any(not np.isnan(var_diff)))
+            plot1 = axs[0].contourf(lons, lats, var_diff, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')#clevs,
+            cbar = plt.colorbar(plot1, ax=axs[0], ticklocation="right", pad=0.08, orientation="horizontal",
+                    aspect=40, shrink=1) # cax=cax,
+            cbar.ax.tick_params(labelsize=10,labelrotation=45)
             plt.title(var_name, size=16)
             if shape_path != None:
                 # Requires the pyshp package
@@ -895,7 +1155,7 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             plot2 = axs[1].contourf(lons, lats, rate*100., clevs_percentage, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
             cbar  = plt.colorbar(plot2, ax=axs[1], ticklocation="right", pad=0.08, orientation="horizontal",
                     aspect=40, shrink=1) # cax=cax,
-            cbar.ax.tick_params(labelsize=8)
+            cbar.ax.tick_params(labelsize=10,labelrotation=45)
             plt.title(var_name+"_diff_percentage", size=16)
 
             if shape_path != None:
@@ -1007,7 +1267,7 @@ def spatial_map_total_soil_water_diff(file_paths, lis_path, loc_lat=None, loc_lo
     plt.contourf(lons, lats, sws_diff, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
 
     cb = plt.colorbar(ax=ax, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
-    cb.ax.tick_params(labelsize=10)
+    cb.ax.tick_params(labelsize=10, labelrotation=45)
     plt.title(message, size=16)
 
     if message == None:
@@ -1140,7 +1400,7 @@ def spatial_map_land_info_diff(file_paths, loc_lat=None, loc_lon=None, wrf_path=
             plt.contourf(lons_out, lats_out, var_diff,  clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
 
         cb = plt.colorbar(ax=ax, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
-        cb.ax.tick_params(labelsize=10)
+        cb.ax.tick_params(labelsize=10, labelrotation=45)
         plt.title(message, size=16)
         if j == 0:
             if message == None:
@@ -1349,7 +1609,7 @@ if __name__ == "__main__":
     #######################################################
     if 1:
         '''
-        Test WRF-CABLE output
+        Test WRF-CABLE LIS output
         '''
 
         case_name      = "ALB-CTL_new" #"bl_pbl2_mp4_sf_sfclay2" #
@@ -1362,21 +1622,20 @@ if __name__ == "__main__":
         atmo_sen_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_sen+"/WRF_output/"
         atmo_ctl_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_ctl+"/WRF_output/"
 
-        land_sen_files = [land_sen_path+"LIS.CABLE.201701-201701.d01.nc",]
-
-        land_ctl_files = [land_ctl_path+"LIS.CABLE.201701-201701.d01.nc",]
-
-        # atmo_sen_files = [ atmo_sen_path+"wrfout_d01_2018-01-01_11:00:00",]
-        # atmo_ctl_files = [ atmo_ctl_path+"wrfout_d01_2018-01-01_11:00:00",]
-
         if 1:
             '''
             Difference plot yearly
             '''
 
-            var_names  = [
-                        #   "Rnet",
-                          "VPD",
+            var_names  = [  #"LAI_inst","Albedo_inst",
+                            "GPP_tavg",#"NPP_tavg",
+                            # "SurfTmax","SurfTmin",
+                            # "Tmax","Tmin",
+                            # "VegT_tavg","Tair_f_inst","AvgSurfT_tavg",
+                            # "VegTmax","VegTmin",
+                            ]
+                        #[   "Rnet",
+                        #  "VPD",
                         #   "GPP_tavg","NPP_tavg",
                         #   "Tmax","Tmin","VegTmax","VegTmin",
                         #   "Qle_tavg","Qh_tavg","LAI_inst",
@@ -1390,7 +1649,6 @@ if __name__ == "__main__":
                           # "Rainf_tavg",
 
                           # "SM_top50cm",
-                          ]
 
             period     = "201718_summer"
             time_s     = datetime(2017,12,1,0,0,0,0)
@@ -1399,92 +1657,50 @@ if __name__ == "__main__":
             spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
                                 lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
                                 message=message)
-            #
-            # period     = "2017_spring"
-            # time_s     = datetime(2017,9,1,0,0,0,0)
-            # time_e     = datetime(2017,12,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-            # 
-            # period     = "2017_fall"
-            # time_s     = datetime(2017,3,1,0,0,0,0)
-            # time_e     = datetime(2017,6,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-            #
-            # period     = "2017_winter"
-            # time_s     = datetime(2017,6,1,0,0,0,0)
-            # time_e     = datetime(2017,9,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
 
-            #
-            # period     = "2018_fall"
-            # time_s     = datetime(2018,3,1,0,0,0,0)
-            # time_e     = datetime(2018,6,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-            #
-            # period     = "2018_winter"
-            # time_s     = datetime(2018,6,1,0,0,0,0)
-            # time_e     = datetime(2018,9,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-            #
-            # period     = "2018_spring"
-            # time_s     = datetime(2018,9,1,0,0,0,0)
-            # time_e     = datetime(2018,12,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-            #
-            # period     = "201819_summer"
-            # time_s     = datetime(2018,12,1,0,0,0,0)
-            # time_e     = datetime(2019,3,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-            #
-            # period     = "2019_fall"
-            # time_s     = datetime(2019,3,1,0,0,0,0)
-            # time_e     = datetime(2019,6,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-            #
-            # period     = "2019_winter"
-            # time_s     = datetime(2019,6,1,0,0,0,0)
-            # time_e     = datetime(2019,9,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-            #
-            # period     = "2019_spring"
-            # time_s     = datetime(2019,9,1,0,0,0,0)
-            # time_e     = datetime(2019,12,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
-            #
-            # period     = "2019_Dec_2020_Jan"
-            # time_s     = datetime(2019,12,1,0,0,0,0)
-            # time_e     = datetime(2020,2,1,0,0,0,0)
-            # message    = case_name+"_"+period
-            # spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                     lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                     message=message)
+            period     = "201819_summer"
+            time_s     = datetime(2018,12,1,0,0,0,0)
+            time_e     = datetime(2019,3,1,0,0,0,0)
+            message    = case_name+"_"+period
+            spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+                                message=message)
+
+            period     = "201920_summer"
+            time_s     = datetime(2019,12,1,0,0,0,0)
+            time_e     = datetime(2020,3,1,0,0,0,0)
+            message    = case_name+"_"+period
+            spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+                                message=message)
+
+        if 0:
+            '''
+            Difference plot yearly
+            '''
+
+            var_names  = ["td2","T2", "rh2", "slp", "pw"]#, "cloudfrac", "cape_2d"] #"p" "th" "rh" "tc" "ua" "va"
+
+            period     = "201718_summer"
+            time_s     = datetime(2017,12,1,0,0,0,0)
+            time_e     = datetime(2018,3,1,0,0,0,0)
+            message    = case_name+"_"+period
+            spatial_map_single_plot_WRF_diff(atmo_ctl_path, atmo_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+                                message=message)
+
+            period     = "201819_summer"
+            time_s     = datetime(2018,12,1,0,0,0,0)
+            time_e     = datetime(2019,3,1,0,0,0,0)
+            message    = case_name+"_"+period
+            spatial_map_single_plot_WRF_diff(atmo_ctl_path, atmo_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+                                message=message)
+
+            period     = "201920_summer"
+            time_s     = datetime(2019,12,1,0,0,0,0)
+            time_e     = datetime(2020,3,1,0,0,0,0)
+            message    = case_name+"_"+period
+            spatial_map_single_plot_WRF_diff(atmo_ctl_path, atmo_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+                                lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+                                message=message)

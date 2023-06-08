@@ -54,6 +54,9 @@ cdo selvar,lat,lon,time,Qg_tavg LIS.CABLE.201910-201910.d01.nc ./Qg_tavg/LIS.CAB
 cdo selvar,lat,lon,time,Qg_tavg LIS.CABLE.201911-201911.d01.nc ./Qg_tavg/LIS.CABLE.201911-201911.d01.nc
 cdo selvar,lat,lon,time,Qg_tavg LIS.CABLE.201912-201912.d01.nc ./Qg_tavg/LIS.CABLE.201912-201912.d01.nc
 
+cdo selvar,lat,lon,time,Qg_tavg LIS.CABLE.202001-202001.d01.nc ./Qg_tavg/LIS.CABLE.202001-202001.d01.nc
+cdo selvar,lat,lon,time,Qg_tavg LIS.CABLE.202002-202002.d01.nc ./Qg_tavg/LIS.CABLE.202002-202002.d01.nc
+
 cd Qg_tavg
-cdo mergetime LIS.CABLE.??????-??????.d01.nc LIS.CABLE.201701-201912.nc
+cdo mergetime LIS.CABLE.??????-??????.d01.nc LIS.CABLE.201701-202002.nc
 

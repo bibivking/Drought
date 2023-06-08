@@ -192,7 +192,7 @@ if __name__ == "__main__":
 
     # ======================= Setting path =======================
     atmo_path     = '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/'+case_name +'/WRF_output/'
-    file_out_path = atmo_path+var_name+'/wrfout_201701-201912.nc'
+    file_out_path = atmo_path+var_name+'/wrfout_201701-202002.nc'
 
     # glob.glob: retrieve files and directories that match a specified pattern.
     # sorted: rank the file paths

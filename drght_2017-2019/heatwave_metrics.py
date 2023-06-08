@@ -5,11 +5,10 @@ __email__  = "mu.mengyuan815@gmail.com"
 
 '''
 Functions:
-1.
-
-Climdex indices: https://www.climdex.org/learn/indices/
+1. Climdex indices: https://www.climdex.org/learn/indices/
 '''
 
+import os
 from netCDF4 import Dataset
 from datetime import datetime, timedelta
 import numpy as np
@@ -26,39 +25,40 @@ from wrf import (getvar, interplevel, get_cartopy, cartopy_xlim,
                  cartopy_ylim, to_np, latlon_coords)
 from common_utils import *
 
-def regrid_EHI_4_WRF_domain(EHI_path,wrf_path,EHI_out):
+def regrid_EHF_4_WRF_domain(EHF_path,wrf_path,EHF_out):
 
     # regridding EHF index
-    time, Var  = read_var(EHI_path, 'event', loc_lat=None, loc_lon=None, lat_name='lat', lon_name='lon')
-    time, lats = read_var(EHI_path, 'lat', loc_lat=None, loc_lon=None, lat_name='lat', lon_name='lon')
-    time, lons = read_var(EHI_path, 'lon', loc_lat=None, loc_lon=None, lat_name='lat', lon_name='lon')
+    time_in, Var  = read_var(EHF_path, 'event', loc_lat=None, loc_lon=None, lat_name='lat', lon_name='lon')
+    time_in, lats = read_var(EHF_path, 'lat', loc_lat=None, loc_lon=None, lat_name='lat', lon_name='lon')
+    time_in, lons = read_var(EHF_path, 'lon', loc_lat=None, loc_lon=None, lat_name='lat', lon_name='lon')
+    ntime         = len(time_in)
+    Time          = [ ]
+
+    print('lats',lats)
 
     wrf        = Dataset(wrf_path,  mode='r')
     lats_out   = wrf.variables['XLAT'][0,:,:]
     lons_out   = wrf.variables['XLONG'][0,:,:]
-
     nlat       = np.shape(lats_out)[0]
     nlon       = np.shape(lats_out)[1]
-    ntime      = np.shape(Var)[0]
     var_regrid = np.zeros([ntime,nlat,nlon])
     for i in np.arange(ntime):
-        var_regrid[i,:,:]= regrid_data(lats, lons, lats_out, lons_out, Var,method="nearest")
-
-    # Make EHI output
-    f_org = nc.Dataset(EHI_path, 'r', format='NETCDF4')
+        print("regridding ",time_in[i].days)
+        Time.append(time_in[i].days+12) # Since EHF doesn't consider leaf years so add 12 leap years back
+        var_regrid[i,:,:]= regrid_data(lats, lons, lats_out, lons_out, Var[i,:,:],method="nearest")
+    print('MMY Time',Time)
 
     # create file and write global attributes
-    f     = nc.Dataset(EHI_out, 'w', format='NETCDF4')
-    f.history           = "Created by: %s" % (os.path.basename(__file__))
+    f                   = nc.Dataset(EHF_out, 'w', format='NETCDF4')
+    f.history           = "Created by: %s written by MU Mengyuan" % (os.path.basename(__file__))
     f.creation_date     = "%s" % (datetime.now())
-    f.description       = 'wrf output content '+var_name+', created by MU Mengyuan'
 
     # Copy global attributes from old file
-    f_org = nc.Dataset(EHI_path, 'r', format='NETCDF4')
+    f_org               = nc.Dataset(EHF_path, 'r', format='NETCDF4')
     for attr_name in f_org.ncattrs():
         attr_value = getattr(f_org, attr_name)
         setattr(f, attr_name, attr_value)
-    # f_org.close()
+
     f.Conventions       = "CF-1.0"
 
     # set dimensions
@@ -68,9 +68,8 @@ def regrid_EHI_4_WRF_domain(EHI_path,wrf_path,EHI_out):
 
     time                = f.createVariable('time', 'f4', ('time'))
     time.standard_name  = "time"
-    time.units          = "days since 1970-01-01"
-    time[:]             = f_org.var
-
+    time.units          = "days since 2000-01-01"
+    time[:]             = Time[:]
 
     lat                = f.createVariable('lat', 'f4', ('lat','lon'))
     lat.standard_name  = "latitude"
@@ -84,7 +83,6 @@ def regrid_EHI_4_WRF_domain(EHI_path,wrf_path,EHI_out):
     lon.units          = "degrees_east"
     lon[:]             = lons_out
 
-
     event               = f.createVariable('event', 'f4', ('time','lat','lon'))
     event.FillValue     = 9.96921e+36
     event.missing_value = -999.99
@@ -95,29 +93,28 @@ def regrid_EHI_4_WRF_domain(EHI_path,wrf_path,EHI_out):
     f.close()
     f_org.close()
 
-def read_spatial_data(land_ctl_path, land_sen_path, var_name, time_s=None,
-                      time_e=None, lat_names="lat", lon_names="lon",loc_lat=None,
-                      loc_lon=None, wrf_path=None):
+def calc_heatwave_magnitude(EHF_out, land_ctl_path, land_sen_path, var_name, time_s=None, time_e=None,
+                            lat_names="lat", lon_names="lon",loc_lat=None, loc_lon=None):
 
-    '''
-    Read ctl and sen data
-    '''
+    time_ehf, hw_event = read_var_multi_file(EHF_out, 'event', loc_lat, loc_lon, lat_names, lon_names)
+    # time_ehf = time_ehf + timedelta(days=12) # to adjust time
 
-    print("var_name= "+var_name)
+    print('time_ehf',time_ehf)
+    print('hw_event',hw_event)
 
-    if var_name in ["Tmax","Tmin",]:
-        land_ctl_files= [land_ctl_path+'Tair_f_inst/LIS.CABLE.201701-201912.nc']
-        land_sen_files= [land_sen_path+'Tair_f_inst/LIS.CABLE.201701-201912.nc']
+    if var_name in ["Tmax","Tmin"]:
+        land_ctl_files= [land_ctl_path+'Tair_f_inst/LIS.CABLE.201701-202002.nc']
+        land_sen_files= [land_sen_path+'Tair_f_inst/LIS.CABLE.201701-202002.nc']
         time, Ctl_tmp = read_var_multi_file(land_ctl_files, 'Tair_f_inst', loc_lat, loc_lon, lat_names, lon_names)
         time, Sen_tmp = read_var_multi_file(land_sen_files, 'Tair_f_inst', loc_lat, loc_lon, lat_names, lon_names)
     elif var_name in ["VegTmax","VegTmin"]:
-        land_ctl_files= [land_ctl_path+'VegT_tavg/LIS.CABLE.201701-201912.nc']
-        land_sen_files= [land_sen_path+'VegT_tavg/LIS.CABLE.201701-201912.nc']
+        land_ctl_files= [land_ctl_path+'VegT_tavg/LIS.CABLE.201701-202002.nc']
+        land_sen_files= [land_sen_path+'VegT_tavg/LIS.CABLE.201701-202002.nc']
         time, Ctl_tmp = read_var_multi_file(land_ctl_files, 'VegT_tavg', loc_lat, loc_lon, lat_names, lon_names)
         time, Sen_tmp = read_var_multi_file(land_sen_files, 'VegT_tavg', loc_lat, loc_lon, lat_names, lon_names)
     elif var_name in ["SurfTmax","SurfTmin"]:
-        land_ctl_files= [land_ctl_path+'AvgSurfT_tavg/LIS.CABLE.201701-201912.nc']
-        land_sen_files= [land_sen_path+'AvgSurfT_tavg/LIS.CABLE.201701-201912.nc']
+        land_ctl_files= [land_ctl_path+'AvgSurfT_tavg/LIS.CABLE.201701-202002.nc']
+        land_sen_files= [land_sen_path+'AvgSurfT_tavg/LIS.CABLE.201701-202002.nc']
         time, Ctl_tmp = read_var_multi_file(land_ctl_files, 'AvgSurfT_tavg', loc_lat, loc_lon, lat_names, lon_names)
         time, Sen_tmp = read_var_multi_file(land_sen_files, 'AvgSurfT_tavg', loc_lat, loc_lon, lat_names, lon_names)
 
@@ -131,70 +128,43 @@ def read_spatial_data(land_ctl_path, land_sen_path, var_name, time_s=None,
         ctl_in       = time_clip_to_day_min(time,Ctl_tmp,time_s,time_e)
         sen_in       = time_clip_to_day_min(time,Sen_tmp,time_s,time_e)
 
-    return ctl_in, sen_in
+    print('np.shape(ctl_in)',np.shape(ctl_in))
+    Var_diff = sen_in-ctl_in
 
-def calc_heat_length():
-
-def calc_heatwave_maganitude(EHI_out, land_ctl_path, land_sen_path, var_name, time_s=None, time_e=None, 
-                             lat_names="lat", lon_names="lon",loc_lat=None, loc_lon=None):
-    
-    time_ehi, hw_event = read_var_multi_file(EHI_out, 'event', loc_lat, loc_lon, lat_names, lon_names)
-
-    if var_name in ["Tmax","Tmin","T_DR"]:
-        land_ctl_files= [land_ctl_path+'Tair_f_inst/LIS.CABLE.201701-201912.nc']
-        land_sen_files= [land_sen_path+'Tair_f_inst/LIS.CABLE.201701-201912.nc']
-        time, Ctl_tmp = read_var_multi_file(land_ctl_files, 'Tair_f_inst', loc_lat, loc_lon, lat_names, lon_names)
-        time, Sen_tmp = read_var_multi_file(land_sen_files, 'Tair_f_inst', loc_lat, loc_lon, lat_names, lon_names)
-    elif var_name in ["VegTmax","VegTmin","Veg_DR"]:
-        land_ctl_files= [land_ctl_path+'VegT_tavg/LIS.CABLE.201701-201912.nc']
-        land_sen_files= [land_sen_path+'VegT_tavg/LIS.CABLE.201701-201912.nc']
-        time, Ctl_tmp = read_var_multi_file(land_ctl_files, 'VegT_tavg', loc_lat, loc_lon, lat_names, lon_names)
-        time, Sen_tmp = read_var_multi_file(land_sen_files, 'VegT_tavg', loc_lat, loc_lon, lat_names, lon_names)
-    elif var_name in ["SurfTmax","SurfTmin","Surf_DR"]:
-        land_ctl_files= [land_ctl_path+'AvgSurfT_tavg/LIS.CABLE.201701-201912.nc']
-        land_sen_files= [land_sen_path+'AvgSurfT_tavg/LIS.CABLE.201701-201912.nc']
-        time, Ctl_tmp = read_var_multi_file(land_ctl_files, 'AvgSurfT_tavg', loc_lat, loc_lon, lat_names, lon_names)
-        time, Sen_tmp = read_var_multi_file(land_sen_files, 'AvgSurfT_tavg', loc_lat, loc_lon, lat_names, lon_names)
-
-    # time-step into daily
-    if var_name in ["SurfTmax","Tmax","VegTmax"]:
-        # average of daily max
-        ctl_in       = time_clip_to_day_max(time,Ctl_tmp,time_s,time_e)
-        sen_in       = time_clip_to_day_max(time,Sen_tmp,time_s,time_e)
-    elif var_name in ["SurfTmin","Tmin","VegTmin"]:
-        # average of daily min
-        ctl_in       = time_clip_to_day_min(time,Ctl_tmp,time_s,time_e)
-        sen_in       = time_clip_to_day_min(time,Sen_tmp,time_s,time_e)
-    elif var_name in ["Surf_DR","T_DR","Veg_DR"]:
-        ctl_in       = time_clip_to_day_max(time,Ctl_tmp,time_s,time_e) - time_clip_to_day_min(time,Ctl_tmp,time_s,time_e)
-        sen_in       = time_clip_to_day_max(time,Sen_tmp,time_s,time_e) - time_clip_to_day_min(time,Sen_tmp,time_s,time_e)
-
-    Var_diff = ctl_in - sen_in
-    
     # calculate HW periods values
-    time_cood    = time_mask(time_ehi, time_s, time_e, seconds=None)
+    time_cood    = time_mask(time_ehf, time_s, time_e, seconds=None)
     hw_event_new = hw_event[time_cood,:,:]
-    Var_diff     = np.where(hw_event_new==1, Var_diff, np.nan)
+
+    print('np.shape(hw_event_new)',np.shape(hw_event_new))
+
+    if time_s == datetime(2017,1,1,0,0,0,0):
+        # since LIS-CABLE miss 2017-01-01, to match Var_diff, change to hw_event_new[1:,:,:]
+        Var_diff     = np.where(hw_event_new[1:,:,:]==1, Var_diff, np.nan)
+    else:
+        Var_diff     = np.where(hw_event_new==1, Var_diff, np.nan)
     var_diff     = np.nanmean(Var_diff,axis=0)
 
     return var_diff
 
-def plot_spatial_map_hw_magnitude(land_ctl_path, land_sen_path, var_names, time_s=None,time_e=None, lat_names="lat", lon_names="lon",
-                    loc_lat=None, loc_lon=None, wrf_path=None, message=None):
-    
-    hw_tmax_diff = calc_heatwave_maganitude(EHI_out, land_ctl_path, land_sen_path, var_names[0], time_s, time_e, 
-                                            lat_names, lon_names,loc_lat, loc_lon)
-    hw_tmin_diff = calc_heatwave_maganitude(EHI_out, land_ctl_path, land_sen_path, var_names[1], time_s, time_e, 
-                                            lat_names, lon_names,loc_lat, loc_lon)
-    hw_dr_diff   = calc_heatwave_maganitude(EHI_out, land_ctl_path, land_sen_path, var_names[2], time_s, time_e, 
-                                            lat_names, lon_names,loc_lat, loc_lon)
+def plot_spatial_map_hw_magnitude(EHF_out, land_ctl_path, land_sen_path, var_names,
+                                  time_s=None,time_e=None, lat_names="lat", lon_names="lon",
+                                  loc_lat=None, loc_lon=None, message=None):
 
-    time, lats   = read_var(land_ctl_path, 'lat', loc_lat, loc_lon, lat_name='lat', lon_name='lon')
-    time, lons   = read_var(land_ctl_path, 'lon', loc_lat, loc_lon, lat_name='lat', lon_name='lon')
+    hw_tmax_diff = calc_heatwave_magnitude(EHF_out, land_ctl_path, land_sen_path, var_names[0], time_s, time_e,
+                                            lat_names, lon_names, loc_lat, loc_lon)
+    hw_tmin_diff = calc_heatwave_magnitude(EHF_out, land_ctl_path, land_sen_path, var_names[1], time_s, time_e,
+                                            lat_names, lon_names, loc_lat, loc_lon)
+    hw_dr_diff   = hw_tmax_diff - hw_tmin_diff
+
+    print("hw_tmax_diff",hw_tmax_diff)
+
+    land_ctl_file = land_ctl_path+"Tair_f_inst/LIS.CABLE.201701-202002.nc"
+    time, lats   = read_var(land_ctl_file, 'lat', loc_lat, loc_lon, lat_name='lat', lon_name='lon')
+    time, lons   = read_var(land_ctl_file, 'lon', loc_lat, loc_lon, lat_name='lat', lon_name='lon')
 
     # ================== Start Plotting =================
-    fig = plt.figure(figsize=(6,5))
-    ax = plt.axes(projection=ccrs.PlateCarree())
+    fig, axs = plt.subplots(nrows=1, ncols=3, figsize=[12,6],sharex=True,
+                sharey=True, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()})
 
     plt.rcParams['text.usetex']     = False
     plt.rcParams['font.family']     = "sans-serif"
@@ -221,51 +191,58 @@ def plot_spatial_map_hw_magnitude(land_ctl_path, land_sen_path, var_names, time_
 
     # set the box type of sequence number
     props = dict(boxstyle="round", facecolor='white', alpha=0.0, ec='white')
-    # choose colormap
 
+    states= NaturalEarthFeature(category="cultural", scale="50m",
+                                        facecolor="none",
+                                        name="admin_1_states_provinces_shp")
     # =============== CHANGE HERE ===============
-    cmap  = plt.cm.seismic_r
-    clevs = np.arange(-1,1.1,0.1)
+    cmap  = plt.cm.seismic
+    clevs = [-1.2,-1.1,-1,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.,1.1,1.2]
 
-    # start plotting
-    if loc_lat == None:
-        ax.set_extent([135,155,-40,-25])
-    else:
-        ax.set_extent([loc_lon[0],loc_lon[1],loc_lat[0],loc_lat[1]])
+    for i in np.arange(3):
 
-    ax.coastlines(resolution="50m",linewidth=1)
+        axs[i].coastlines(resolution="50m",linewidth=1)
+        axs[i].set_extent([135,155,-39,-23])
+        axs[i].add_feature(states, linewidth=.5, edgecolor="black")
 
-    # Add gridlines
-    gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=1, color='black', linestyle='--')
-    gl.xlabels_top   = False
-    gl.ylabels_right = False
-    gl.xlines        = False
-    gl.xlines        = False
+        # Add gridlines
+        gl = axs[i].gridlines(crs=ccrs.PlateCarree(), draw_labels=True, linewidth=1, color=almost_black, linestyle='--')
+        gl.xlabels_top  = False
+        gl.ylabels_right= False
+        gl.xlines       = False
+        gl.ylines       = False
+        gl.xlocator     = mticker.FixedLocator([130,135,140,145,150,155,160])
+        gl.ylocator     = mticker.FixedLocator([-40,-35,-30,-25,-20])
+        gl.xformatter   = LONGITUDE_FORMATTER
+        gl.yformatter   = LATITUDE_FORMATTER
+        gl.xlabel_style = {'size':12, 'color':almost_black}#,'rotation': 90}
+        gl.ylabel_style = {'size':12, 'color':almost_black}
 
-    if loc_lat == None:
-        gl.xlocator  = mticker.FixedLocator([135,140,145,150,155])
-        gl.ylocator  = mticker.FixedLocator([-40,-35,-30,-25])
-    else:
-        gl.xlocator  = mticker.FixedLocator(loc_lon)
-        gl.ylocator  = mticker.FixedLocator(loc_lat)
+        gl.xlabels_bottom = True
+        gl.ylabels_left   = True
 
-    gl.xformatter = LONGITUDE_FORMATTER
-    gl.yformatter = LATITUDE_FORMATTER
-    gl.xlabel_style = {'size':10, 'color':'black'}
-    gl.ylabel_style = {'size':10, 'color':'black'}
 
-    plt.contourf(lons, lats, hw_tmax_diff, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
+    plot1 = axs[0].contourf(lons, lats, hw_tmax_diff, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
+    cb = plt.colorbar(plot1, ax=axs[0], ticklocation="right", pad=0.08, orientation="horizontal",aspect=40, shrink=1)
+    cb.ax.tick_params(labelsize=10,labelrotation=45)
+    # plt.title(message, size=16)
 
-    cb = plt.colorbar(ax=ax, orientation="vertical", pad=0.02, aspect=16, shrink=0.8)
-    cb.ax.tick_params(labelsize=10)
-    plt.title(message, size=16)
+    plot1 = axs[1].contourf(lons, lats, hw_tmin_diff, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
+    cb = plt.colorbar(plot1, ax=axs[1], ticklocation="right", pad=0.08, orientation="horizontal",aspect=40, shrink=1)
+    cb.ax.tick_params(labelsize=10,labelrotation=45)
+    # plt.title(message, size=16)
+
+    plot1 = axs[2].contourf(lons, lats, hw_dr_diff, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
+    cb = plt.colorbar(plot1, ax=axs[2], ticklocation="right", pad=0.08, orientation="horizontal",aspect=40, shrink=1)
+    cb.ax.tick_params(labelsize=10,labelrotation=45)
+    # plt.title(message, size=16)
 
     plt.savefig('./plots/spatial_map_hw_'+message+'.png',dpi=300)
 
 if __name__ == "__main__":
 
     # ======================= Option =======================
-    region = "SE Aus" #"SE Aus" #"CORDEX" #"SE Aus"
+    region = "Aus" #"SE Aus" #"CORDEX" #"SE Aus"
 
     if region == "Aus":
         loc_lat    = [-44,-10]
@@ -281,7 +258,13 @@ if __name__ == "__main__":
     # Plot WRF-CABLE vs AWAP temperal metrics
     # #################################
 
-    EHI_path   = '/g/data/w97/mm3972/scripts/ehfheatwaves/nc_file'
+    if 0:
+        # regrid EHF event
+
+        EHF_path   = '/g/data/w97/mm3972/scripts/ehfheatwaves/nc_file/AUS_1970_2022/EHF_heatwaves_201701-202002_daily_flip.nc'
+        wrf_path   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/wrfout_d01_2017-02-01_06:00:00"
+        EHF_out    = '/g/data/w97/mm3972/scripts/ehfheatwaves/nc_file/AUS_1970_2022/HW_Event_Indicator_201701-202002.nc'
+        regrid_EHF_4_WRF_domain(EHF_path,wrf_path,EHF_out)
 
     if 1:
         '''
@@ -292,6 +275,31 @@ if __name__ == "__main__":
         case_ctl       = "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2"
         case_sen       = "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB"
 
-        wrf_path       = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_ctl+"/WRF_output/wrfout_d01_2017-02-01_06:00:00"
-        land_sen_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_sen+"/LIS_output/"
         land_ctl_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_ctl+"/LIS_output/"
+        land_sen_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_sen+"/LIS_output/"
+
+        EHF_out        = ['/g/data/w97/mm3972/scripts/ehfheatwaves/nc_file/AUS_1970_2022/HW_Event_Indicator_201701-202002.nc']
+
+
+        var_names      = ['Tmax','Tmin'] # "SurfTmax","SurfTmin",
+
+        time_s         = datetime(2017,12,1,0,0,0,0)
+        time_e         = datetime(2018,3,1,0,0,0,0)
+        message        = "201718_Summer_Tmax_Tmin_TDR"
+        plot_spatial_map_hw_magnitude(EHF_out, land_ctl_path, land_sen_path, var_names,
+                                      time_s=time_s,time_e=time_e, lat_names="lat", lon_names="lon",
+                                      loc_lat=loc_lat, loc_lon=loc_lon, message=message)
+
+        time_s         = datetime(2018,12,1,0,0,0,0)
+        time_e         = datetime(2019,3,1,0,0,0,0)
+        message        = "201819_Summer_Tmax_Tmin_TDR"
+        plot_spatial_map_hw_magnitude(EHF_out, land_ctl_path, land_sen_path, var_names,
+                                      time_s=time_s,time_e=time_e, lat_names="lat", lon_names="lon",
+                                      loc_lat=loc_lat, loc_lon=loc_lon, message=message)
+
+        time_s         = datetime(2019,12,1,0,0,0,0)
+        time_e         = datetime(2020,2,29,0,0,0,0)
+        message        = "201920_Summer_Tmax_Tmin_TDR"
+        plot_spatial_map_hw_magnitude(EHF_out, land_ctl_path, land_sen_path, var_names,
+                                      time_s=time_s,time_e=time_e, lat_names="lat", lon_names="lon",
+                                      loc_lat=loc_lat, loc_lon=loc_lon, message=message)

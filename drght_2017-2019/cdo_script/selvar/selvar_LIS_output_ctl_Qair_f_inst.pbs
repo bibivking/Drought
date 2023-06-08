@@ -12,7 +12,7 @@
 
 module load cdo
 
-cd /g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/LIS_output
+cd /g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/LIS_output
 
 mkdir Qair_f_inst
 cdo selvar,lat,lon,time,Qair_f_inst LIS.CABLE.201701-201701.d01.nc ./Qair_f_inst/LIS.CABLE.201701-201701.d01.nc
@@ -54,6 +54,9 @@ cdo selvar,lat,lon,time,Qair_f_inst LIS.CABLE.201910-201910.d01.nc ./Qair_f_inst
 cdo selvar,lat,lon,time,Qair_f_inst LIS.CABLE.201911-201911.d01.nc ./Qair_f_inst/LIS.CABLE.201911-201911.d01.nc
 cdo selvar,lat,lon,time,Qair_f_inst LIS.CABLE.201912-201912.d01.nc ./Qair_f_inst/LIS.CABLE.201912-201912.d01.nc
 
+cdo selvar,lat,lon,time,Qair_f_inst LIS.CABLE.202001-202001.d01.nc ./Qair_f_inst/LIS.CABLE.202001-202001.d01.nc
+cdo selvar,lat,lon,time,Qair_f_inst LIS.CABLE.202002-202002.d01.nc ./Qair_f_inst/LIS.CABLE.202002-202002.d01.nc
+
 cd Qair_f_inst
-cdo mergetime LIS.CABLE.??????-??????.d01.nc LIS.CABLE.201701-201912.nc
+cdo mergetime LIS.CABLE.??????-??????.d01.nc LIS.CABLE.201701-202002.nc
 

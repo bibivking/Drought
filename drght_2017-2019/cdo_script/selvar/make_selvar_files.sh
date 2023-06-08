@@ -2,18 +2,12 @@ case_name="drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB"
 #"drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB" 
 #"drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2"
 
-var_names=("Qair_f_inst")
-        #("AvgSurfT_tavg")
-        #("Wind_f_inst" "Swnet_tavg" "Lwnet_tavg" "GPP_tavg" "NPP_tavg" "VegT_tavg")
-        #("Landcover_inst" "Albedo_inst" "LAI_inst" "Qle_tavg" "Qh_tavg" "Qg_tavg" "Evap_tavg" "TVeg_tavg" "ESoil_tavg" "FWsoil_tavg" "WaterTableD_tavg" "GWwb_tavg" "SoilMoist_inst" "Rainf_tavg" "Tair_f_inst") 
-        #    "ECanop_tavg","Snowf_tavg","VegT_tavg","AvgSurfT_tavg","SoilTemp_inst",\
-        #    "Qs_tavg","Qsb_tavg","Psurf_f_inst","Qair_f_inst","Tair_f_inst","Wind_f_inst",\
-        #    "LWdown_f_inst","SWdown_f_inst","Swnet_tavg","Lwnet_tavg",] 
+var_names=("Qair_f_inst" "AvgSurfT_tavg" "Wind_f_inst" "Swnet_tavg" "Lwnet_tavg" "GPP_tavg" "NPP_tavg" "VegT_tavg" "Landcover_inst" "Albedo_inst" "LAI_inst" "Qle_tavg" "Qh_tavg" "Qg_tavg" "Evap_tavg" "TVeg_tavg" "ESoil_tavg" "FWsoil_tavg" "WaterTableD_tavg" "GWwb_tavg" "SoilMoist_inst" "Rainf_tavg" "Tair_f_inst") 
 
 
 for var_name in "${var_names[@]}"; do
 
-cat > ./selvar_LIS_output_ctl_${var_name}.pbs << EOF_selvar
+cat > ./selvar_LIS_output_sen_${var_name}.pbs << EOF_selvar
 #!/bin/bash
 
 #PBS -m ae
@@ -70,11 +64,14 @@ cdo selvar,lat,lon,time,${var_name} LIS.CABLE.201910-201910.d01.nc ./${var_name}
 cdo selvar,lat,lon,time,${var_name} LIS.CABLE.201911-201911.d01.nc ./${var_name}/LIS.CABLE.201911-201911.d01.nc
 cdo selvar,lat,lon,time,${var_name} LIS.CABLE.201912-201912.d01.nc ./${var_name}/LIS.CABLE.201912-201912.d01.nc
 
+cdo selvar,lat,lon,time,${var_name} LIS.CABLE.202001-202001.d01.nc ./${var_name}/LIS.CABLE.202001-202001.d01.nc
+cdo selvar,lat,lon,time,${var_name} LIS.CABLE.202002-202002.d01.nc ./${var_name}/LIS.CABLE.202002-202002.d01.nc
+
 cd ${var_name}
-cdo mergetime LIS.CABLE.??????-??????.d01.nc LIS.CABLE.201701-201912.nc
+cdo mergetime LIS.CABLE.??????-??????.d01.nc LIS.CABLE.201701-202002.nc
 
 EOF_selvar
 
-qsub ./selvar_LIS_output_ctl_${var_name}.pbs
+qsub ./selvar_LIS_output_sen_${var_name}.pbs
 
 done
