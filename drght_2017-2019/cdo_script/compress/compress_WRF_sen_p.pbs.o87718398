@@ -1,0 +1,18 @@
+Cannot compress /g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/WRF_output/p/wrfout_201701-202002.nc with nc2nc as it is NETCDF4 format, switching to nccopy
+Error with /g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/WRF_output/p/wrfout_201701-202002.nc :: Max compress exceeded: 31.427280489021054 
+    Following files not properly compressed or suspiciously high compression ratio:
+/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/WRF_output/p/wrfout_201701-202002.nc
+Failed to remove temporary directory /g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/WRF_output/p/tmp.nc_compress
+
+======================================================================================
+                  Resource Usage on 2023-06-13 15:50:04:
+   Job Id:             87718398.gadi-pbs
+   Project:            w97
+   Exit Status:        0
+   Service Units:      4.49
+   NCPUs Requested:    1                      NCPUs Used: 1               
+                                           CPU Time Used: 00:07:18        
+   Memory Requested:   256.0GB               Memory Used: 33.58GB         
+   Walltime requested: 02:30:00            Walltime Used: 00:07:35        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================

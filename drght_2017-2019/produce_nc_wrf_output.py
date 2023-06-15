@@ -191,12 +191,13 @@ if __name__ == "__main__":
     var_name, case_name = cmd_line_parser()
 
     # ======================= Setting path =======================
-    atmo_path     = '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/'+case_name +'/WRF_output/'
-    file_out_path = atmo_path+var_name+'/wrfout_201701-202002.nc'
+    atmo_path_out = '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/'+case_name +'/WRF_output/'
+    atmo_path_in  = '/scratch/w97/mm3972/model/NUWRF/Tinderbox_drght_LAI_ALB/output/'+case_name +'/WRF_output/'
+    file_out_path = atmo_path_out+var_name+'/wrfout_201701-202002.nc'
 
     # glob.glob: retrieve files and directories that match a specified pattern.
     # sorted: rank the file paths
-    file_paths    = sorted(glob.glob(atmo_path + "wrfout_d01*00:00"))
+    file_paths    = sorted(glob.glob(atmo_path_in + "wrfout_d01*00:00"))
     print(file_paths)
 
     # ==================== Generate nc file ======================

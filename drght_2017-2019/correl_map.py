@@ -270,7 +270,7 @@ def plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=None,time_e
     plt.savefig('./plots/correl_map_'+message+'.png',dpi=300)
 
 def plot_partial_corr_map(land_ctl_path, land_sen_path, var_names, time_ss=None,time_es=None, lat_names="lat", lon_names="lon",
-                    loc_lat=None, loc_lon=None, wrf_path=None, message=None):
+                    loc_lat=None, loc_lon=None, wrf_path=None, message=None, correl_method='pearson'):
 
     import sys
     # Add the desired path to sys.path
@@ -311,8 +311,8 @@ def plot_partial_corr_map(land_ctl_path, land_sen_path, var_names, time_ss=None,
                 df        = pd.DataFrame({var_names[0]: one_tmp,
                                           var_names[1]: two_tmp,
                                           var_names[2]: three_tmp})
-                partial_corr_r[x,y] = pg.partial_corr(data=df, x=var_names[0], y=var_names[1], covar=var_names[2])['r']
-                partial_corr_p[x,y] = pg.partial_corr(data=df, x=var_names[0], y=var_names[1], covar=var_names[2])['p-val']
+                partial_corr_r[x,y] = pg.partial_corr(data=df, x=var_names[0], y=var_names[1], covar=var_names[2],method=correl_method)['r']
+                partial_corr_p[x,y] = pg.partial_corr(data=df, x=var_names[0], y=var_names[1], covar=var_names[2],method=correl_method)['p-val']
             else:
                 partial_corr_r[x,y] = np.nan
                 partial_corr_p[x,y] = np.nan
@@ -497,70 +497,70 @@ if __name__ == "__main__":
             '''
             Calculate partial correlation
             '''
-
+            correl_method = 'spearman'
             var_names  = ["Tmax", "Albedo_inst","LAI_inst"]
-            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
+            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]+'_'+correl_method
             time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
             time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
             message    = case_name+"_"+period
             plot_partial_corr_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
-                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,correl_method=correl_method)
 
             var_names  = ["Tmax", "LAI_inst","Albedo_inst"]
-            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
+            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]+'_'+correl_method
             time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
             time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
             message    = case_name+"_"+period
             plot_partial_corr_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
-                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,correl_method=correl_method)
 
             var_names  = ["Tmin", "Albedo_inst","LAI_inst"]
-            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
+            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]+'_'+correl_method
             time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
             time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
             message    = case_name+"_"+period
             plot_partial_corr_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
-                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,correl_method=correl_method)
 
             var_names  = ["Tmin", "LAI_inst","Albedo_inst"]
-            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
+            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]+'_'+correl_method
             time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
             time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
             message    = case_name+"_"+period
             plot_partial_corr_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
-                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,correl_method=correl_method)
 
             var_names  = ["SurfTmax", "Albedo_inst","LAI_inst"]
-            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
+            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]+'_'+correl_method
             time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
             time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
             message    = case_name+"_"+period
             plot_partial_corr_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
-                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,correl_method=correl_method)
 
             var_names  = ["SurfTmax", "LAI_inst","Albedo_inst"]
-            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
+            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]+'_'+correl_method
             time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
             time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
             message    = case_name+"_"+period
             plot_partial_corr_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
-                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,correl_method=correl_method)
 
             var_names  = ["SurfTmin", "Albedo_inst","LAI_inst"]
-            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
+            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]+'_'+correl_method
             time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
             time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
             message    = case_name+"_"+period
             plot_partial_corr_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
-                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,correl_method=correl_method)
 
             var_names  = ["SurfTmin", "LAI_inst","Albedo_inst"]
-            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
+            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]+'_'+correl_method
             time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
             time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
             message    = case_name+"_"+period
             plot_partial_corr_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
-                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,correl_method=correl_method)
 
 
 

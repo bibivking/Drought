@@ -1,0 +1,18 @@
+Cannot compress /g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/th/wrfout_201701-202002.nc with nc2nc as it is NETCDF4 format, switching to nccopy
+Directory: /g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/th
+    Number files compressed: 1
+    Total space saved: 0.02 TB
+    Average compression ratio: 2.13
+
+======================================================================================
+                  Resource Usage on 2023-06-13 15:54:58:
+   Job Id:             87718472.gadi-pbs
+   Project:            w97
+   Exit Status:        0
+   Service Units:      7.11
+   NCPUs Requested:    1                      NCPUs Used: 1               
+                                           CPU Time Used: 00:11:42        
+   Memory Requested:   256.0GB               Memory Used: 47.54GB         
+   Walltime requested: 02:30:00            Walltime Used: 00:12:00        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================
