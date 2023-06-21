@@ -25,7 +25,7 @@ from common_utils import *
 def tif_to_nc(tif_file_path, output_file, wrf_file):
 
     # for opening the raster read-only and saving it on f variable.
-    f = gdal.Open(tif_file_path, gdal.GA_ReadOnly) 
+    f = gdal.Open(tif_file_path, gdal.GA_ReadOnly)
     print('f',f)
 
     # Copy the transformation to a variable, it will be useful later.
@@ -82,18 +82,20 @@ def tif_to_nc(tif_file_path, output_file, wrf_file):
     alb_out             = f.createVariable('Albedo_imp', 'f4', ('north_south', 'east_west'),fill_value=-9999.)
     alb_out.long_name   = "Importance of Δalbedo to ΔTmax"
     alb_out[:]          = Albedo[::-1,:]
-    
+
     wrf                 = Dataset(wrf_file,'r')
     lat                 = wrf.variables['lat'][:]
     lon                 = wrf.variables['lon'][:]
     latitude[:]         = lat
-    longitude[:]        = lon   
+    longitude[:]        = lon
 
     f.close()
 
 def plot_RF_map(output_file,message=None):
 
     # =================== Plotting spatial map ===================
+
+    # read input var, lat and lon
     f           = Dataset(output_file, 'r')
     LAI_imp     = f.variables['LAI_imp'][:,:] # nseason, nindex, nlat, nlon
     Albedo_imp  = f.variables['Albedo_imp'][:,:]
@@ -102,32 +104,26 @@ def plot_RF_map(output_file,message=None):
     LAI_imp     = np.where(LAI_imp <0, np.nan, LAI_imp)
     Albedo_imp  = np.where(Albedo_imp <0, np.nan, Albedo_imp)
 
-    # regrid to
-    lat_out     = np.arange(-39,-24,0.04)
+    # set output lat and lon
+    lat_out     = np.arange(-39,-25,0.04)
     lon_out     = np.arange(135,155,0.04)
-
-    lon_out_2D,lat_out_2D = np.meshgrid(lon_out,lat_out)
     nlat        = len(lat_out)
     nlon        = len(lon_out)
 
-    lat_in_1D   = lat.flatten()
-    lon_in_1D   = lon.flatten()
-    LAI_in_1D_tmp = LAI_imp.flatten()
-    ALB_in_1D   = Albedo_imp.flatten()
+    # set mask_val
+    land_file   = '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/'\
+                + 'LIS_output/Albedo_inst/LIS.CABLE.201701-202002.nc'
+    land        = Dataset(land_file, 'r')
+    mask_val    = land.variables['lon'][:,:]
 
-    LAI_in_1D   = LAI_in_1D_tmp[~np.isnan(LAI_in_1D_tmp)]
-    ALB_in_1D   = ALB_in_1D[~np.isnan(LAI_in_1D_tmp)]
-    lat_in_1D   = lat_in_1D[~np.isnan(LAI_in_1D_tmp)]    # here I make nan in values as the standard
-    lon_in_1D   = lon_in_1D[~np.isnan(LAI_in_1D_tmp)]
-    
-    LAI_regrid  = griddata((lat_in_1D, lon_in_1D), LAI_in_1D, (lat_out_2D, lon_out_2D), method='nearest')
-    ALB_regrid  = griddata((lat_in_1D, lon_in_1D), ALB_in_1D, (lat_out_2D, lon_out_2D), method='nearest')
+    LAI_regrid  = regrid_to_PlateCarree(LAI_imp, mask_val, lat, lon, lat_out, lon_out, method='nearest')
+    ALB_regrid  = regrid_to_PlateCarree(Albedo_imp, mask_val, lat, lon, lat_out, lon_out, method='nearest')
 
     var_imp     = np.zeros((nlat,nlon))
-    var_imp     = np.where(np.all([ALB_regrid>0.005,      LAI_regrid<0.005],axis=0),1,var_imp) # albedo domainate 
-    var_imp     = np.where(np.all([LAI_regrid>0.005,      ALB_regrid<0.005],axis=0),2,var_imp) # LAI domainate 
-    var_imp     = np.where(np.all([ALB_regrid>LAI_regrid, LAI_regrid>0.005],axis=0),3,var_imp) # both important by albedo domainate 
-    var_imp     = np.where(np.all([LAI_regrid>ALB_regrid, ALB_regrid>0.005],axis=0),4,var_imp) # both important by lai domainate 
+    var_imp     = np.where(np.all([ALB_regrid>0.005,      LAI_regrid<0.005],axis=0),1,var_imp) # albedo domainate
+    var_imp     = np.where(np.all([LAI_regrid>0.005,      ALB_regrid<0.005],axis=0),2,var_imp) # LAI domainate
+    var_imp     = np.where(np.all([ALB_regrid>LAI_regrid, LAI_regrid>0.005],axis=0),3,var_imp) # both important by albedo domainate
+    var_imp     = np.where(np.all([LAI_regrid>ALB_regrid, ALB_regrid>0.005],axis=0),4,var_imp) # both important by lai domainate
 
     # ____ plotting ____
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=[5,5],sharex=True, sharey=True, squeeze=True,
@@ -167,15 +163,15 @@ def plot_RF_map(output_file,message=None):
 
 
     # ======================= Set colormap =======================
-    cmap    = ListedColormap(["lightgray",     # 0: 
-                              "orange",    # 1: albedo domainate 
-                              "blue",          # 2: LAI domainate 
-                              "lightgreen",    # 3: both important by albedo domainate 
-                              "green",         # 4: both important by lai domainate 
+    cmap    = ListedColormap(["lightgray",     # 0:
+                              "orange",    # 1: albedo domainate
+                              "blue",          # 2: LAI domainate
+                              "lightgreen",    # 3: both important by albedo domainate
+                              "green",         # 4: both important by lai domainate
                               ]) #plt.cm.tab10 #BrBG
 
     ax.coastlines(resolution="50m",linewidth=1)
-    ax.set_extent([135,155,-39,-24])
+    ax.set_extent([135,155,-39,-25])
     ax.add_feature(states, linewidth=.5, edgecolor="black")
 
     # Add gridlines
@@ -193,7 +189,7 @@ def plot_RF_map(output_file,message=None):
     gl.xlabel_style = {'size':12, 'color':almost_black}#,'rotation': 90}
     gl.ylabel_style = {'size':12, 'color':almost_black}
 
-    extent   = (135, 155, -39, -24)
+    extent   = (135, 155, -39, -25)
     plot1    = ax.imshow(var_imp, origin="lower", extent=extent, vmin=-0.5, vmax=4.5, transform=ccrs.PlateCarree(), cmap=cmap)
     ax.add_feature(OCEAN,edgecolor='none', facecolor="lightgray")
     cbar = plt.colorbar(plot1, ax=ax, ticklocation="right", pad=0.01, orientation="vertical",

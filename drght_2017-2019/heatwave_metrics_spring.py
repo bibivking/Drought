@@ -87,7 +87,7 @@ def regrid_EHF_4_WRF_domain(EHF_path,wrf_path,EHF_out):
     event.FillValue     = 9.96921e+36
     event.missing_value = -999.99
     event.long_name     = "Event indicator"
-    event.description   = "Indicates whether a Spring heatwave is happening on that day"
+    event.description   = "Indicates whether a summer heatwave is happening on that day"
     event[:]            = var_regrid
 
     f.close()
@@ -145,6 +145,92 @@ def calc_heatwave_magnitude(EHF_out, land_ctl_path, land_sen_path, var_name, tim
     var_diff     = np.nanmean(Var_diff,axis=0)
 
     return var_diff
+
+def plot_heatwave_days(EHF_out, time_s=None, time_e=None, lat_names="lat", lon_names="lon", loc_lat=None, loc_lon=None,message=None):
+
+    # ==== calculate HW days ====
+    # read in HW events
+    time_ehf, hw_event = read_var_multi_file(EHF_out, 'event', loc_lat, loc_lon, lat_names, lon_names)
+    time_cood          = time_mask(time_ehf, time_s, time_e, seconds=None)
+    hw_event_new       = hw_event[time_cood,:,:]
+
+    time, lats          = read_var(EHF_out[0], 'lat', loc_lat, loc_lon, lat_name='lat', lon_name='lon')
+    time, lons          = read_var(EHF_out[0], 'lon', loc_lat, loc_lon, lat_name='lat', lon_name='lon')
+
+    if time_s == datetime(2017,1,1,0,0,0,0):
+        # since LIS-CABLE miss 2017-01-01, to match Var_diff, change to hw_event_new[1:,:,:]
+        days     = np.where(hw_event_new[1:,:,:]==1, 1, 0)
+    else:
+        days     = np.where(hw_event_new==1, 1, 0)
+    days_total   = np.sum(days,axis=0)
+
+
+    # ================== Start Plotting =================
+    fig, axs = plt.subplots(nrows=1, ncols=1, figsize=[5,5],sharex=True,
+                sharey=True, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()})
+
+    plt.rcParams['text.usetex']     = False
+    plt.rcParams['font.family']     = "sans-serif"
+    plt.rcParams['font.serif']      = "Helvetica"
+    plt.rcParams['axes.linewidth']  = 1.5
+    plt.rcParams['axes.labelsize']  = 14
+    plt.rcParams['font.size']       = 14
+    plt.rcParams['legend.fontsize'] = 14
+    plt.rcParams['xtick.labelsize'] = 14
+    plt.rcParams['ytick.labelsize'] = 14
+
+    almost_black                    = '#262626'
+    # change the tick colors also to the almost black
+    plt.rcParams['ytick.color']     = almost_black
+    plt.rcParams['xtick.color']     = almost_black
+
+    # change the text colors also to the almost black
+    plt.rcParams['text.color']      = almost_black
+
+    # Change the default axis colors from black to a slightly lighter black,
+    # and a little thinner (0.5 instead of 1)
+    plt.rcParams['axes.edgecolor']  = almost_black
+    plt.rcParams['axes.labelcolor'] = almost_black
+
+    # set the box type of sequence number
+    props = dict(boxstyle="round", facecolor='white', alpha=0.0, ec='white')
+
+    states= NaturalEarthFeature(category="cultural", scale="50m",
+                                        facecolor="none",
+                                        name="admin_1_states_provinces_shp")
+    # =============== CHANGE HERE ===============
+    cmap  = plt.cm.rainbow #seismic
+
+    axs.coastlines(resolution="50m",linewidth=1)
+    axs.set_extent([135,155,-39,-23])
+    axs.add_feature(states, linewidth=.5, edgecolor="black")
+
+    # Add gridlines
+    gl = axs.gridlines(crs=ccrs.PlateCarree(), draw_labels=True, linewidth=1, color=almost_black, linestyle='--')
+    gl.xlabels_top  = False
+    gl.ylabels_right= False
+    gl.xlines       = False
+    gl.ylines       = False
+    gl.xlocator     = mticker.FixedLocator([130,135,140,145,150,155,160])
+    gl.ylocator     = mticker.FixedLocator([-40,-35,-30,-25,-20])
+    gl.xformatter   = LONGITUDE_FORMATTER
+    gl.yformatter   = LATITUDE_FORMATTER
+    gl.xlabel_style = {'size':12, 'color':almost_black}#,'rotation': 90}
+    gl.ylabel_style = {'size':12, 'color':almost_black}
+
+    gl.xlabels_bottom = True
+    gl.ylabels_left   = True
+
+    clevs = [0,5,10,15,20,25,30,35,40,45,50,55,60]
+
+    plot1 = axs.contourf(lons, lats, days_total, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
+    cb = plt.colorbar(plot1, ax=axs, ticklocation="right", pad=0.08, orientation="horizontal",aspect=40, shrink=1)
+    cb.ax.tick_params(labelsize=10,labelrotation=45)
+    # plt.title(message, size=16)
+
+    plt.savefig('./plots/spatial_map_total_hw_days_'+message+'.png',dpi=300)
+
+
 
 def plot_spatial_map_hw_magnitude(EHF_out, land_ctl_path, land_sen_path, var_names,
                                   time_s=None,time_e=None, lat_names="lat", lon_names="lon",
@@ -239,6 +325,7 @@ def plot_spatial_map_hw_magnitude(EHF_out, land_ctl_path, land_sen_path, var_nam
 
     plt.savefig('./plots/spatial_map_hw_'+message+'.png',dpi=300)
 
+
 if __name__ == "__main__":
 
     # ======================= Option =======================
@@ -266,7 +353,7 @@ if __name__ == "__main__":
         EHF_out    = '/g/data/w97/mm3972/scripts/ehfheatwaves/nc_file/AUS_1970_2022/HW_Event_Indicator_201701-202002.nc'
         regrid_EHF_4_WRF_domain(EHF_path,wrf_path,EHF_out)
 
-    if 1:
+    if 0:
         '''
         Test WRF-CABLE output
         '''
@@ -302,3 +389,23 @@ if __name__ == "__main__":
         plot_spatial_map_hw_magnitude(EHF_out, land_ctl_path, land_sen_path, var_names,
                                       time_s=time_s,time_e=time_e, lat_names="lat", lon_names="lon",
                                       loc_lat=loc_lat, loc_lon=loc_lon, message=message)
+    if 1:
+
+        case_name      = "ALB-CTL_new" #"bl_pbl2_mp4_sf_sfclay2" 
+        EHF_out        = ['/g/data/w97/mm3972/scripts/ehfheatwaves/nc_file/AUS_1970_2022/HW_Event_Indicator_201701-202002.nc']
+        
+        time_s         = datetime(2017,9,1,0,0,0,0)
+        time_e         = datetime(2017,12,1,0,0,0,0)
+        message        = "2017_Spring"
+        plot_heatwave_days(EHF_out, time_s=time_s, time_e=time_e, lat_names="lat", lon_names="lon", loc_lat=loc_lat, loc_lon=loc_lon,message=message)
+
+        time_s         = datetime(2018,9,1,0,0,0,0)
+        time_e         = datetime(2018,12,1,0,0,0,0)
+        message        = "2018_Spring"
+        plot_heatwave_days(EHF_out, time_s=time_s, time_e=time_e, lat_names="lat", lon_names="lon", loc_lat=loc_lat, loc_lon=loc_lon,message=message)
+
+        time_s         = datetime(2019,9,1,0,0,0,0)
+        time_e         = datetime(2019,12,1,0,0,0,0)
+        message        = "2019_Spring"
+        plot_heatwave_days(EHF_out, time_s=time_s, time_e=time_e, lat_names="lat", lon_names="lon", loc_lat=loc_lat, loc_lon=loc_lon,message=message)
+

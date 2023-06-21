@@ -2,7 +2,7 @@
 
 #PBS -m ae
 #PBS -P w97
-#PBS -l walltime=30:00:00
+#PBS -l walltime=2:00:00
 #PBS -l mem=256GB
 #PBS -l ncpus=1
 #PBS -j oe
@@ -13,7 +13,8 @@
 module use /g/data/hh5/public/modules
 module load conda/analysis3-22.04
 
-var_names=("td2" "T2" "rh2" "slp" "pw" "cloudfrac" "cape_2d" "p" "th" "rh" "tc" "ua" "va")
+var_names=("PBLH")
+#("td2" "T2" "rh2" "slp" "pw" "cloudfrac" "cape_2d" "p" "th" "rh" "tc" "ua" "va")
 
 for var_name in "${var_names[@]}"; do
 

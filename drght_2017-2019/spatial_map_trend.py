@@ -171,39 +171,50 @@ def make_nc_file(ctl_file_path,sen_file_path,trend_file,var_name,time_s,time_e,t
 def plot_trend_map(trend_file, wrf_path, message=None):
 
     # =================== Plotting spatial map ===================
+
+    # Read in trend plots on WRF domain
     f     = Dataset(trend_file, 'r')
     trend = f.variables['trend'][:,0,:,:] # nseason, nindex, nlat, nlon
     Mask  = f.variables['lon'][:,:]
     trend = np.where(Mask <0, np.nan, trend)
 
+    # Read in no Nan WRF lat and lon
     wrf   = Dataset(wrf_path, 'r')
     lat   = wrf.variables['lat'][:,:]
     lon   = wrf.variables['lon'][:,:]
     print("np.shape(trend)",np.shape(trend))
 
-    # regrid to
+    # Set the output lat and lon
     lat_out     = np.arange(-39,-24,0.04)
     lon_out     = np.arange(135,155,0.04)
     lon_out_2D,lat_out_2D = np.meshgrid(lon_out,lat_out)
 
+    # Regrid to lat-lon projection
     trend_regrid= np.zeros((4,len(lat_out),len(lon_out)))
-
+    Mask_regrid = np.zeros((len(lat_out),len(lon_out)))
+    Mask        = np.where(Mask < 0, 0, 1)
 
     for i in np.arange(4):
         trend_in_1D_tmp = trend[i,:,:].flatten()
-        lat_in_1D   = lat.flatten()
-        lon_in_1D   = lon.flatten()
+        lat_in_1D       = lat.flatten()
+        lon_in_1D       = lon.flatten()
 
-        trend_in_1D = trend_in_1D_tmp[~np.isnan(trend_in_1D_tmp)]
-        lat_in_1D   = lat_in_1D[~np.isnan(trend_in_1D_tmp)]    # here I make nan in values as the standard
-        lon_in_1D   = lon_in_1D[~np.isnan(trend_in_1D_tmp)]
+        trend_in_1D     = trend_in_1D_tmp[~np.isnan(trend_in_1D_tmp)]
+        lat_in_1D       = lat_in_1D[~np.isnan(trend_in_1D_tmp)]    # here I make nan in values as the standard
+        lon_in_1D       = lon_in_1D[~np.isnan(trend_in_1D_tmp)]
+
         trend_regrid[i,:,:]   = griddata((lat_in_1D, lon_in_1D), trend_in_1D, (lat_out_2D, lon_out_2D), method='nearest')
-
+        if i == 0:
+            Mask_in_1D      = Mask.flatten()
+            lat_mask_1D     = lat.flatten()
+            lon_mask_1D     = lon.flatten()
+            Mask_regrid     = griddata((lat_mask_1D, lon_mask_1D), Mask_in_1D, (lat_out_2D, lon_out_2D), method='nearest')
+        trend_regrid[i,:,:] = np.where(Mask_regrid==1,trend_regrid[i,:,:],np.nan)
 
     # for j in np.arange(17):
-    fig, ax = plt.subplots(nrows=2, ncols=2, figsize=[12,12],sharex=True, sharey=True, squeeze=True,
+    fig, ax = plt.subplots(nrows=1, ncols=4, figsize=[12,4],sharex=True, sharey=True, squeeze=True,
                             subplot_kw={'projection': ccrs.PlateCarree()})
-    plt.subplots_adjust(wspace=0., hspace=-0.05) # left=0.15,right=0.95,top=0.85,bottom=0.05,
+    plt.subplots_adjust(wspace=0.05, hspace=0.) # left=0.15,right=0.95,top=0.85,bottom=0.05,
 
     plt.rcParams['text.usetex']     = False
     plt.rcParams['font.family']     = "sans-serif"
@@ -239,54 +250,56 @@ def plot_trend_map(trend_file, wrf_path, message=None):
 
     # ======================= Set colormap =======================
     cmap    = ListedColormap(["lightgray", # 0: no trend
-                              "darkgreen", # 1: increase
-                              "darkred",   # 2: decrease
-                              "orange",    # 3: increase then decrease
-                              "cyan",      # 4: decrease then increase
-                              "lightgreen",# 5: 2st no trend, 1nd inrease a lot
-                              "lightcoral",# 6: 2st no trend, 1nd decrease a lot
-                              "green",     # 7: 1st no trend, 2nd inrease a lot
-                              "red",       # 8: 1st on trend, 2nd decrease a lot
+                              "green",             # 1: increase
+                              "red",               # 2: decrease
+                              "orange",            # 3: increase then decrease
+                              "lightseagreen",     # 4: decrease then increase
+                              "mediumspringgreen", # 5: 2st no trend, 1nd inrease a lot
+                              "lightcoral",        # 6: 2st no trend, 1nd decrease a lot
+                              "lawngreen",             # 7: 1st no trend, 2nd inrease a lot
+                              "hotpink",               # 8: 1st on trend, 2nd decrease a lot
                               ]) #plt.cm.tab10 #BrBG
     label_x = [ "MAM", "JJA", "SON", "DJF",]
                          #  0,   1,   2,   3,   4,  11,   12,   21,   22,
     clevs_trend = [-0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5]
     cnt         = 0
-    for i in np.arange(2):
-        for j in np.arange(2):
-            ax[i,j].coastlines(resolution="50m",linewidth=1)
-            ax[i,j].set_extent([135,155,-39,-24])
-            ax[i,j].add_feature(states, linewidth=.5, edgecolor="black")
+    for i in np.arange(4):
+        # for j in np.arange(2):
+        ax[i].coastlines(resolution="50m",linewidth=1)
+        ax[i].set_extent([135,155,-39,-24])
+        ax[i].add_feature(states, linewidth=.5, edgecolor="black")
 
-            # Add gridlines
-            gl = ax[i,j].gridlines(crs=ccrs.PlateCarree(), draw_labels=True, linewidth=1, color=almost_black, linestyle='--')
-            gl.top_labels   = False
-            gl.right_labels = False
-            gl.bottom_labels= True
+        # Add gridlines
+        gl = ax[i].gridlines(crs=ccrs.PlateCarree(), draw_labels=True, linewidth=1, color=almost_black, linestyle='--')
+        gl.top_labels   = False
+        gl.right_labels = False
+        gl.bottom_labels= True
+        if i ==0:
             gl.left_labels  = True
-            gl.xlines       = False
-            gl.ylines       = False
-            gl.xlocator     = mticker.FixedLocator(np.arange(125,160,1))
-            gl.ylocator     = mticker.FixedLocator(np.arange(-40,-20,1))
-            gl.xformatter   = LONGITUDE_FORMATTER
-            gl.yformatter   = LATITUDE_FORMATTER
-            gl.xlabel_style = {'size':12, 'color':almost_black}#,'rotation': 90}
-            gl.ylabel_style = {'size':12, 'color':almost_black}
+        else:
+            gl.left_labels  = False
+        gl.xlines       = False
+        gl.ylines       = False
+        gl.xlocator     = mticker.FixedLocator(np.arange(125,160,1))
+        gl.ylocator     = mticker.FixedLocator(np.arange(-40,-20,1))
+        gl.xformatter   = LONGITUDE_FORMATTER
+        gl.yformatter   = LATITUDE_FORMATTER
+        gl.xlabel_style = {'size':10, 'color':almost_black}#,'rotation': 90}
+        gl.ylabel_style = {'size':10, 'color':almost_black}
 
-            # left: MAM
-            print('trend_regrid[cnt,:,:]',trend_regrid[cnt,:,:])
-            print('ccrs.PlateCarree()',ccrs.PlateCarree())
-            extent=(135, 155, -39, -24)
-            print(np.min(lon),np.max(lon), np.min(lat), np.max(lat))
-            plot1    = ax[i,j].imshow(trend_regrid[cnt,:,:], origin="lower", extent=extent, vmin=-0.5, vmax=8.5, transform=ccrs.PlateCarree(), cmap=cmap)
-            ax[i,j].text(0.02, 0.15, label_x[cnt], transform=ax[i,j].transAxes, fontsize=14, verticalalignment='top', bbox=props)
-            # ax[0].add_feature(OCEAN,edgecolor='none', facecolor="lightgray")
-            ax[i,j].add_feature(OCEAN,edgecolor='none', facecolor="lightgray")
-            cbar = plt.colorbar(plot1, ax=ax[i,j], ticklocation="right", pad=0.01, orientation="vertical",
-                                aspect=20, shrink=0.6) # cax=cax,
-            cbar.ax.tick_params(labelsize=8, labelrotation=45)
-            cnt = cnt + 1
+        # left: MAM
+        print('trend_regrid[cnt,:,:]',trend_regrid[cnt,:,:])
+        print('ccrs.PlateCarree()',ccrs.PlateCarree())
+        extent=(135, 155, -39, -24)
+        # print(np.min(lon),np.max(lon), np.min(lat), np.max(lat))
+        plot1    = ax[i].imshow(trend_regrid[cnt,:,:], origin="lower", extent=extent, vmin=-0.5, vmax=8.5, transform=ccrs.PlateCarree(), cmap=cmap)
+        ax[i].text(0.02, 0.15, label_x[cnt], transform=ax[i].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+        # ax[0].add_feature(OCEAN,edgecolor='none', facecolor="lightgray")
+        ax[i].add_feature(OCEAN,edgecolor='none', facecolor="lightgray")
 
+        cnt = cnt + 1
+    cbar = plt.colorbar(plot1, ax=ax, ticklocation="bottom", pad=0.1, orientation="horizontal", aspect=40, shrink=0.6) # cax=cax,
+    cbar.ax.tick_params(labelsize=8, labelrotation=45)
     if message != None:
         plt.savefig('./plots/spatial_map_trend_'+message+'.png',dpi=300)
     else:
