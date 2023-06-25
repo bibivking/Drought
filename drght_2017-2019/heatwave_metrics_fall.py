@@ -230,8 +230,6 @@ def plot_heatwave_days(EHF_out, time_s=None, time_e=None, lat_names="lat", lon_n
 
     plt.savefig('./plots/spatial_map_total_hw_days_'+message+'.png',dpi=300)
 
-
-
 def plot_spatial_map_hw_magnitude(EHF_out, land_ctl_path, land_sen_path, var_names,
                                   time_s=None,time_e=None, lat_names="lat", lon_names="lon",
                                   loc_lat=None, loc_lon=None, message=None):
@@ -324,7 +322,6 @@ def plot_spatial_map_hw_magnitude(EHF_out, land_ctl_path, land_sen_path, var_nam
     # plt.title(message, size=16)
 
     plt.savefig('./plots/spatial_map_hw_'+message+'.png',dpi=300)
-
 
 if __name__ == "__main__":
 

@@ -30,30 +30,6 @@ from wrf import (to_np, getvar, smooth2d, get_cartopy, cartopy_xlim,
                         cartopy_ylim, latlon_coords, ALL_TIMES)
 from common_utils import *
 
-
-def qair_to_vpd(qair, tair, press):
-    '''
-    calculate vpd
-    '''
-    DEG_2_KELVIN = 273.15
-    PA_TO_KPA    = 0.001
-    PA_TO_HPA    = 0.01
-
-    # convert back to Pa
-    press        /= PA_TO_HPA
-    tair         -= DEG_2_KELVIN
-
-    # saturation vapor pressure
-    es = 100.0 * 6.112 * np.exp((17.67 * tair) / (243.5 + tair))
-
-    # vapor pressure
-    ea = (qair * press) / (0.622 + (1.0 - 0.622) * qair)
-
-    vpd = (es - ea) * PA_TO_KPA
-    vpd = np.where(vpd < 0.05, 0.05, vpd)
-
-    return vpd
-
 def read_LIS_vars(var_type):
 
     '''
@@ -552,21 +528,21 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
     for var_name in var_names:
         print("plotting "+var_name)
 
-        if var_name in ["Tmax","Tmin",]:
+        if var_name in ["Tmax","Tmin","TDR"]:
             land_ctl_files= [land_ctl_path+'Tair_f_inst/LIS.CABLE.201701-202002.nc']
             land_sen_files= [land_sen_path+'Tair_f_inst/LIS.CABLE.201701-202002.nc']
             time, Ctl_tmp = read_var_multi_file(land_ctl_files, 'Tair_f_inst', loc_lat, loc_lon, lat_names, lon_names)
             time, Sen_tmp = read_var_multi_file(land_sen_files, 'Tair_f_inst', loc_lat, loc_lon, lat_names, lon_names)
             Ctl_tmp       = Ctl_tmp -273.15
             Sen_tmp       = Sen_tmp -273.15
-        elif var_name in ["VegTmax","VegTmin"]:
+        elif var_name in ["VegTmax","VegTmin","VegTDR"]:
             land_ctl_files= [land_ctl_path+'VegT_tavg/LIS.CABLE.201701-202002.nc']
             land_sen_files= [land_sen_path+'VegT_tavg/LIS.CABLE.201701-202002.nc']
             time, Ctl_tmp = read_var_multi_file(land_ctl_files, 'VegT_tavg', loc_lat, loc_lon, lat_names, lon_names)
             time, Sen_tmp = read_var_multi_file(land_sen_files, 'VegT_tavg', loc_lat, loc_lon, lat_names, lon_names)
             Ctl_tmp       = Ctl_tmp -273.15
             Sen_tmp       = Sen_tmp -273.15
-        elif var_name in ["SurfTmax","SurfTmin"]:
+        elif var_name in ["SurfTmax","SurfTmin","SurfTDR"]:
             land_ctl_files= [land_ctl_path+'AvgSurfT_tavg/LIS.CABLE.201701-202002.nc']
             land_sen_files= [land_sen_path+'AvgSurfT_tavg/LIS.CABLE.201701-202002.nc']
             time, Ctl_tmp = read_var_multi_file(land_ctl_files, 'AvgSurfT_tavg', loc_lat, loc_lon, lat_names, lon_names)
@@ -639,6 +615,14 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             # average of daily min
             ctl_in       = spital_var_min(time,Ctl_tmp,time_s,time_e)
             sen_in       = spital_var_min(time,Sen_tmp,time_s,time_e)
+        elif 'TDR' in var_name:
+            # average of daily min
+            ctl_in_max   = spital_var_max(time,Ctl_tmp,time_s,time_e)
+            sen_in_max   = spital_var_max(time,Sen_tmp,time_s,time_e)
+            ctl_in_min   = spital_var_min(time,Ctl_tmp,time_s,time_e)
+            sen_in_min   = spital_var_min(time,Sen_tmp,time_s,time_e)
+            ctl_in       = ctl_in_max - ctl_in_min
+            sen_in       = sen_in_max - sen_in_min
         else:
             ctl_in       = spital_var(time,Ctl_tmp,time_s,time_e)
             sen_in       = spital_var(time,Sen_tmp,time_s,time_e)
@@ -705,7 +689,7 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
         elif var_name in ["Psurf_f_inst"]:
             clevs = [-22,-18,-14,-10,-6,-2,2,6,10,14,18,22]
         elif var_name in ["Tair_f_inst","Tmax","Tmin","VegT_tavg","VegTmax","VegTmin",
-                          "AvgSurfT_tavg","SurfTmax","SurfTmin","SoilTemp_inst",]:
+                          "AvgSurfT_tavg","SurfTmax","SurfTmin","SoilTemp_inst",'TDR','VegTDR','SurfTDR']:
             # clevs = [-2.,-1.8,-1.6,-1.4,-1.2,-1.,-0.8,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.,1.2,1.4,1.6,1.8,2.]
             clevs = [-1.2,-1.1,-1,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.,1.1,1.2]
             # clevs = [-3,-2.5,-2,-1.5,-1,-0.5,-0.1,0.1,0.5,1.,1.5,2,2.5,3.]
@@ -1651,9 +1635,11 @@ if __name__ == "__main__":
             Difference plot yearly
 
             '''
-            var_names  = [  #"SM_top50cm",
+            var_names  = [   "TDR"
+                            #"FWsoil_tavg",
+                            #"SM_top50cm",
                             #"VPDmax","VPDmin"
-                            "LAI_inst","Albedo_inst",
+                            # "LAI_inst","Albedo_inst",
                             #"VPD",
                             #"GPP_tavg",#"NPP_tavg",
                             #"SurfTmax","SurfTmin",
@@ -1676,21 +1662,21 @@ if __name__ == "__main__":
 
                           # "SM_top50cm",
 
-            #period     = "201718_winter"
-            #time_s     = datetime(2017,6,1,0,0,0,0)
-            #time_e     = datetime(2017,9,1,0,0,0,0)
-            #message    = case_name+"_"+period
-            #spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                    lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                    message=message)
+            period     = "201718_winter"
+            time_s     = datetime(2017,6,1,0,0,0,0)
+            time_e     = datetime(2017,9,1,0,0,0,0)
+            message    = case_name+"_"+period
+            spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+                               lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+                               message=message)
 
-            #period     = "201819_winter"
-            #time_s     = datetime(2018,6,1,0,0,0,0)
-            #time_e     = datetime(2018,9,1,0,0,0,0)
-            #message    = case_name+"_"+period
-            #spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
-            #                    lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
-            #                    message=message)
+            period     = "201819_winter"
+            time_s     = datetime(2018,6,1,0,0,0,0)
+            time_e     = datetime(2018,9,1,0,0,0,0)
+            message    = case_name+"_"+period
+            spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
+                               lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, shape_path=shape_path,
+                               message=message)
 
             period     = "201920_winter"
             time_s     = datetime(2019,6,1,0,0,0,0)

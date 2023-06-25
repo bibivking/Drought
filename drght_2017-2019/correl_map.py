@@ -169,7 +169,7 @@ def read_spatial_data(land_ctl_path, land_sen_path, var_name, time_ss=None,
     return ctl_in, sen_in
 
 def plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=None,time_es=None, lat_names="lat", lon_names="lon",
-                    loc_lat=None, loc_lon=None, wrf_path=None, message=None):
+                    loc_lat=None, loc_lon=None, wrf_path=None, message=None,method='spearman'):
 
     ctl_one, sen_one = read_spatial_data(land_ctl_path, land_sen_path, var_names[0], time_ss, time_es, lat_names, lon_names,loc_lat, loc_lon, wrf_path)
     ctl_two, sen_two = read_spatial_data(land_ctl_path, land_sen_path, var_names[1], time_ss, time_es, lat_names, lon_names,loc_lat, loc_lon, wrf_path)
@@ -196,7 +196,10 @@ def plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=None,time_e
                 r[x,y]    = np.nan
                 p[x,y]    = np.nan
             else:
-                r[x,y],p[x,y]    = stats.pearsonr(one_tmp, two_tmp)
+                if method == "pearson":
+                    r[x,y],p[x,y]    = stats.pearsonr(one_tmp, two_tmp)
+                elif method == 'spearman':
+                    r[x,y],p[x,y]    = stats.spearmanr(one_tmp, two_tmp)
 
     # ================== Start Plotting =================
     fig = plt.figure(figsize=(6,5))
@@ -267,7 +270,7 @@ def plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=None,time_e
     cb.ax.tick_params(labelsize=10)
     plt.title(message, size=16)
 
-    plt.savefig('./plots/correl_map_'+message+'.png',dpi=300)
+    plt.savefig('./plots/correl_map_'+method+'_'+message+'.png',dpi=300)
 
 def plot_partial_corr_map(land_ctl_path, land_sen_path, var_names, time_ss=None,time_es=None, lat_names="lat", lon_names="lon",
                     loc_lat=None, loc_lon=None, wrf_path=None, message=None, correl_method='pearson'):
@@ -422,78 +425,70 @@ if __name__ == "__main__":
         land_ctl_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_ctl+"/LIS_output/"
 
 
-        if 0:
+        if 1:
             '''
             Calculate correlation coefficent
             '''
+            T_varname  = "Tmin"
 
-            var_names  = ["Tmax", "Albedo_inst"]
-            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
+            # Summer - DJF
             time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
             time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
-            message    = case_name+"_"+period
+
+            var_names  = [T_varname, "Albedo_inst"]
+            message    = "Summer_"+var_names[0]+"_vs_"+var_names[1]
             plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
-                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
 
-            var_names  = ["Tmax", "LAI_inst"]
-            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
-            time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
-            time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
-            message    = case_name+"_"+period
+            var_names  = [T_varname, "LAI_inst"]
+            message    = "Summer_"+var_names[0]+"_vs_"+var_names[1]
             plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
-                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
 
-            var_names  = ["Tmin", "Albedo_inst"]
-            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
-            time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
-            time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
-            message    = case_name+"_"+period
+            # Fall - MAM
+            time_ss    = [datetime(2017,3,1,0,0,0,0),datetime(2018,3,1,0,0,0,0),datetime(2019,3,1,0,0,0,0)]
+            time_es    = [datetime(2017,6,1,0,0,0,0),datetime(2018,6,1,0,0,0,0),datetime(2019,6,1,0,0,0,0)]
+
+            var_names  = [T_varname, "Albedo_inst"]
+            message    = "Fall_"+var_names[0]+"_vs_"+var_names[1]
             plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
-                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
 
-            var_names  = ["Tmin", "LAI_inst"]
-            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
-            time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
-            time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
-            message    = case_name+"_"+period
+            var_names  = [T_varname, "LAI_inst"]
+            message    = "Fall_"+var_names[0]+"_vs_"+var_names[1]
             plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
-                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
 
-            var_names  = ["GPP_tavg", "LAI_inst"]
-            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
-            time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
-            time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
-            message    = case_name+"_"+period
+            # Winter - JJA
+            time_ss    = [datetime(2017,6,1,0,0,0,0), datetime(2018,6,1,0,0,0,0), datetime(2019,6,1,0,0,0,0)]
+            time_es    = [datetime(2017,9,1,0,0,0,0), datetime(2018,9,1,0,0,0,0), datetime(2019,9,1,0,0,0,0)]
+
+            var_names  = [T_varname, "Albedo_inst"]
+            message    = "Winter_"+var_names[0]+"_vs_"+var_names[1]
             plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
-                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
 
-            var_names  = ["GPP_tavg", "VPD"]
-            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
-            time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
-            time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
-            message    = case_name+"_"+period
+            var_names  = [T_varname, "LAI_inst"]
+            message    = "Winter_"+var_names[0]+"_vs_"+var_names[1]
             plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
-                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
 
+            # Spring - SON
+            time_ss    = [datetime(2017,9,1,0,0,0,0),  datetime(2018,9,1,0,0,0,0),  datetime(2019,9,1,0,0,0,0)]
+            time_es    = [datetime(2017,12,1,0,0,0,0), datetime(2018,12,1,0,0,0,0), datetime(2019,12,1,0,0,0,0)]
 
-            var_names  = ["GPP_tavg", "FWsoil_tavg"]
-            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
-            time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
-            time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
-            message    = case_name+"_"+period
+            var_names  = [T_varname, "Albedo_inst"]
+            message    = "Spring_"+var_names[0]+"_vs_"+var_names[1]
             plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
-                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
 
-
-            var_names  = ["GPP_tavg", "Tair_f_inst"]
-            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
-            time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
-            time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
-            message    = case_name+"_"+period
+            var_names  = [T_varname, "LAI_inst"]
+            message    = "Spring_"+var_names[0]+"_vs_"+var_names[1]
             plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
-                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
 
-        if 1:
+
+        if 0:
             '''
             Calculate partial correlation
             '''
@@ -579,3 +574,49 @@ if __name__ == "__main__":
             # message    = case_name+"_"+period
             # plot_partial_corr_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
             #         loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)
+
+        if 0:
+            '''
+            Calculate correlation with GPP
+            '''
+
+            var_names  = ["GPP_tavg", "FWsoil_tavg"]
+            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
+            time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
+            time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
+            message    = case_name+"_"+period
+            plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+
+            var_names  = ["GPP_tavg", "LAI_inst"]
+            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
+            time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
+            time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
+            message    = case_name+"_"+period
+            plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+
+            var_names  = ["GPP_tavg", "VPD"]
+            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
+            time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
+            time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
+            message    = case_name+"_"+period
+            plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+
+            var_names  = ["GPP_tavg", "Tair_f_inst"]
+            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
+            time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
+            time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
+            message    = case_name+"_"+period
+            plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+
+            var_names  = ["GPP_tavg", "Rnet"]
+            period     = "Summers_"+var_names[0]+"_vs_"+var_names[1]
+            time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
+            time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
+            message    = case_name+"_"+period
+            plot_partial_corr_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+                    loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+

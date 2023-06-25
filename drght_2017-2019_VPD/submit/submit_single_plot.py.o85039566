@@ -1,0 +1,61 @@
+/g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD/common_utils.py:711: RuntimeWarning: Mean of empty slice
+  var       = np.nanmean(Var[time_cood],axis=0)
+/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/lib/python3.9/site-packages/cartopy/mpl/gridliner.py:451: UserWarning: The .xlabels_top attribute is deprecated. Please use .top_labels to toggle visibility instead.
+  warnings.warn('The .xlabels_top attribute is deprecated. Please '
+/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/lib/python3.9/site-packages/cartopy/mpl/gridliner.py:487: UserWarning: The .ylabels_right attribute is deprecated. Please use .right_labels to toggle visibility instead.
+  warnings.warn('The .ylabels_right attribute is deprecated. Please '
+Fwsoil
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_HDM/new_default/outputs/cable_out_2017.nc
+print lat_spc  & lon_spc in def mask_by_lat_lon  0.10000038 0.099998474
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_HDM/new_default/outputs/cable_out_2018.nc
+shape of mask_multi (365, 341, 421)
+3
+file_path =  /g/data/w97/mm3972/model/cable/runs/VPD_drought/ctl/litter_on_HDM/new_default/outputs/cable_out_2019.nc
+shape of mask_multi (365, 341, 421)
+3
+=== In read_var_multi_file ===
+len(np.shape(Ctl_var)) 2
+[[nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ ...
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]
+ [nan nan nan ... nan nan nan]]
+Traceback (most recent call last):
+  File "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD/spatial_map_single_plot.py", line 842, in <module>
+    spatial_map_single_plot_multifile(land_ctl_files, var_names, time_s=time_s, time_e=time_e, lat_names="latitude",
+  File "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019_VPD/spatial_map_single_plot.py", line 713, in spatial_map_single_plot_multifile
+    plt.savefig('./plots/ctl/'+config_set+'/spatial_map_'+message + "_" + var_name+'.png',dpi=300)
+  File "/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/lib/python3.9/site-packages/matplotlib/pyplot.py", line 958, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/lib/python3.9/site-packages/matplotlib/figure.py", line 3019, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/lib/python3.9/site-packages/matplotlib/backend_bases.py", line 2319, in print_figure
+    result = print_method(
+  File "/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/lib/python3.9/site-packages/matplotlib/backend_bases.py", line 1648, in wrapper
+    return func(*args, **kwargs)
+  File "/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/lib/python3.9/site-packages/matplotlib/_api/deprecation.py", line 412, in wrapper
+    return func(*inner_args, **inner_kwargs)
+  File "/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/lib/python3.9/site-packages/matplotlib/backends/backend_agg.py", line 541, in print_png
+    mpl.image.imsave(
+  File "/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/lib/python3.9/site-packages/matplotlib/image.py", line 1675, in imsave
+    image.save(fname, **pil_kwargs)
+  File "/g/data3/hh5/public/apps/miniconda3/envs/analysis3-22.01/lib/python3.9/site-packages/PIL/Image.py", line 2237, in save
+    fp = builtins.open(filename, "w+b")
+FileNotFoundError: [Errno 2] No such file or directory: './plots/ctl/litter_on_HDM/spatial_map_ctl_Tinderbox_drought_Fwsoil.png'
+
+======================================================================================
+                  Resource Usage on 2023-05-25 14:47:56:
+   Job Id:             85039566.gadi-pbs
+   Project:            w97
+   Exit Status:        1
+   Service Units:      1.05
+   NCPUs Requested:    1                      NCPUs Used: 1               
+                                           CPU Time Used: 00:00:18        
+   Memory Requested:   90.0GB                Memory Used: 4.0GB           
+   Walltime requested: 02:20:00            Walltime Used: 00:01:41        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================
