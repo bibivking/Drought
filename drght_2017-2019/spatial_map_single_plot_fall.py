@@ -1176,7 +1176,6 @@ def spatial_map_single_plot_WRF_diff(atmo_ctl_path, atmo_sen_path, var_names, ti
             else:
                 plt.savefig('./plots/spatial_map_'+message + "_" +var_name+'.png',dpi=300)
 
-
 def spatial_map_total_soil_water_diff(file_paths, lis_path, loc_lat=None, loc_lon=None, wrf_path=None,message=None):
 
     '''

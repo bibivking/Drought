@@ -1,0 +1,19 @@
+cdo    seldate: Processed 3043155024 values from 1 variable over 27696 timesteps [60.60s 102MB].
+Cannot compress ./LIS.CABLE.201912-202002.nc with nc2nc as it is NETCDF4 format, switching to nccopy
+Directory: ./
+    Number files compressed: 1
+    Total space saved: 0.01 TB
+    Average compression ratio: 2.11
+
+======================================================================================
+                  Resource Usage on 2023-06-27 16:19:14:
+   Job Id:             89127216.gadi-pbs
+   Project:            w97
+   Exit Status:        0
+   Service Units:      7.17
+   NCPUs Requested:    8                      NCPUs Used: 8               
+                                           CPU Time Used: 00:04:05        
+   Memory Requested:   256.0GB               Memory Used: 22.8GB          
+   Walltime requested: 02:30:00            Walltime Used: 00:04:12        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================

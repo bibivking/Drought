@@ -52,7 +52,7 @@ def read_wrf_var(file_paths, var_name, var_unit=None):
             ncfile_next.close()
         else:
             # set the time step of the nc file ends before 2020-01-01
-            next_file_time = datetime(2020, 1, 1, 0, 0, 0)
+            next_file_time = datetime(2020, 3, 1, 0, 0, 0)
 
         # Read time
         ntime    = len(ncfile.variables['Times'][:,0])

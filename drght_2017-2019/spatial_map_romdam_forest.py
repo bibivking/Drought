@@ -91,6 +91,74 @@ def tif_to_nc(tif_file_path, output_file, wrf_file):
 
     f.close()
 
+def pieces_tif_to_nc(piece_tif_path, output_file, wrf_file):
+
+    # for opening the raster read-only and saving it on f variable.
+    Interact = np.zeros((439,529))
+
+    for i in np.arange(1,24):
+
+        lon_s = (i-1)*23
+        lon_e = i*23
+
+        file_path = piece_tif_path+"Interaction_deltaTmax_deltaLAI_deltaAlbedo_2017_2020_DJF_part"+str(i)+".tif"
+        f = gdal.Open(file_path, gdal.GA_ReadOnly)
+
+        print('f',f)
+
+        # Copy the transformation to a variable, it will be useful later.
+        GT_input = f.GetGeoTransform()
+        print('GT_input',GT_input)
+
+        # Read the bands of your raster using GetRasterBand
+        interact_tmp            = f.GetRasterBand(1)
+        Interact[:,lon_s:lon_e] = interact_tmp.ReadAsArray()
+
+        # Read the size of your array
+        size1,size2=Interact.shape
+        print('size1,size2=',size1,size2)
+
+        interact = np.float32(Interact)
+        interact = np.where(interact < 0, -9999. ,interact)
+        print('interact',interact)
+
+    # make nc file
+    f                   = Dataset(output_file, 'w', format='NETCDF4')
+
+    ### Create nc file ###
+    f.history           = "Created by: %s" % (os.path.basename(__file__))
+    f.creation_date     = "%s" % (datetime.now())
+    f.description       = 'Transfer Interaction_deltaTmax_deltaLAI_deltaAlbedo_2017_2020_DJF_part1~23.tif to netcdf file, created by MU Mengyuan'
+
+    # set dimensions
+    f.createDimension('north_south', size1)
+    f.createDimension('east_west', size2)
+    f.Conventions       = "CF-1.0"
+
+    # create variables
+    latitude            = f.createVariable('lat', 'f4', ('north_south', 'east_west'))
+    latitude.long_name  = "latitude"
+    latitude.units      = "degree_north"
+    latitude._CoordinateAxisType = "Lat"
+
+    longitude           = f.createVariable('lon', 'f4', ('north_south', 'east_west'))
+    longitude.long_name = "longitude"
+    longitude.units     = "degree_east"
+    longitude._CoordinateAxisType = "Lon"
+
+    var_out             = f.createVariable('LAI_ALB_interact', 'f4', ('north_south', 'east_west'),fill_value=-9999.)
+    var_out.long_name   = "Importance of ΔLAI and ΔAlbedo interaction to ΔTmax"
+    var_out[:]          = interact[::-1,:]
+
+    wrf                 = Dataset(wrf_file,'r')
+    lat                 = wrf.variables['lat'][:]
+    lon                 = wrf.variables['lon'][:]
+    latitude[:]         = lat
+    longitude[:]        = lon
+
+    f.close()
+
+
 def plot_RF_map(output_file,message=None):
 
     # =================== Plotting spatial map ===================
@@ -210,4 +278,9 @@ if __name__ == "__main__":
     # make nc file
     # tif_to_nc(tif_file_path, output_file, wrf_file)
 
-    plot_RF_map(output_file)
+
+    output_file   = '/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/Interact_Imp_deltaTmax_deltaLAI_deltaAlbedo_2017_2020_DJF.nc'
+    piece_tif_path = "/g/data/oq98/sho561/Mengyuan/output_combined/"
+    pieces_tif_to_nc(piece_tif_path, output_file, wrf_file)
+
+    # plot_RF_map(output_file)

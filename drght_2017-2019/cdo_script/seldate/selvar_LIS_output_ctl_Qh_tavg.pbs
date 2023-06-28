@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#PBS -m ae
+#PBS -P w97
+#PBS -q normalsr
+#PBS -l walltime=2:30:00
+#PBS -l mem=256GB
+#PBS -l ncpus=8
+#PBS -j oe
+#PBS -l wd
+#PBS -l storage=gdata/w97+gdata/hh5
+
+module load cdo
+
+cd /g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/LIS_output/Qh_tavg
+
+cdo seldate,2019-12-01,2020-02-29 LIS.CABLE.201701-202002.nc LIS.CABLE.201912-202002.nc
+
+module use /g/data/hh5/public/modules
+module load conda/analysis3-22.04
+nccompress -r -o -np 8 LIS.CABLE.201912-202002.nc
+

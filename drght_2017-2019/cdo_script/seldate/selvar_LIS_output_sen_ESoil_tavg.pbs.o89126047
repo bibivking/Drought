@@ -1,0 +1,14 @@
+cdo    seldate: Processed 507192504 values from 1 variable over 27696 timesteps [10.29s 81MB].
+
+======================================================================================
+                  Resource Usage on 2023-06-27 15:58:25:
+   Job Id:             89126047.gadi-pbs
+   Project:            w97
+   Exit Status:        0
+   Service Units:      0.37
+   NCPUs Requested:    1                      NCPUs Used: 1               
+                                           CPU Time Used: 00:00:10        
+   Memory Requested:   256.0GB               Memory Used: 2.72GB          
+   Walltime requested: 02:30:00            Walltime Used: 00:00:13        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================

@@ -294,6 +294,82 @@ def make_delta_Tmax_LAI_Albedo_nc(land_ctl_path, land_sen_path, output_file, var
 
         plt.savefig('./plots/partial_corr_map_'+message+'.png',dpi=300)
 
+
+def cut_into_pieces(input_file, output_path):
+
+    # Read in input file
+    fin       = nc.Dataset(input_file,  mode='r')
+    time_in   = fin.variables['time'][:]
+    lat_in    = fin.variables['lat'][:]
+    lon_in    = fin.variables['lon'][:]
+    Tmax_in   = fin.variables['delta_Tmax'][:]
+    LAI_in    = fin.variables['delta_LAI'][:]
+    Albedo_in = fin.variables['delta_Albedo'][:]
+    fin.close()
+
+    # Set lat and lon numbers
+    nlat      = 439
+    nlon      = 23 # 529 = 23 x 23
+    ntime     = len(time_in)
+    
+    for i in np.arange(23):
+
+        print("Doing part "+str(i))
+        
+        # set the range of lon
+        lon_s = i*23
+        lon_e = (i+1)*23
+
+        # define the file name
+        output_file          = output_path + "deltaTmax_deltaLAI_deltaAlbedo_2017_2020_DJF_part"+str(i+1)+".nc"
+        
+        print("output_file="+output_file)
+
+        # create file and write global attributes
+        f                    = nc.Dataset(output_file, 'w', format='NETCDF4')
+        f.history            = "Created by: %s" % (os.path.basename(__file__))
+        f.creation_date      = "%s" % (datetime.now())
+        f.description        = 'daily ΔTmax (sen-ctl), ΔLAI, Δalbedo for 2017-2020 three DJFs, made by MU Mengyuan'
+
+        # set dimensions
+        f.createDimension('time', ntime)
+        f.createDimension('north_south', nlat)
+        f.createDimension('east_west', nlon)
+        f.Conventions        = "CF-1.0"
+
+        time                 = f.createVariable('time', 'f4', ('time'))
+        time.units           = "days since 2000-01-01"
+        time[:]              = time_in
+
+        latitude             = f.createVariable('lat', 'f4', ('north_south', 'east_west'))
+        latitude.long_name   = "latitude"
+        latitude.units       = "degree_north"
+        latitude._CoordinateAxisType = "Lat"
+        latitude[:]          = lat_in[:,lon_s:lon_e]
+
+        longitude            = f.createVariable('lon', 'f4', ('north_south', 'east_west'))
+        longitude.long_name  = "longitude"
+        longitude.units      = "degree_east"
+        longitude._CoordinateAxisType = "Lon"
+        longitude[:]         = lon_in[:,lon_s:lon_e]
+
+        delta_Tmax               = f.createVariable('delta_Tmax', 'f4', ('time', 'north_south', 'east_west'))
+        delta_Tmax.standard_name = 'maximum daiy air tempeature difference'
+        delta_Tmax.units         = 'C'
+        delta_Tmax[:]            = Tmax_in[:,:,lon_s:lon_e]
+
+        delta_LAI                = f.createVariable('delta_LAI', 'f4', ('time', 'north_south', 'east_west'))
+        delta_LAI.standard_name  = 'Leaf area index (LAI) difference'
+        delta_LAI.units          = 'm2/m2'
+        delta_LAI[:]             = LAI_in[:,:,lon_s:lon_e]
+
+        delta_Albedo               = f.createVariable('delta_Albedo', 'f4', ('time', 'north_south', 'east_west'))
+        delta_Albedo.standard_name = 'Albedo difference'
+        delta_Albedo[:]            = Albedo_in[:,:,lon_s:lon_e]
+
+        f.close()
+
+
 if __name__ == "__main__":
 
     # ======================= Option =======================
@@ -312,7 +388,7 @@ if __name__ == "__main__":
     # #################################
     # Plot WRF-CABLE vs AWAP temperal metrics
     # #################################
-    if 1:
+    if 0:
         '''
         Test WRF-CABLE output
         '''
@@ -336,3 +412,10 @@ if __name__ == "__main__":
         message    = case_name+"_"+period
         make_delta_Tmax_LAI_Albedo_nc(land_ctl_path, land_sen_path, output_file, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
                 loc_lat=loc_lat, loc_lon=loc_lon, message=message)
+
+    if 1: 
+        # cutting the file into 23 pieces   
+        input_file  = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/deltaTmax_deltaLAI_deltaAlbedo_2017_2020_DJF.nc"
+        output_path = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/"
+
+        cut_into_pieces(input_file, output_path)

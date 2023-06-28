@@ -69,7 +69,7 @@ def spatial_map_T_coldest_warmest(land_ctl_path, land_sen_path, var_name, time_s
     ctl_TDR        = ctl_max - ctl_min
     sen_TDR        = sen_max - sen_min
 
-    # sort out data 
+    # sort out data
     ctl_max_sort       = np.sort(ctl_max,axis=0)
     ctl_min_sort       = np.sort(ctl_min,axis=0)
     sen_max_sort       = np.sort(sen_max,axis=0)
@@ -91,26 +91,26 @@ def spatial_map_T_coldest_warmest(land_ctl_path, land_sen_path, var_name, time_s
     print('np.shape(ctl_TDR_max_sort)',np.shape(ctl_TDR_max_sort))
 
     # average 5th, 95th percentile
-    # the 18 days (i.e. 5th 365 days) of coldest Tmax  
+    # the 18 days (i.e. 5th 365 days) of coldest Tmax
     ctl_max_coldest     = np.nanmean(ctl_max_sort[0:18,:,:],axis=0)
     ctl_TDR_max_coldest = np.nanmean(ctl_TDR_max_sort[0:18,:,:],axis=0)
     sen_max_coldest     = np.nanmean(sen_max_sort[0:18,:,:],axis=0)
     sen_TDR_max_coldest = np.nanmean(sen_TDR_max_sort[0:18,:,:],axis=0)
     print('np.shape(ctl_max_coldest)',np.shape(ctl_max_coldest))
 
-    # the 18 coldest days (i.e. 5th 365 days) of coldest Tmin 
+    # the 18 coldest days (i.e. 5th 365 days) of coldest Tmin
     ctl_min_coldest     = np.nanmean(ctl_min_sort[0:18,:,:],axis=0)
     ctl_TDR_min_coldest = np.nanmean(ctl_TDR_min_sort[0:18,:,:],axis=0)
     sen_min_coldest     = np.nanmean(sen_min_sort[0:18,:,:],axis=0)
     sen_TDR_min_coldest = np.nanmean(sen_TDR_min_sort[0:18,:,:],axis=0)
 
-    # the 18 days (i.e. 95th 365 days) of warmest Tmax  
+    # the 18 days (i.e. 95th 365 days) of warmest Tmax
     ctl_max_warmest     = np.nanmean(ctl_max_sort[-18:,:,:],axis=0)
     ctl_TDR_max_warmest = np.nanmean(ctl_TDR_max_sort[-18:,:,:],axis=0)
     sen_max_warmest     = np.nanmean(sen_max_sort[-18:,:,:],axis=0)
     sen_TDR_max_warmest = np.nanmean(sen_TDR_max_sort[-18:,:,:],axis=0)
 
-    # the 18 days (i.e. 95th 365 days) of warmest Tmin  
+    # the 18 days (i.e. 95th 365 days) of warmest Tmin
     ctl_min_warmest     = np.nanmean(ctl_min_sort[-18:,:,:],axis=0)
     ctl_TDR_min_warmest = np.nanmean(ctl_TDR_min_sort[-18:,:,:],axis=0)
     sen_min_warmest     = np.nanmean(sen_min_sort[-18:,:,:],axis=0)
@@ -269,13 +269,13 @@ def spatial_map_T_coldest_warmest(land_ctl_path, land_sen_path, var_name, time_s
         cbar.ax.tick_params(labelsize=10,labelrotation=45)
         axs[0,3].set_title('delta_min_coldest', size=12)
 
-        # TDR 
+        # TDR
         plot5 = axs[1,0].contourf(lons, lats, delta_TDR_max_warmest, clevs_TDR_diff, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
         cbar  = plt.colorbar(plot5, ax=axs[1,0], ticklocation="right", pad=0.1, orientation="horizontal",
                 aspect=40, shrink=1) # cax=cax,
         cbar.ax.tick_params(labelsize=10,labelrotation=45)
         axs[1,0].set_title('delta_TDR_max_warmest', size=12)
-        
+
         plot6 = axs[1,1].contourf(lons, lats, delta_TDR_min_warmest, clevs_TDR_diff, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
         cbar  = plt.colorbar(plot6, ax=axs[1,1], ticklocation="right", pad=0.1, orientation="horizontal",
                 aspect=40, shrink=1) # cax=cax,
@@ -285,14 +285,14 @@ def spatial_map_T_coldest_warmest(land_ctl_path, land_sen_path, var_name, time_s
         plot7 = axs[1,2].contourf(lons, lats, delta_TDR_max_coldest, clevs_TDR_diff, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
         cbar  = plt.colorbar(plot7, ax=axs[1,2], ticklocation="right", pad=0.1, orientation="horizontal",
                 aspect=40, shrink=1) # cax=cax,
-        cbar.ax.tick_params(labelsize=10,labelrotation=45)   
-        axs[1,2].set_title('delta_TDR_max_coldest', size=12)     
+        cbar.ax.tick_params(labelsize=10,labelrotation=45)
+        axs[1,2].set_title('delta_TDR_max_coldest', size=12)
 
         plot8 = axs[1,3].contourf(lons, lats, delta_TDR_min_coldest, clevs_TDR_diff, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
         cbar  = plt.colorbar(plot8, ax=axs[1,3], ticklocation="right", pad=0.1, orientation="horizontal",
                 aspect=40, shrink=1) # cax=cax,
-        cbar.ax.tick_params(labelsize=10,labelrotation=45)     
-        axs[1,3].set_title('delta_TDR_min_coldest', size=12)  
+        cbar.ax.tick_params(labelsize=10,labelrotation=45)
+        axs[1,3].set_title('delta_TDR_min_coldest', size=12)
 
         plt.savefig('./plots/spatial_map_coldest_warmest_Tmax_Tmin_'+message+'.png',dpi=300)
     else:
@@ -309,7 +309,7 @@ def spatial_map_T_coldest_warmest(land_ctl_path, land_sen_path, var_name, time_s
         cbar.ax.tick_params(labelsize=10,labelrotation=45)
         axs[0,0].set_title(var_type, size=12)
 
-        # TDR 
+        # TDR
         plot2 = axs[1,0].contourf(lons, lats, var_TDR, clevs_TDR, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
         cbar  = plt.colorbar(plot2, ax=axs[1,0], ticklocation="right", pad=0.1, orientation="horizontal",
                 aspect=40, shrink=1) # cax=cax,
@@ -343,7 +343,7 @@ def spatial_map_T_coldest_warmest(land_ctl_path, land_sen_path, var_name, time_s
         axs[1,2].set_title('DJF', size=12)
 
         plt.savefig('./plots/spatial_map_'+plot_type+'_'+message+'.png',dpi=300)
-        
+
     return
 
 if __name__ == "__main__":
