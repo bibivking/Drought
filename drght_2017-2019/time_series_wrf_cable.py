@@ -23,6 +23,27 @@ from scipy.interpolate import griddata
 import matplotlib.ticker as mticker
 from common_utils import *
 
+def calc_diurnal_cycle(Var, time, time_s, time_e, seconds=None):
+
+    # select time periods
+    time_cood = time_mask(time, time_s, time_e, seconds)
+    time_slt  = time[time_cood]
+    var_slt   = Var[time_cood]
+
+    seconds   = [t.seconds for t in time_slt]
+    print("seconds",seconds)
+
+    data        = pd.DataFrame([t.seconds for t in time_slt], columns=['seconds'])
+    data['var'] = var_slt[:]
+
+    data_group  = data.groupby(by=["seconds"]).mean()
+    print(data_group)
+
+    var = data_group['var'].values
+    print(var)
+
+    return var
+
 def plot_time_series(file_paths, var_name, time_s=None, time_e=None, loc_lat=None, loc_lon=None, lat_name=None, lon_name=None, message=None):
 
     print("======== In plot_time_series =========")
@@ -309,10 +330,11 @@ def plot_time_series_diff(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,
             message = message + "_iveg="+str(iveg)
         plt.savefig('./plots/time_series_diff_'+message+'.png',dpi=300)
 
-def plot_time_series_multilines(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,var_name=None,
+def plot_time_series_twolines(file_paths_ctl, file_paths_sen, file_paths_sen_2=None,var_name=None,
                           time_s=None, time_e=None, loc_lat=None, loc_lon=None,
                           lat_name=None, lon_name=None, message=None, multi=None,iveg=None):
 
+    # plot multiple lines on one plot
     # for GPP
     s2d        = 3600*24.          # s-1 to d-1
     GPP_scale  = -0.000001*12*s2d   # umol s-1 to g d-1
@@ -561,6 +583,79 @@ def plot_time_series_multilines(file_paths_ctl, file_paths_sen, file_paths_sen_2
             message = message + "_iveg="+str(iveg)
         plt.savefig('./plots/time_series_diff_'+message+'.png',dpi=300)
 
+def plot_diurnal_cycle_multilines(file_paths, var_name=None, time_ss=None, time_es=None, loc_lat=None, loc_lon=None,
+                                lat_name=None, lon_name=None, message=None):
+
+    # for GPP
+    s2d        = 3600*24.          # s-1 to d-1
+    GPP_scale  = -0.000001*12*s2d   # umol s-1 to g d-1
+
+    # Set line numbers dimension
+    nlines     = len(file_paths)
+
+    # Loop the lines I want to draw
+    for i in np.arange(nlines):
+        # Read in data
+        if var_name == "EF":
+            time, Var_Qle = read_var(file_paths[i], "Qle_tavg", loc_lat, loc_lon, lat_name, lon_name)
+            time, Var_Qh  = read_var(file_paths[i], "Qh_tavg",  loc_lat, loc_lon, lat_name, lon_name)
+            QleQh         = Var_Qle+Var_Qh
+            Var           = np.where(abs(QleQh)>0.01, Var_Qle/QleQh,np.nan)
+        elif var_name in ["Tmax","Tmin"]:
+            time, Var     = read_var(file_paths[i], "Tair_f_inst", loc_lat, loc_lon, lat_name, lon_name)
+        else:
+            time, Var     = read_var(file_paths[i], var_name, loc_lat, loc_lon, lat_name, lon_name)
+
+        # Calculate regional average
+        var = np.nanmean(Var[:], axis=(1,2))
+
+        # Ajust the units
+        if var_name in ["Rainf_tavg","Evap_tavg","TVeg_tavg","ESoil_tavg","ECanop_tavg","Qs_tavg","Qsb_tavg"]:
+            var = var*3600.
+        elif var_name in ["WaterTableD_tavg"]:
+            var = var/1000.
+        elif var_name in ["Tmax","Tmin","Tair_f_inst"]:
+            var = var-273.15
+        elif var_name in ['GPP_tavg','NPP_tavg']:
+            var = var*GPP_scale
+        
+        # Calculate diurnal cycle
+        var_diurnal = calc_diurnal_cycle(var, time, time_ss[i], time_es[i])
+
+        # Set up new variable
+        if i == 0:
+            ntime   = len(var_diurnal)
+            var_all = np.zeros((nlines, ntime))
+
+        # Give values to the new variable 
+        var_all[i,:] = var_diurnal[:]
+
+    # ====================== Plotting ======================
+    colors        = [ "forestgreen", "forestgreen", "forestgreen",
+                      "lightcoral",  "lightcoral",  "lightcoral"]
+    alpha         = [0.3,0.4,0.7, 0.3,0.4,0.7]
+    labels        = [ 'ctl_2017', 'ctl_2018', 'ctl_2019', 
+                      'sen_2017', 'sen_2018', 'sen_2019']
+
+    cleaner_dates = ["0", "6", "12", "18" ]
+    xtickslocs    = [  0,   6,   12,  18  ]
+
+    fig, ax = plt.subplots(figsize=[9,9])
+
+    for i in np.arange(nlines):
+        ax.plot(var_all[i], c = colors[i],  label=labels[i], alpha=alpha[i]) 
+
+    ax.legend()
+    fig.tight_layout()
+
+    if message == None:
+        message = var_name
+    else:
+        message = message + "_multi_" + var_name
+
+    plt.savefig('./plots/time_series_'+message+'.png',dpi=300)
+
+
 if __name__ == "__main__":
 
     # ======================= Option =======================
@@ -591,39 +686,205 @@ if __name__ == "__main__":
     ####################################
 
     if 1:
-        message        = "east_coast"
         lat_name       = "lat"
         lon_name       = "lon"
-        iveg           = None #[2,5,6,9,14] #2
-
+        
         case_name_ctl  = "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2"
         case_name_sen  = "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB"
-        case_name_sen_2= None
-
-        time_s         = datetime(2017,1,1,0,0,0,0)
-        time_e         = datetime(2020,3,1,0,0,0,0)
 
         wrf_path       = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name_ctl+"/WRF_output/wrfout_d01_2017-02-01_06:00:00"
         LIS_path_ctl   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name_ctl+"/LIS_output/"
         LIS_path_sen   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name_sen+"/LIS_output/"
-        LIS_path_sen_2 = None
+        
+        var_names      = [ "Tair_f_inst",]
 
-        var_names      = [ "GPP_tavg",]
-                           # "Tmax","Tmin", "NPP_tavg",
-                           # "Qle_tavg","Qh_tavg","Evap_tavg","TVeg_tavg","ESoil_tavg",
-                           # "Tair_f_inst","Rainf_tavg","FWsoil_tavg","SoilMoist_inst",
-                           # "WaterTableD_tavg","GWwb_tavg",  ]
+        if 1: 
 
-        for var_name in var_names:
-            if var_name in ["Tmax","Tmin"]:
-                file_paths_ctl = [ LIS_path_ctl+'Tair_f_inst/LIS.CABLE.201701-202002.nc' ]
-                file_paths_sen = [ LIS_path_sen+'Tair_f_inst/LIS.CABLE.201701-202002.nc' ]
-                file_paths_sen_2 = None
-            else:
-                file_paths_ctl = [ LIS_path_ctl+var_name+'/LIS.CABLE.201701-202002.nc' ]
-                file_paths_sen = [ LIS_path_sen+var_name+'/LIS.CABLE.201701-202002.nc' ]
-                file_paths_sen_2 = None
-            plot_time_series_multilines(file_paths_ctl,file_paths_sen,file_paths_sen_2, var_name,
-                                  time_s=time_s,time_e=time_e, loc_lat=loc_lat, loc_lon=loc_lon,
-                                  lat_name=lat_name, lon_name=lon_name, message=message,
-                                  multi=True, iveg=iveg)
+            # ========== Plotting summer ==========
+            if 1:
+                lat_name       = "lat"
+                lon_name       = "lon"
+                iveg           = None #[2,5,6,9,14] #2
+
+                case_name_ctl  = "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2"
+                case_name_sen  = "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB"
+                case_name_sen_2= None
+
+                time_s         = datetime(2017,1,1,0,0,0,0)
+                time_e         = datetime(2020,3,1,0,0,0,0)
+
+                wrf_path       = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name_ctl+"/WRF_output/wrfout_d01_2017-02-01_06:00:00"
+                LIS_path_ctl   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name_ctl+"/LIS_output/"
+                LIS_path_sen   = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_name_sen+"/LIS_output/"
+                LIS_path_sen_2 = None
+
+                var_names      = [ "Tmax","Albedo_inst","LAI_inst"]
+
+                message        = "burn_region_1"
+                loc_lat        = [-33,-27]
+                loc_lon        = [152,154]
+
+                for var_name in var_names:
+                    if var_name in ["Tmax","Tmin"]:
+                        file_paths_ctl = [ LIS_path_ctl+'Tair_f_inst/LIS.CABLE.201701-202002.nc' ]
+                        file_paths_sen = [ LIS_path_sen+'Tair_f_inst/LIS.CABLE.201701-202002.nc' ]
+                        file_paths_sen_2 = None
+                    else:
+                        file_paths_ctl = [ LIS_path_ctl+var_name+'/LIS.CABLE.201701-202002.nc' ]
+                        file_paths_sen = [ LIS_path_sen+var_name+'/LIS.CABLE.201701-202002.nc' ]
+                        file_paths_sen_2 = None
+                    plot_time_series_twolines(file_paths_ctl,file_paths_sen,file_paths_sen_2, var_name,
+                                        time_s=time_s,time_e=time_e, loc_lat=loc_lat, loc_lon=loc_lon,
+                                        lat_name=lat_name, lon_name=lon_name, message=message,
+                                        multi=True, iveg=iveg)
+
+                # message        = "burn_region_2"
+                # loc_lat        = [-33,-27]
+                # loc_lon        = [152,154]
+
+                # for var_name in var_names:
+                #     if var_name in ["Tmax","Tmin"]:
+                #         file_paths_ctl = [ LIS_path_ctl+'Tair_f_inst/LIS.CABLE.201701-202002.nc' ]
+                #         file_paths_sen = [ LIS_path_sen+'Tair_f_inst/LIS.CABLE.201701-202002.nc' ]
+                #         file_paths_sen_2 = None
+                #     else:
+                #         file_paths_ctl = [ LIS_path_ctl+var_name+'/LIS.CABLE.201701-202002.nc' ]
+                #         file_paths_sen = [ LIS_path_sen+var_name+'/LIS.CABLE.201701-202002.nc' ]
+                #         file_paths_sen_2 = None
+                #     plot_time_series_twolines(file_paths_ctl,file_paths_sen,file_paths_sen_2, var_name,
+                #                         time_s=time_s,time_e=time_e, loc_lat=loc_lat, loc_lon=loc_lon,
+                #                         lat_name=lat_name, lon_name=lon_name, message=message,
+                #                         multi=True, iveg=iveg)
+
+                # message        = "burn_region_3"
+                # loc_lat        = [-33,-27]
+                # loc_lon        = [152,154]
+
+                # for var_name in var_names:
+                #     if var_name in ["Tmax","Tmin"]:
+                #         file_paths_ctl = [ LIS_path_ctl+'Tair_f_inst/LIS.CABLE.201701-202002.nc' ]
+                #         file_paths_sen = [ LIS_path_sen+'Tair_f_inst/LIS.CABLE.201701-202002.nc' ]
+                #         file_paths_sen_2 = None
+                #     else:
+                #         file_paths_ctl = [ LIS_path_ctl+var_name+'/LIS.CABLE.201701-202002.nc' ]
+                #         file_paths_sen = [ LIS_path_sen+var_name+'/LIS.CABLE.201701-202002.nc' ]
+                #         file_paths_sen_2 = None
+                #     plot_time_series_twolines(file_paths_ctl,file_paths_sen,file_paths_sen_2, var_name,
+                #                         time_s=time_s,time_e=time_e, loc_lat=loc_lat, loc_lon=loc_lon,
+                #                         lat_name=lat_name, lon_name=lon_name, message=message,
+                #                         multi=True, iveg=iveg)
+
+        if 0:
+            '''
+            Plot diurnal cycle
+            '''
+
+            # ========== Plotting summer ==========
+            time_ss        = [ datetime(2017,12,1,0,0,0,0),
+                            datetime(2018,12,1,0,0,0,0),
+                            datetime(2019,12,1,0,0,0,0),
+
+                            datetime(2017,12,1,0,0,0,0),
+                            datetime(2018,12,1,0,0,0,0),
+                            datetime(2019,12,1,0,0,0,0),]
+
+            time_es        = [ datetime(2018,3,1,0,0,0,0),
+                            datetime(2019,3,1,0,0,0,0),
+                            datetime(2020,3,1,0,0,0,0),
+                                
+                            datetime(2018,3,1,0,0,0,0),
+                            datetime(2019,3,1,0,0,0,0),
+                            datetime(2020,3,1,0,0,0,0),]
+
+
+
+            for var_name in var_names:
+                if var_name in ["Tmax","Tmin"]:
+                    vname  = 'Tair_f_inst'
+                else:
+                    vname  = var_name
+
+                file_paths = [  LIS_path_ctl + vname + '/LIS.CABLE.201701-202002.nc',
+                                LIS_path_ctl + vname + '/LIS.CABLE.201701-202002.nc',
+                                LIS_path_ctl + vname + '/LIS.CABLE.201701-202002.nc',
+                                LIS_path_sen + vname + '/LIS.CABLE.201701-202002.nc',
+                                LIS_path_sen + vname + '/LIS.CABLE.201701-202002.nc',
+                                LIS_path_sen + vname + '/LIS.CABLE.201701-202002.nc' ]
+                    
+            
+                message        = "summer_east_coast"
+                
+                loc_lat        = [-33,-27]
+                loc_lon        = [151,154]
+
+                plot_diurnal_cycle_multilines(file_paths, var_name,
+                                        time_ss=time_ss,time_es=time_es, 
+                                        loc_lat=loc_lat, loc_lon=loc_lon,
+                                        lat_name=lat_name, lon_name=lon_name,
+                                        message=message)
+
+                message    = "summer_crop_failure"
+                
+                loc_lat    = [-36,-33]
+                loc_lon    = [144,148]
+
+                plot_diurnal_cycle_multilines(file_paths, var_name,
+                                        time_ss=time_ss,time_es=time_es, 
+                                        loc_lat=loc_lat, loc_lon=loc_lon,
+                                        lat_name=lat_name, lon_name=lon_name,
+                                        message=message)
+
+            # ========== Plotting winter ==========
+            time_ss        = [ datetime(2017,6,1,0,0,0,0),
+                            datetime(2018,6,1,0,0,0,0),
+                            datetime(2019,6,1,0,0,0,0),
+
+                            datetime(2017,6,1,0,0,0,0),
+                            datetime(2018,6,1,0,0,0,0),
+                            datetime(2019,6,1,0,0,0,0),]
+
+            time_es        = [ datetime(2018,8,1,0,0,0,0),
+                            datetime(2019,8,1,0,0,0,0),
+                            datetime(2020,8,1,0,0,0,0),
+                                
+                            datetime(2018,8,1,0,0,0,0),
+                            datetime(2019,8,1,0,0,0,0),
+                            datetime(2020,8,1,0,0,0,0),]
+
+
+
+            for var_name in var_names:
+                if var_name in ["Tmax","Tmin"]:
+                    vname  = 'Tair_f_inst'
+                else:
+                    vname  = var_name
+
+                file_paths = [  LIS_path_ctl + vname + '/LIS.CABLE.201701-202002.nc',
+                                LIS_path_ctl + vname + '/LIS.CABLE.201701-202002.nc',
+                                LIS_path_ctl + vname + '/LIS.CABLE.201701-202002.nc',
+                                LIS_path_sen + vname + '/LIS.CABLE.201701-202002.nc',
+                                LIS_path_sen + vname + '/LIS.CABLE.201701-202002.nc',
+                                LIS_path_sen + vname + '/LIS.CABLE.201701-202002.nc' ]
+                    
+            
+                message        = "winter_east_coast"
+                
+                loc_lat        = [-33,-27]
+                loc_lon        = [151,154]
+
+                plot_diurnal_cycle_multilines(file_paths, var_name,
+                                        time_ss=time_ss,time_es=time_es, 
+                                        loc_lat=loc_lat, loc_lon=loc_lon,
+                                        lat_name=lat_name, lon_name=lon_name,
+                                        message=message)
+
+                message    = "winter_crop_failure"
+                
+                loc_lat    = [-36,-33]
+                loc_lon    = [144,148]
+
+                plot_diurnal_cycle_multilines(file_paths, var_name,
+                                        time_ss=time_ss,time_es=time_es, 
+                                        loc_lat=loc_lat, loc_lon=loc_lon,
+                                        lat_name=lat_name, lon_name=lon_name,
+                                        message=message)

@@ -1,0 +1,31 @@
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XLONG<
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XLAT<
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XTIME<
+cdo    seldate: Processed 669289750 values from 4 variables over 1692 timesteps [6.02s 77MB].
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XLONG<
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XLAT<
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XTIME<
+cdo    seldate: Processed 669289750 values from 4 variables over 3152 timesteps [9.09s 79MB].
+Cannot compress ./wrfout_201712-201802.nc with nc2nc as it is NETCDF4 format, switching to nccopy
+Error with ./wrfout_201712-201802.nc :: Max compress exceeded: 31.195305362109774 
+    Following files not properly compressed or suspiciously high compression ratio:
+./wrfout_201712-201802.nc
+Failed to remove temporary directory ./tmp.nc_compress
+Cannot compress ./wrfout_201812-201902.nc with nc2nc as it is NETCDF4 format, switching to nccopy
+Error with ./wrfout_201812-201902.nc :: Max compress exceeded: 31.141253973507247 
+    Following files not properly compressed or suspiciously high compression ratio:
+./wrfout_201812-201902.nc
+Failed to remove temporary directory ./tmp.nc_compress
+
+======================================================================================
+                  Resource Usage on 2023-06-29 13:55:59:
+   Job Id:             89258276.gadi-pbs
+   Project:            w97
+   Exit Status:        0
+   Service Units:      1.99
+   NCPUs Requested:    8                      NCPUs Used: 8               
+                                           CPU Time Used: 00:01:02        
+   Memory Requested:   256.0GB               Memory Used: 10.89GB         
+   Walltime requested: 02:30:00            Walltime Used: 00:01:10        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================

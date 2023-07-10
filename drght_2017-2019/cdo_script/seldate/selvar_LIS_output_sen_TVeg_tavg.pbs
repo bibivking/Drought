@@ -14,9 +14,9 @@ module load cdo
 
 cd /g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/LIS_output/TVeg_tavg
 
-cdo seldate,2019-12-01,2020-02-29 LIS.CABLE.201701-202002.nc LIS.CABLE.201912-202002.nc
+cdo seldate,2017-12-01,2018-02-28 LIS.CABLE.201701-202002.nc LIS.CABLE.201712-201802.nc
 
 module use /g/data/hh5/public/modules
 module load conda/analysis3-22.04
-nccompress -r -o -np 8 LIS.CABLE.201912-202002.nc
+nccompress -r -o -np 8 LIS.CABLE.201712-201802.nc
 

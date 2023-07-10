@@ -47,7 +47,7 @@ def read_wrf_var(file_paths, var_name, var_unit=None):
             ncfile_next.close()
         else:
             # set the time for the last file as 2020-03-01
-            next_file_time = datetime(2020, 3, 1, 0, 0, 0)        
+            next_file_time = datetime(2020, 7, 1, 0, 0, 0)        
 
         # Open current input file
         ncfile   = nc.Dataset(file_path)
@@ -60,7 +60,7 @@ def read_wrf_var(file_paths, var_name, var_unit=None):
         # Read time length in the current file
         ntime    = len(ncfile.variables['Times'][:,0])
 
-        # Stop reading those time steps from the current file if those time steps are covered by the next file 
+        # Stop reading those time steps from the current file if those time steps are covered by the next file
         for i in np.arange(ntime):
             print('i=',i)
             cur_time = datetime.strptime(str(ncfile.variables['Times'][i,:], encoding),'%Y-%m-%d_%H:%M:%S')
@@ -196,7 +196,7 @@ if __name__ == "__main__":
     # ======================= Setting path =======================
     atmo_path_out = '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/'+case_name +'/WRF_output/'
     atmo_path_in  = '/scratch/w97/mm3972/model/NUWRF/Tinderbox_drght_LAI_ALB/output/'+case_name +'/WRF_output/'
-    file_out_path = atmo_path_out+var_name+'/wrfout_201912-202002.nc'
+    file_out_path = atmo_path_out+var_name+'/wrfout_201701-202006.nc'
 
     # glob.glob: retrieve files and directories that match a specified pattern.
     # sorted: rank the file paths

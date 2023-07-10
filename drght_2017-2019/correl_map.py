@@ -132,6 +132,9 @@ def read_spatial_data(land_ctl_path, land_sen_path, var_name, time_ss=None,
             # average of daily min
             ctl_tmp  = time_clip_to_day_min(time,Ctl_tmp,time_ss[i],time_es[i])
             sen_tmp  = time_clip_to_day_min(time,Sen_tmp,time_ss[i],time_es[i])
+        elif var_name in ["SM",]:
+            ctl_tmp  = time_clip_to_day(time,c_tmp,Ctl_tmp[i,0,:,:],time_es[i])
+            sen_tmp  = time_clip_to_day(time,s_tmp,Sen_tmp[i,0,:,:],time_es[i])
         elif var_name in ["SM_top50cm",]:
             # top 1m soil moisture [.022, .058, .154, .409, 1.085, 2.872]
             c_tmp    = Ctl_tmp[:,0,:,:]*0.022 + Ctl_tmp[:,1,:,:]*0.058 + Ctl_tmp[:,2,:,:]*0.154 + Ctl_tmp[:,3,:,:]*0.266
@@ -246,10 +249,12 @@ def plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=None,time_e
 
     # Add gridlines
     gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=1, color='black', linestyle='--')
-    gl.xlabels_top   = False
-    gl.ylabels_right = False
-    gl.xlines        = False
-    gl.xlines        = False
+    gl.xlabels_top    = False
+    gl.ylabels_right  = False
+    gl.xlabels_bottom = True
+    gl.ylabels_left   = True
+    gl.xlines         = False
+    gl.xlines         = False
 
     if loc_lat == None:
         gl.xlocator  = mticker.FixedLocator([135,140,145,150,155])
@@ -368,10 +373,12 @@ def plot_partial_corr_map(land_ctl_path, land_sen_path, var_names, time_ss=None,
 
     # Add gridlines
     gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=1, color='black', linestyle='--')
-    gl.xlabels_top   = False
-    gl.ylabels_right = False
-    gl.xlines        = False
-    gl.xlines        = False
+    gl.xlabels_top    = False
+    gl.ylabels_right  = False
+    gl.xlabels_bottom = True
+    gl.ylabels_left   = True
+    gl.xlines         = False
+    gl.xlines         = False
 
     if loc_lat == None:
         gl.xlocator  = mticker.FixedLocator([135,140,145,150,155])
@@ -424,8 +431,122 @@ if __name__ == "__main__":
         land_sen_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_sen+"/LIS_output/"
         land_ctl_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_ctl+"/LIS_output/"
 
-
         if 1:
+            # # Calculate correlation coefficent between LAI_inst and Albedo_inst
+            # time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
+            # time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
+            #
+            # var_names  = ["LAI_inst", "Albedo_inst"]
+            # message    = "Summer_"+var_names[0]+"_vs_"+var_names[1]
+            # plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+            #        loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+            #
+            # # Calculate correlation coefficent between LAI_inst and Albedo_inst
+            # time_ss    = [datetime(2017,6,1,0,0,0,0), datetime(2018,6,1,0,0,0,0), datetime(2019,6,1,0,0,0,0)]
+            # time_es    = [datetime(2017,9,1,0,0,0,0), datetime(2018,9,1,0,0,0,0), datetime(2019,9,1,0,0,0,0)]
+            #
+            # var_names  = ["LAI_inst", "Albedo_inst"]
+            # message    = "Winter_"+var_names[0]+"_vs_"+var_names[1]
+            # plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+            #        loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+            #
+
+            # Calculate correlation coefficent between LAI_inst and Albedo_inst
+            time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
+            time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
+
+            var_names  = ["Albedo_inst", "SM"]
+            message    = "Summer_"+var_names[0]+"_vs_"+var_names[1]
+            plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+                   loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+
+            # Calculate correlation coefficent between LAI_inst and Albedo_inst
+            time_ss    = [datetime(2017,6,1,0,0,0,0), datetime(2018,6,1,0,0,0,0), datetime(2019,6,1,0,0,0,0)]
+            time_es    = [datetime(2017,9,1,0,0,0,0), datetime(2018,9,1,0,0,0,0), datetime(2019,9,1,0,0,0,0)]
+
+            var_names  = ["Albedo_inst", "SM"]
+            message    = "Winter_"+var_names[0]+"_vs_"+var_names[1]
+            plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+                   loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+
+
+            # Calculate correlation coefficent between LAI_inst and Albedo_inst
+            time_ss    = [datetime(2017,12,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
+            time_es    = [datetime(2018,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
+
+            var_names  = ["LAI_inst", "SM"]
+            message    = "Summer_"+var_names[0]+"_vs_"+var_names[1]
+            plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+                   loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+
+            # Calculate correlation coefficent between LAI_inst and Albedo_inst
+            time_ss    = [datetime(2017,6,1,0,0,0,0), datetime(2018,6,1,0,0,0,0), datetime(2019,6,1,0,0,0,0)]
+            time_es    = [datetime(2017,9,1,0,0,0,0), datetime(2018,9,1,0,0,0,0), datetime(2019,9,1,0,0,0,0)]
+
+            var_names  = ["LAI_inst", "SM"]
+            message    = "Winter_"+var_names[0]+"_vs_"+var_names[1]
+            plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+                   loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+
+        if 0:
+            # # Calculate correlation coefficent between Albedo and SM50
+            # time_ss    = [datetime(2017,1,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
+            # time_es    = [datetime(2020,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
+            # #
+            # var_names  = ["Albedo_inst", "SM_top50cm"]
+            # message    = "Summer_"+var_names[0]+"_vs_"+var_names[1]
+            # plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+            #         loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+            # #
+            # #
+            # # Calculate correlation coefficent between LAI and SM50
+            # time_ss    = [datetime(2017,1,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
+            # time_es    = [datetime(2020,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
+            #
+            # var_names  = ["LAI_inst", "SM_top50cm"]
+            # message    = "Summer_"+var_names[0]+"_vs_"+var_names[1]
+            # plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+            #         loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+            #
+
+            # Calculate correlation coefficent between Tmax and LAI_inst
+            time_ss    = [datetime(2017,1,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
+            time_es    = [datetime(2020,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
+
+            var_names  = ["Tmax", "LAI_inst"]
+            message    = "Summer_"+var_names[0]+"_vs_"+var_names[1]
+            plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+                   loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+
+            # Calculate correlation coefficent between Tmax and Albedo_inst
+            time_ss    = [datetime(2017,1,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
+            time_es    = [datetime(2020,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
+
+            var_names  = ["Tmax", "Albedo_inst"]
+            message    = "Summer_"+var_names[0]+"_vs_"+var_names[1]
+            plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+                   loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+
+            # Calculate correlation coefficent between LAI_inst and Albedo_inst
+            time_ss    = [datetime(2017,6,1,0,0,0,0), datetime(2018,6,1,0,0,0,0), datetime(2019,6,1,0,0,0,0)]
+            time_es    = [datetime(2017,9,1,0,0,0,0), datetime(2018,9,1,0,0,0,0), datetime(2019,9,1,0,0,0,0)]
+
+            var_names  = ["Tmax", "LAI_inst"]
+            message    = "Winter_"+var_names[0]+"_vs_"+var_names[1]
+            plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+                   loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+
+
+            # Calculate correlation coefficent between LAI_inst and Albedo_inst
+            time_ss    = [datetime(2017,6,1,0,0,0,0), datetime(2018,6,1,0,0,0,0), datetime(2019,6,1,0,0,0,0)]
+            time_es    = [datetime(2017,9,1,0,0,0,0), datetime(2018,9,1,0,0,0,0), datetime(2019,9,1,0,0,0,0)]
+
+            var_names  = ["Tmax", "Albedo_inst"]
+            message    = "Winter_"+var_names[0]+"_vs_"+var_names[1]
+            plot_correl_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
+                   loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
+
+        if 0:
             '''
             Calculate correlation coefficent
             '''
@@ -619,4 +740,3 @@ if __name__ == "__main__":
             message    = case_name+"_"+period
             plot_partial_corr_map(land_ctl_path, land_sen_path, var_names, time_ss=time_ss,time_es=time_es, lat_names="lat", lon_names="lon",
                     loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message,method='spearman')
-

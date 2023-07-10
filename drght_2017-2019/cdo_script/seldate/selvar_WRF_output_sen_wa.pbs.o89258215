@@ -1,0 +1,19 @@
+cdo    seldate: Open failed on >wrfout_201701-202002.nc<
+                No such file or directory
+cdo    seldate: Open failed on >wrfout_201701-202002.nc<
+                No such file or directory
+Input does not exist: wrfout_201712-201802.nc .. skipping
+Input does not exist: wrfout_201812-201902.nc .. skipping
+
+======================================================================================
+                  Resource Usage on 2023-06-29 13:53:57:
+   Job Id:             89258215.gadi-pbs
+   Project:            w97
+   Exit Status:        0
+   Service Units:      0.17
+   NCPUs Requested:    8                      NCPUs Used: 8               
+                                           CPU Time Used: 00:00:03        
+   Memory Requested:   256.0GB               Memory Used: 304.48MB        
+   Walltime requested: 02:30:00            Walltime Used: 00:00:06        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================

@@ -59,32 +59,30 @@ def get_time_cood(file_path, time_s ,time_e):
 
     return time_cood_all, time_cood_day, time_cood_night, doy_all, doy_day, doy_night
 
-def read_variable(atmo_path,wrf_path):
+def read_variable(atmo_path,wrf_path,file_name):
 
-    file_name = "/wrfout_201912-202002.nc"
-
-    z_file  = Dataset(atmo_path + "z" + file_name, mode='r')
+    z_file  = Dataset(atmo_path + "z/" + file_name, mode='r')
     time    = z_file.variables['time'][:]
     Z       = z_file.variables['z'][:]
     z_file.close()
 
-    wa_file = Dataset(atmo_path + "wa" + file_name, mode='r')
+    wa_file = Dataset(atmo_path + "wa/" + file_name, mode='r')
     Wa      = wa_file.variables['wa'][:]
     wa_file.close()
 
-    ua_file = Dataset(atmo_path + "ua" + file_name, mode='r')
+    ua_file = Dataset(atmo_path + "ua/" + file_name, mode='r')
     Ua      = ua_file.variables['ua'][:]
     ua_file.close()
 
-    T_file  = Dataset(atmo_path + "th" + file_name, mode='r')
+    T_file  = Dataset(atmo_path + "th/" + file_name, mode='r')
     T       = T_file.variables['th'][:]
     T_file.close()
 
-    rh_file = Dataset(atmo_path + "rh" + file_name, mode='r')
+    rh_file = Dataset(atmo_path + "rh/" + file_name, mode='r')
     S       = rh_file.variables['rh'][:]
     rh_file.close()
 
-    PBLH_file = Dataset(atmo_path + "PBLH" + file_name, mode='r')
+    PBLH_file = Dataset(atmo_path + "PBLH/" + file_name, mode='r')
     PBL       = PBLH_file.variables['PBLH'][:]
     PBLH_file.close()
 
@@ -334,7 +332,7 @@ def get_interpolation(t_crs, s_crs, ua_crs, wa_crs, loct, vrt):
 
     return t_out, s_out, ua_out, wa_out
 
-def plot_profile_wrf_wind(atmo_path_ctl, atmo_path_sen, wrf_path, land_path,
+def plot_profile_wrf_wind(atmo_path_ctl, atmo_path_sen, wrf_path, land_path, file_name,
                           time_s, time_e, message=None, lat_slt=36, lon_min=130, lon_max=160):
 
     # ================ Get time coordiation ================
@@ -345,7 +343,7 @@ def plot_profile_wrf_wind(atmo_path_ctl, atmo_path_sen, wrf_path, land_path,
     print("time_cood_day",time_cood_night)
 
     # ================ Get the WRF variables ================
-    Z1,Wa1,Ua1,T1,S1,PBL1 = read_variable(atmo_path_ctl,wrf_path)
+    Z1,Wa1,Ua1,T1,S1,PBL1 = read_variable(atmo_path_ctl,wrf_path,file_name)
     print("Z1", Z1)
 
     # ================ Get time masked ================
@@ -374,7 +372,7 @@ def plot_profile_wrf_wind(atmo_path_ctl, atmo_path_sen, wrf_path, land_path,
 
 
     # ================ read second file ================
-    Z2,Wa2,Ua2,T2,S2,PBL2 = read_variable(atmo_path_sen,wrf_path)
+    Z2,Wa2,Ua2,T2,S2,PBL2 = read_variable(atmo_path_sen,wrf_path,file_name)
 
     z2_day, t2_day, s2_day, ua2_day, wa2_day, pbl2_day = \
                     get_time_masked(Z2,T2,S2,Ua2,Wa2,PBL2, time_cood_day)
@@ -467,8 +465,8 @@ def plot_profile_wrf_wind(atmo_path_ctl, atmo_path_sen, wrf_path, land_path,
     # cntr_wtd  = ax[0,0].contourf(xy_loc, wtd_hgt, wtd_crs, levels=np.arange(1,12,1), cmap=cmap1, extend='both')
     line1     = ax[0,0].plot(xy_loc,pbl1_day_crs,ls="-", color="black")
     line2     = ax[0,0].plot(xy_loc,pbl2_day_crs,ls="--", color="black")
-    q         = ax[0,0].quiver(xy_loc[::30], vertical[::3], ua_day_crs[::30,::3],
-                              wa_day_crs[::30,::3], angles='xy', scale_units='xy',
+    q         = ax[0,0].quiver(xy_loc[::30], vertical[::3], ua_day_crs[::3,::30],
+                              wa_day_crs[::3,::30], angles='xy', scale_units='xy',
                               scale=scale, pivot='middle', color="white")
     ax[0,0].text(0.02, 0.95, "(a) Δθ$\mathregular{_{max}}$", transform=ax[0,0].transAxes, verticalalignment='top', bbox=props) # fontsize=14,
     ax[0,0].set_ylabel("Geopotential Height (m)")#, fontsize=12)
@@ -478,8 +476,8 @@ def plot_profile_wrf_wind(atmo_path_ctl, atmo_path_sen, wrf_path, land_path,
     # cntr_wtd  = ax[0,1].contourf(xy_loc, wtd_hgt, wtd_crs, levels=np.arange(1,12,1), cmap=cmap1, extend='both')
     line1     = ax[0,1].plot(xy_loc,pbl1_night_crs,ls="-", color="black")
     line2     = ax[0,1].plot(xy_loc,pbl2_night_crs,ls="--", color="black")
-    q         = ax[0,1].quiver(xy_loc[::30], vertical[::3], ua_night_crs[::30,::3],
-                              wa_night_crs[::30,::3], angles='xy', scale_units='xy',
+    q         = ax[0,1].quiver(xy_loc[::30], vertical[::3], ua_night_crs[::3,::30],
+                              wa_night_crs[::3,::30], angles='xy', scale_units='xy',
                               scale=scale, pivot='middle', color="white")
     ax[0,1].text(0.02, 0.95, "(b) Δθ$\mathregular{_{min}}$", transform=ax[0,1].transAxes, verticalalignment='top', bbox=props) # fontsize=14,
     cb_var    = fig.colorbar(contour, ax=ax[0], pad=0.01, orientation="vertical", aspect=20, shrink=0.88)
@@ -493,8 +491,8 @@ def plot_profile_wrf_wind(atmo_path_ctl, atmo_path_sen, wrf_path, land_path,
     # cntr_wtd  = ax[1,0].contourf(xy_loc, wtd_hgt, wtd_crs, levels=np.arange(1,12,1), cmap=cmap1, extend='both')
     line1     = ax[1,0].plot(xy_loc,pbl1_day_crs,ls="-", color="black")
     line2     = ax[1,0].plot(xy_loc,pbl2_day_crs,ls="--", color="black")
-    q         = ax[1,0].quiver(xy_loc[::30], vertical[::3], ua_day_crs[::30,::3],
-                              wa_day_crs[::30,::3], angles='xy', scale_units='xy',
+    q         = ax[1,0].quiver(xy_loc[::30], vertical[::3], ua_day_crs[::3,::30],
+                              wa_day_crs[::3,::30], angles='xy', scale_units='xy',
                               scale=scale, pivot='middle', color="white")
     ax[1,0].text(0.02, 0.95, "(c) ΔRH$\mathregular{_{day}}$", transform=ax[1,0].transAxes, verticalalignment='top', bbox=props) # fontsize=14,
     ax[1,0].set_xlabel("Longitude")#, fontsize=12)
@@ -506,8 +504,8 @@ def plot_profile_wrf_wind(atmo_path_ctl, atmo_path_sen, wrf_path, land_path,
     # cntr_wtd  = ax[1,1].contourf(xy_loc, wtd_hgt, wtd_crs, levels=np.arange(1,12,1), cmap=cmap1, extend='both')
     line1     = ax[1,1].plot(xy_loc,pbl1_night_crs,ls="-", color="black")
     line2     = ax[1,1].plot(xy_loc,pbl2_night_crs,ls="--", color="black")
-    q         = ax[1,1].quiver(xy_loc[::30], vertical[::3], ua_night_crs[::30,::3],
-                              wa_night_crs[::30,::3], angles='xy', scale_units='xy',
+    q         = ax[1,1].quiver(xy_loc[::30], vertical[::3], ua_night_crs[::3,::30],
+                              wa_night_crs[::3,::30], angles='xy', scale_units='xy',
                               scale=scale, pivot='middle', color="white")
 
     ax[1,1].quiverkey(q,X=0.80, Y=2.1, U=scale, label=str(scale)+' m/s', labelpos='E', color="black")
@@ -532,9 +530,10 @@ if __name__ == "__main__":
     lon_min       = 134.0
     lon_max       = 154.0
 
-    time_s        = datetime(2019,12,1,0,0,0,0)
-    time_e        = datetime(2020,3,1,0,0,0,0)
-    # time_e        = datetime(2020,3,1,0,0,0,0)
+    message       = "201819_Summer"
+    time_s        = datetime(2018,12,1,0,0,0,0)
+    time_e        = datetime(2019,3,1,0,0,0,0)
+    file_name     = "wrfout_201812-201902.nc"
 
     path          = '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/'
 
@@ -544,8 +543,6 @@ if __name__ == "__main__":
     atmo_path_ctl = path + 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/'
     atmo_path_sen = path + 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/WRF_output/'
 
-    message       = "201920_Summer"
-
-    plot_profile_wrf_wind(atmo_path_ctl, atmo_path_sen, wrf_path, land_path,
+    plot_profile_wrf_wind(atmo_path_ctl, atmo_path_sen, wrf_path, land_path, file_name,
                           time_s, time_e, message=message,
                           lat_slt=lat_slt, lon_min=lon_min, lon_max=lon_max)

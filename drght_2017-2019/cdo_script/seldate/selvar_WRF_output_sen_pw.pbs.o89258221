@@ -1,0 +1,31 @@
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XLONG<
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XLAT<
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XTIME<
+cdo    seldate: Processed 84067622 values from 3 variables over 1692 timesteps [1.64s 74MB].
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XLONG<
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XLAT<
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XTIME<
+cdo    seldate: Processed 84067622 values from 3 variables over 3152 timesteps [1.45s 72MB].
+Cannot compress ./wrfout_201712-201802.nc with nc2nc as it is NETCDF4 format, switching to nccopy
+Directory: ./
+    Number files compressed: 1
+    Total space saved: 0.11 GB
+    Average compression ratio: 1.50
+Cannot compress ./wrfout_201812-201902.nc with nc2nc as it is NETCDF4 format, switching to nccopy
+Directory: ./
+    Number files compressed: 1
+    Total space saved: 0.11 GB
+    Average compression ratio: 1.49
+
+======================================================================================
+                  Resource Usage on 2023-06-29 13:54:18:
+   Job Id:             89258221.gadi-pbs
+   Project:            w97
+   Exit Status:        0
+   Service Units:      0.68
+   NCPUs Requested:    8                      NCPUs Used: 8               
+                                           CPU Time Used: 00:00:20        
+   Memory Requested:   256.0GB               Memory Used: 2.23GB          
+   Walltime requested: 02:30:00            Walltime Used: 00:00:24        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================

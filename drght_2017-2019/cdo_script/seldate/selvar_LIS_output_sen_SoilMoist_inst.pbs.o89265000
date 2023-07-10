@@ -1,0 +1,19 @@
+cdo    seldate: Processed 3009713760 values from 1 variable over 18913 timesteps [73.07s 97MB].
+Cannot compress ./LIS.CABLE.201812-201902.nc with nc2nc as it is NETCDF4 format, switching to nccopy
+Error with ./LIS.CABLE.201812-201902.nc :: Compression failed: Command '['nccopy', '-d', '5', '-s', '-m', '500000000', './LIS.CABLE.201812-201902.nc', './tmp.nc_compress/LIS.CABLE.201812-201902.nc']' returned non-zero exit status 1. 
+    Following files not properly compressed or suspiciously high compression ratio:
+./LIS.CABLE.201812-201902.nc
+Failed to remove temporary directory ./tmp.nc_compress
+
+======================================================================================
+                  Resource Usage on 2023-06-29 15:18:20:
+   Job Id:             89265000.gadi-pbs
+   Project:            w97
+   Exit Status:        0
+   Service Units:      5.55
+   NCPUs Requested:    8                      NCPUs Used: 8               
+                                           CPU Time Used: 00:03:00        
+   Memory Requested:   256.0GB               Memory Used: 20.42GB         
+   Walltime requested: 02:30:00            Walltime Used: 00:03:15        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================

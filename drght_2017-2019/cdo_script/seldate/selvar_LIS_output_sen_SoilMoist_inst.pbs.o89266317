@@ -1,0 +1,17 @@
+Error (cdf_create): LIS.CABLE.201812-201902.nc: Permission denied
+cdf_create        : ncid=-1  mode=4096  chunksizehint=0  file=LIS.CABLE.201812-201902.nc
+
+Failed to remove temporary directory ./tmp.nc_compress
+
+======================================================================================
+                  Resource Usage on 2023-06-29 15:23:00:
+   Job Id:             89266317.gadi-pbs
+   Project:            w97
+   Exit Status:        0
+   Service Units:      0.14
+   NCPUs Requested:    8                      NCPUs Used: 8               
+                                           CPU Time Used: 00:00:04        
+   Memory Requested:   256.0GB               Memory Used: 36.71MB         
+   Walltime requested: 02:30:00            Walltime Used: 00:00:05        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================

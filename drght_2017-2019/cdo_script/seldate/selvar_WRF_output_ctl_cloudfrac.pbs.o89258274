@@ -1,0 +1,31 @@
+Warning (cdfScanVarAttr): Time must be the first dimension! Unsupported array structure, skipped variable cloudfrac!
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XLONG<
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XLAT<
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XTIME<
+Warning (cdf_set_var): Inconsistent variable definition for cloudfrac!
+cdo    seldate (Warning): Date between  20171201.0000 and  20180228.9990 not found!
+
+cdo    seldate (Abort): No timesteps selected!
+Warning (cdfScanVarAttr): Time must be the first dimension! Unsupported array structure, skipped variable cloudfrac!
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XLONG<
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XLAT<
+Warning (cdfScanVarAttr): NetCDF: Variable not found - >XTIME<
+Warning (cdf_set_var): Inconsistent variable definition for cloudfrac!
+cdo    seldate (Warning): Date between  20181201.0000 and  20190228.9990 not found!
+
+cdo    seldate (Abort): No timesteps selected!
+Input does not exist: wrfout_201712-201802.nc .. skipping
+Input does not exist: wrfout_201812-201902.nc .. skipping
+
+======================================================================================
+                  Resource Usage on 2023-06-29 13:54:55:
+   Job Id:             89258274.gadi-pbs
+   Project:            w97
+   Exit Status:        0
+   Service Units:      0.17
+   NCPUs Requested:    8                      NCPUs Used: 8               
+                                           CPU Time Used: 00:00:03        
+   Memory Requested:   256.0GB               Memory Used: 323.88MB        
+   Walltime requested: 02:30:00            Walltime Used: 00:00:06        
+   JobFS requested:    100.0MB                JobFS used: 0B              
+======================================================================================
