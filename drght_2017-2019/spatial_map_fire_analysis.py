@@ -558,7 +558,8 @@ def plot_LIS_diff(fire_path, file_name, land_ctl_path, land_sen_path, var_names,
         # =============== CHANGE HERE ===============
 
         for i in np.arange(2):
-
+            
+            axs[i].set_facecolor('lightgray')
             axs[i].coastlines(resolution="50m",linewidth=1)
             axs[i].set_extent([146,154,-39,-27])
             axs[i].add_feature(states, linewidth=.5, edgecolor="black")
@@ -749,7 +750,6 @@ def plot_time_series_burn_region(fire_path, wrf_path, file_name, land_ctl_path, 
         Var_daily_ctl = time_clip_to_day(time_ctl, Var_ctl, time_s, time_e, seconds=None)
         Var_daily_sen = time_clip_to_day(time_sen, Var_sen, time_s, time_e, seconds=None)
 
-
     wrf     = Dataset(wrf_path,  mode='r')
     lon_in  = wrf.variables['XLONG'][0,:,:]
     lat_in  = wrf.variables['XLAT'][0,:,:]
@@ -837,6 +837,7 @@ def plot_time_series_burn_region(fire_path, wrf_path, file_name, land_ctl_path, 
 
 
 if __name__ == "__main__":
+    
     region = "Aus" #"SE Aus" #"CORDEX" #"SE Aus"
 
     if region == "Aus":
@@ -862,7 +863,7 @@ if __name__ == "__main__":
         LAI_MODIS_path = "/g/data/w97/mm3972/data/MODIS/MODIS_LAI/MCD15A3H_c61_bigWRFroi_LAI_for_WRF_5000m_201911_202002.nc"
         plot_LAI_fire_map(fire_path,LAI_MODIS_path)
 
-    if 0:
+    if 1:
         '''
         Difference plot yearly
 
@@ -1047,7 +1048,8 @@ if __name__ == "__main__":
             plot_LIS_diff(fire_path, file_name, land_ctl_path, land_sen_path, var_names, time_s=time_s, time_e=time_e, lat_names="lat",
                           lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path,
                           message=message, burn=burn)
-    if 1:
+
+    if 0:
         # plot burnt region time series
         case_ctl       = "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2"
         case_sen       = "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB"

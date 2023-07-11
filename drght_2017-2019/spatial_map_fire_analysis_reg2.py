@@ -302,7 +302,7 @@ def plot_LAI_fire_map(fire_path,LAI_MODIS_path):
 
     plt.savefig('./plots/spatial_map_fire_Burnt_LAI_Dec.png',dpi=300)
 
-def read_LIS_diff(var_name,file_name,land_ctl_path,land_sen_path, lat_names, lon_names):
+def read_LIS_diff(var_name,file_name,land_ctl_path,land_sen_path, lat_names, lon_names,time_s=None,time_e=None):
 
     print("plotting "+var_name)
 
@@ -475,7 +475,7 @@ def read_LIS_diff(var_name,file_name,land_ctl_path,land_sen_path, lat_names, lon
 
     return sen_in, var_diff, clevs, cmap
 
-def regrid_to_fire_map_resolution(fire_path, var_in, lat_in, lon_in, burn=0):
+def regrid_to_fire_map_resolution(fire_path, var_in, lat_in, lon_in, loc_lat=None, loc_lon=None, burn=0):
 
     # =========== Read in fire data ============
     fire_file  = Dataset(fire_path, mode='r')
@@ -498,6 +498,16 @@ def regrid_to_fire_map_resolution(fire_path, var_in, lat_in, lon_in, burn=0):
         # unburnt region
         var_regrid = np.where(burn_area==0, var_regrid, np.nan )
 
+    if loc_lat !=None:
+        lons_2D, lats_2D = np.meshgrid(lon_out, lat_out)
+        var_regrid = np.where(np.all(( lats_2D>loc_lat[0],
+                                       lats_2D<loc_lat[1],
+                                       lons_2D>loc_lon[0],
+                                       lons_2D<loc_lon[1]), axis=0),
+                                       var_regrid, np.nan)
+        lat_out    = lats_2D
+        lon_out    = lons_2D
+
     return var_regrid, lat_out, lon_out
 
 def plot_LIS_diff(fire_path, file_name, land_ctl_path, land_sen_path, var_names, time_s=None, time_e=None,
@@ -515,8 +525,8 @@ def plot_LIS_diff(fire_path, file_name, land_ctl_path, land_sen_path, var_names,
     for var_name in var_names:
 
         # read in var
-        sen_in, var_diff, clevs, cmap = read_LIS_diff(var_name, file_name, land_ctl_path, land_sen_path, lat_names, lon_names)
-
+        sen_in, var_diff, clevs, cmap = read_LIS_diff(var_name, file_name, land_ctl_path, land_sen_path,
+                                                       lat_names, lon_names, time_s, time_e)
         # regrid to burn map resolution ~ 400m
         var_regrid, lats, lons = regrid_to_fire_map_resolution(fire_path, var_diff, lat_in, lon_in, burn=burn)
         sen_regrid, lats, lons = regrid_to_fire_map_resolution(fire_path, sen_in, lat_in, lon_in, burn=burn)
@@ -559,6 +569,7 @@ def plot_LIS_diff(fire_path, file_name, land_ctl_path, land_sen_path, var_names,
 
         for i in np.arange(2):
 
+            axs[i].set_facecolor('lightgray')
             axs[i].coastlines(resolution="50m",linewidth=1)
             axs[i].set_extent([146,154,-39,-27])
             axs[i].add_feature(states, linewidth=.5, edgecolor="black")
@@ -571,10 +582,10 @@ def plot_LIS_diff(fire_path, file_name, land_ctl_path, land_sen_path, var_names,
             gl.ylines       = False
             # gl.xlines       = True
             # gl.ylines       = True
-            # gl.xlocator     = mticker.FixedLocator(np.arange(125,160,1))
-            # gl.ylocator     = mticker.FixedLocator(np.arange(-40,-20,1))
-            gl.xlocator     = mticker.FixedLocator([130,135,140,145,150,155,160])
-            gl.ylocator     = mticker.FixedLocator([-40,-35,-30,-25,-20])
+            gl.xlocator     = mticker.FixedLocator(np.arange(126,160,2))
+            gl.ylocator     = mticker.FixedLocator(np.arange(-40,-20,2))
+            # gl.xlocator     = mticker.FixedLocator([130,135,140,145,150,155,160])
+            # gl.ylocator     = mticker.FixedLocator([-40,-35,-30,-25,-20])
             gl.xformatter   = LONGITUDE_FORMATTER
             gl.yformatter   = LATITUDE_FORMATTER
             gl.xlabel_style = {'size':12, 'color':almost_black}#,'rotation': 90}
@@ -610,7 +621,8 @@ def plot_LIS_burn_vs_unburn(fire_path, file_name, land_ctl_path, land_sen_path, 
     for var_name in var_names:
 
         # read in var
-        sen_in, var_diff, clevs, cmap = read_LIS_diff(var_name, file_name, land_ctl_path, land_sen_path, lat_names, lon_names)
+        sen_in, var_diff, clevs, cmap = read_LIS_diff(var_name, file_name, land_ctl_path, land_sen_path,
+                                                      lat_names, lon_names, time_s, time_e)
 
         # regrid to burn map resolution ~ 400m
         var_regrid_burn, lats, lons   = regrid_to_fire_map_resolution(fire_path, var_diff, lat_in, lon_in, burn=1)
@@ -762,8 +774,8 @@ def plot_time_series_burn_region(fire_path, wrf_path, file_name, land_ctl_path, 
         print("i=",i)
         # regrid to burn map resolution ~ 400m
         if i == 0:
-            ctl_regrid_tmp, lats, lons = regrid_to_fire_map_resolution(fire_path, Var_daily_ctl[i,:,:], lat_in, lon_in, burn=burn)
-            sen_regrid_tmp, lats, lons = regrid_to_fire_map_resolution(fire_path, Var_daily_sen[i,:,:], lat_in, lon_in, burn=burn)
+            ctl_regrid_tmp, lats, lons = regrid_to_fire_map_resolution(fire_path, Var_daily_ctl[i,:,:], lat_in, lon_in, loc_lat, loc_lon, burn=burn)
+            sen_regrid_tmp, lats, lons = regrid_to_fire_map_resolution(fire_path, Var_daily_sen[i,:,:], lat_in, lon_in, loc_lat, loc_lon, burn=burn)
             nlat = np.shape(ctl_regrid_tmp)[0]
             nlon = np.shape(ctl_regrid_tmp)[1]
             ctl_regrid = np.zeros((ntime, nlat, nlon))
@@ -771,8 +783,34 @@ def plot_time_series_burn_region(fire_path, wrf_path, file_name, land_ctl_path, 
             ctl_regrid[i,:,:] = ctl_regrid_tmp
             sen_regrid[i,:,:] = sen_regrid_tmp
         else:
-            ctl_regrid[i,:,:], lats, lons = regrid_to_fire_map_resolution(fire_path, Var_daily_ctl[i,:,:], lat_in, lon_in, burn=burn)
-            sen_regrid[i,:,:], lats, lons = regrid_to_fire_map_resolution(fire_path, Var_daily_sen[i,:,:], lat_in, lon_in, burn=burn)
+            ctl_regrid[i,:,:], lats, lons = regrid_to_fire_map_resolution(fire_path, Var_daily_ctl[i,:,:], lat_in, lon_in, loc_lat, loc_lon, burn=burn)
+            sen_regrid[i,:,:], lats, lons = regrid_to_fire_map_resolution(fire_path, Var_daily_sen[i,:,:], lat_in, lon_in, loc_lat, loc_lon, burn=burn)
+
+    # Check whether mask right
+    if 0:
+        fig1, ax1    = plt.subplots(nrows=1, ncols=1, figsize=[5,4],sharex=True, sharey=True, squeeze=True,
+                                    subplot_kw={'projection': ccrs.PlateCarree()})
+
+        states= NaturalEarthFeature(category="cultural", scale="50m",
+                                            facecolor="none",
+                                            name="admin_1_states_provinces_shp")
+
+        # ======================= Set colormap =======================
+        cmap    = plt.cm.BrBG
+        cmap.set_bad(color='lightgrey')
+        ax1.coastlines(resolution="50m",linewidth=1)
+        ax1.set_extent([135,155,-39,-23])
+        ax1.add_feature(states, linewidth=.5, edgecolor="black")
+
+        ctl_avg = np.nanmean(ctl_regrid, axis=0)
+
+        plot1  = ax1.contourf( lons, lats, ctl_avg, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
+        cbar1  = plt.colorbar(plot1, ax=ax1, ticklocation="right", pad=0.08, orientation="horizontal",
+                            aspect=40, shrink=0.6)
+        cbar1.ax.tick_params(labelsize=8, labelrotation=45)
+
+        plt.savefig('./plots/spatial_map_check_burn_region_mask.png',dpi=300)
+
 
     ctl_time_series = np.nanmean(ctl_regrid,axis=(1,2))
     sen_time_series = np.nanmean(sen_regrid,axis=(1,2))
@@ -798,14 +836,14 @@ def plot_time_series_burn_region(fire_path, wrf_path, file_name, land_ctl_path, 
     if var_name == "Tmax":
         # bot_val = 15
         # up_val  = 36
-        bot_val = -2
-        up_val  = 2
+        bot_val = -1.
+        up_val  = 1.
     elif var_name == "LAI_inst":
-        bot_val = 0.5
-        up_val  = 4.5
+        bot_val = 0
+        up_val  = 6
     elif var_name == "Albedo_inst":
-        bot_val = 0.08
-        up_val  = 0.20
+        bot_val = 0.05
+        up_val  = 0.15
     elif var_name == "FWsoil_tavg":
         bot_val = 0.
         up_val  = 1.
@@ -822,7 +860,8 @@ def plot_time_series_burn_region(fire_path, wrf_path, file_name, land_ctl_path, 
     df_sen['high'] = sen_high
 
     if var_name == "Tmax":
-        ax.plot(df_sen['sen'].rolling(window=5).mean()-df_ctl['ctl'].rolling(window=5).mean(), label="sen-ctl", c = "red", lw=0.5, alpha=1)
+        ax.axhline(y=0, color='grey', linestyle='--')
+        ax.plot(df_sen['sen'].rolling(window=5).mean()-df_ctl['ctl'].rolling(window=5).mean(), label="sen-ctl", c = "red", lw=1., alpha=1)
     else:
         ax.fill_between(time_steps, df_ctl['low'].rolling(window=5).mean(), df_ctl['high'].rolling(window=5).mean(),
                         color="green", edgecolor="none", alpha=0.15)
@@ -1064,7 +1103,7 @@ if __name__ == "__main__":
         land_sen_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_sen+"/LIS_output/"
         land_ctl_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_ctl+"/LIS_output/"
 
-        var_names      = ["Tmax","LAI_inst","Albedo_inst","FWsoil_tavg"]
+        var_names      = ["LAI_inst"]#"LAI_inst","Tmax","FWsoil_tavg"]
 
         time_s         = datetime(2019,10,1,0,0,0,0)
         time_e         = datetime(2020,3,1,0,0,0,0)
