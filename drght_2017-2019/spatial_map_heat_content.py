@@ -137,11 +137,11 @@ def spatial_map_heat_content(file_paths, time_s, time_e, seconds=None, message=N
     P1     = read_wrf_hgt_var(file_paths[0], "p", "Pa")
 
 
-    pblh1  = spital_var(time,PBLH1,time_s,time_e,seconds)
-    z1     = spital_var(time,Z1,time_s,time_e,seconds)
-    t1     = spital_var(time,T1,time_s,time_e,seconds)
-    qv1    = spital_var(time,QV1,time_s,time_e,seconds)
-    p1     = spital_var(time,P1,time_s,time_e,seconds)
+    pblh1  = spatial_var(time,PBLH1,time_s,time_e,seconds)
+    z1     = spatial_var(time,Z1,time_s,time_e,seconds)
+    t1     = spatial_var(time,T1,time_s,time_e,seconds)
+    qv1    = spatial_var(time,QV1,time_s,time_e,seconds)
+    p1     = spatial_var(time,P1,time_s,time_e,seconds)
 
     print(np.shape(pblh1))
     print(np.shape(z1))
@@ -164,9 +164,9 @@ def spatial_map_heat_content(file_paths, time_s, time_e, seconds=None, message=N
     #     QV2   = read_wrf_hgt_var(file_paths[1], "QVAPOR") # kg kg-1
     #     P2    = read_wrf_hgt_var(file_paths[1], "p", "Pa")
 
-    #     t2    = spital_var(time,T2,time_s,time_e,seconds)
-    #     qv2   = spital_var(time,QV1,time_s,time_e,seconds)
-    #     p2    = spital_var(time,P1,time_s,time_e,seconds)
+    #     t2    = spatial_var(time,T2,time_s,time_e,seconds)
+    #     qv2   = spatial_var(time,QV1,time_s,time_e,seconds)
+    #     p2    = spatial_var(time,P1,time_s,time_e,seconds)
     #     density2 = air_density(t2,qv2,p2)
     #     atmo_hc2 = calc_atmospheric_heat_content(t2,density2,dx,dy,dz)
 

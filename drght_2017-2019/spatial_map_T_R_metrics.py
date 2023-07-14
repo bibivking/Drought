@@ -38,44 +38,44 @@ def plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=None, loc_lon
         time1, lons1 = read_var(file_paths[0], lon_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
 
         if var_names[0] in ['tas','Tair','Tair_f_inst']:
-            var1         = spital_var(time1,Var1,time_s,time_e)-273.15
+            var1         = spatial_var(time1,Var1,time_s,time_e)-273.15
             print(var1)
         elif var_names[0] in ['tp']:
             scale        = get_scale(var_names[0])
             var1         = spital_ERAI_tp(time1,Var1,time_s,time_e)*scale
         elif var_names[0] in ['Rainf','Rainf_tavg']:
-            var1         = spital_var(time1,Var1,time_s,time_e)*24*60*60.
+            var1         = spatial_var(time1,Var1,time_s,time_e)*24*60*60.
             print(var1)
         elif var_names[0] in ['Wind']:
             # !!!!!!!!! Note that !!!!!!!!!!!
             # Wind speeds is at 2 meter height in AWAP while 10 meters in WRF-CABLE
             # So here converting AWAP 2m wind speed to 10m wind speed by multipling 2
-            var1         = spital_var(time1,Var1,time_s,time_e)*2.
+            var1         = spatial_var(time1,Var1,time_s,time_e)*2.
             print(var1)
         else:
             scale        = get_scale(var_names[0])
-            var1         = spital_var(time1,Var1,time_s,time_e)*scale
+            var1         = spatial_var(time1,Var1,time_s,time_e)*scale
 
         if len(file_paths) > 1:
             time2, Var2  = read_var(file_paths[1], var_names[1], loc_lat, loc_lon, lat_names[1], lon_names[1])
             time2, lats2 = read_var(file_paths[1], lat_names[1], loc_lat, loc_lon, lat_names[1], lon_names[1])
             time2, lons2 = read_var(file_paths[1], lon_names[1], loc_lat, loc_lon, lat_names[1], lon_names[1])
             scale        = get_scale(var_names[1])
-            var2         = spital_var(time2,Var2,time_s,time_e)*scale
+            var2         = spatial_var(time2,Var2,time_s,time_e)*scale
 
         if len(file_paths) > 2:
             time3, Var3  = read_var(file_paths[2], var_names[2], loc_lat, loc_lon, lat_names[2], lon_names[2])
             time3, lats3 = read_var(file_paths[2], lat_names[2], loc_lat, loc_lon, lat_names[2], lon_names[2])
             time3, lons3 = read_var(file_paths[2], lon_names[2], loc_lat, loc_lon, lat_names[2], lon_names[2])
             scale        = get_scale(var_names[2])
-            var3         = spital_var(time3,Var3,time_s,time_e)*scale
+            var3         = spatial_var(time3,Var3,time_s,time_e)*scale
 
         if len(file_paths) > 3:
             time4, Var4  = read_var(file_paths[3], var_names[3], loc_lat, loc_lon, lat_names[3], lon_names[3])
             time4, lats4 = read_var(file_paths[3], lat_names[3], loc_lat, loc_lon, lat_names[3], lon_names[3])
             time4, lons4 = read_var(file_paths[3], lon_names[3], loc_lat, loc_lon, lat_names[3], lon_names[3])
             scale        = get_scale(var_names[3])
-            var4         = spital_var(time4,Var4,time_s,time_e)*scale
+            var4         = spatial_var(time4,Var4,time_s,time_e)*scale
 
     elif diff == True:
         time1, Var1  = read_var(file_paths[0], var_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
@@ -90,8 +90,8 @@ def plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=None, loc_lon
         print("np.shape(Var2) ", np.shape(Var2))
 
         if var_names[0] in ['tas','Tair','Tair_f_inst']:
-            var1         = spital_var(time1,Var1,time_s,time_e)-273.15 # AWAP
-            var2         = spital_var(time2,Var2,time_s,time_e)-273.15 # WRF
+            var1         = spatial_var(time1,Var1,time_s,time_e)-273.15 # AWAP
+            var2         = spatial_var(time2,Var2,time_s,time_e)-273.15 # WRF
             # regrid_data(lat_in, lon_in, lat_out, lon_out, input_data)
             var1_regrid  = regrid_data(lats1, lons1, lats2, lons2, var1)
             var1         = var2 - var1_regrid
@@ -103,15 +103,15 @@ def plot_spital_map(file_paths, var_names, time_s, time_e, loc_lat=None, loc_lon
             var1_regrid  = regrid_data(lats1, lons1, lats2, lons2, var1)
             var1         = var2 - var1_regrid
         elif var_names[0] in ['Rainf','Rainf_tavg']:
-            var1         = spital_var(time1,Var1,time_s,time_e)*24*60*60.
-            var2         = spital_var(time2,Var2,time_s,time_e)*24*60*60.
+            var1         = spatial_var(time1,Var1,time_s,time_e)*24*60*60.
+            var2         = spatial_var(time2,Var2,time_s,time_e)*24*60*60.
             # regrid_data(lat_in, lon_in, lat_out, lon_out, input_data)
             var1_regrid  = regrid_data(lats1, lons1, lats2, lons2, var1)
             var1         = var2 - var1_regrid
         else:
             scale        = get_scale(var_names[0])
-            var1         = spital_var(time1,Var1,time_s,time_e)*scale
-            var2         = spital_var(time2,Var2,time_s,time_e)*scale
+            var1         = spatial_var(time1,Var1,time_s,time_e)*scale
+            var2         = spatial_var(time2,Var2,time_s,time_e)*scale
             # regrid_data(lat_in, lon_in, lat_out, lon_out, input_data)
             var1_regrid  = regrid_data(lats1, lons1, lats2, lons2, var1)
             var1         = var2 - var1_regrid
@@ -253,7 +253,7 @@ def plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e
             else:
                 clevs    = [-5,-4,-3,-2,-1,-0.5,0.5,1,2,3,4,5] # np.linspace( -5., 5., num=11)
                 cmap     = plt.cm.seismic
-            var      = spital_var(time,Var,time_s,time_e)-273.15
+            var      = spatial_var(time,Var,time_s,time_e)-273.15
         elif var_names[i] in ['Rainf','Rainf_tavg','tp']:
             if i == 0:
                 clevs    = np.linspace( 0., 300., num=16)
@@ -263,13 +263,13 @@ def plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e
                 cmap     = plt.cm.BrBG #RdYlBu_r
 
             if month == "01":
-                var      = spital_var(time,Var,time_s,time_e)*24*60*60.*30
+                var      = spatial_var(time,Var,time_s,time_e)*24*60*60.*30
             elif month == "02":
-                var      = spital_var(time,Var,time_s,time_e)*24*60*60.*28
+                var      = spatial_var(time,Var,time_s,time_e)*24*60*60.*28
             elif month == "03":
-                var      = spital_var(time,Var,time_s,time_e)*24*60*60.*31
+                var      = spatial_var(time,Var,time_s,time_e)*24*60*60.*31
             else:
-                var      = spital_var(time,Var,time_s,time_e)*24*60*60.
+                var      = spatial_var(time,Var,time_s,time_e)*24*60*60.
 
         elif var_names[i] in ['LWdown','LWdown_f_inst','SWdown','SWdown_f_inst']:
             if i == 0:
@@ -278,14 +278,14 @@ def plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e
                 clevs = np.arange( -90.,100.,10.)
             cmap  = plt.cm.BrBG_r
             scale = get_scale(var_names[i])
-            var   = spital_var(time,Var,time_s,time_e)*scale
+            var   = spatial_var(time,Var,time_s,time_e)*scale
         elif var_names[i] in ['Wind','Wind_f_inst']:
             if i == 0:
                 clevs = np.arange( 0,10.5,0.5) #np.linspace( 15.,45., num=31)
-                var   = spital_var(time,Var,time_s,time_e)*2
+                var   = spatial_var(time,Var,time_s,time_e)*2
             else:
                 clevs = np.arange( -5,5.5,0.5)
-                var   = spital_var(time,Var,time_s,time_e)
+                var   = spatial_var(time,Var,time_s,time_e)
             cmap  = plt.cm.BrBG
         elif var_names[i] in ['Qair','Qair_f_inst']:
             # kg kg-1
@@ -295,7 +295,7 @@ def plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e
                 clevs = np.arange( -0.006,0.007, 0.001)
             cmap  = plt.cm.BrBG
             scale = get_scale(var_names[i])
-            var   = spital_var(time,Var,time_s,time_e)*scale
+            var   = spatial_var(time,Var,time_s,time_e)*scale
         else:
             if i == 0:
                 clevs = np.linspace( 0.,5., num=11)
@@ -303,7 +303,7 @@ def plot_spital_map_multi(wrf_path, names, file_paths, var_names, time_s, time_e
                 clevs = np.linspace( -5.,5., num=11)
             cmap  = plt.cm.GnBu # BrBG
             scale = get_scale(var_names[i])
-            var   = spital_var(time,Var,time_s,time_e)*scale
+            var   = spatial_var(time,Var,time_s,time_e)*scale
 
         if i == 0:
             # save AWAP dataset

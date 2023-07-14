@@ -35,7 +35,7 @@ def select_case(time, Var, var_name, time_s, time_e, month=None, diff=False):
         else:
             clevs    = [-5,-4,-3,-2,-1,-0.5,0.5,1,2,3,4,5] # np.linspace( -5., 5., num=11)
             cmap     = plt.cm.RdYlBu_r
-        var      = spital_var(time,Var,time_s,time_e)-273.15
+        var      = spatial_var(time,Var,time_s,time_e)-273.15
         
     elif var_name in ['Rainf','Rainf_tavg','tp']:
         if diff == False:
@@ -45,13 +45,13 @@ def select_case(time, Var, var_name, time_s, time_e, month=None, diff=False):
             clevs    = [-180,-160,-140,-120,-100,-80,-60,-40,-20,20,40,60,80,100,120,140,160,180]
             cmap     = plt.cm.BrBG #RdYlBu_r
         if month == 1:
-            var      = spital_var(time,Var,time_s,time_e)*24*60*60.*30
+            var      = spatial_var(time,Var,time_s,time_e)*24*60*60.*30
         elif month == 2:
-            var      = spital_var(time,Var,time_s,time_e)*24*60*60.*28
+            var      = spatial_var(time,Var,time_s,time_e)*24*60*60.*28
         elif month == 3:
-            var      = spital_var(time,Var,time_s,time_e)*24*60*60.*31
+            var      = spatial_var(time,Var,time_s,time_e)*24*60*60.*31
         else:
-            var      = spital_var(time,Var,time_s,time_e)*24*60*60.
+            var      = spatial_var(time,Var,time_s,time_e)*24*60*60.
             
     elif var_name in ['LWdown','LWdown_f_inst','SWdown','SWdown_f_inst']:
         if diff == False:
@@ -60,15 +60,15 @@ def select_case(time, Var, var_name, time_s, time_e, month=None, diff=False):
             clevs = np.arange( -90.,100.,10.)
         cmap  = plt.cm.BrBG_r
         scale = get_scale(var_name)
-        var   = spital_var(time,Var,time_s,time_e)*scale
+        var   = spatial_var(time,Var,time_s,time_e)*scale
         
     elif var_name in ['Wind','Wind_f_inst']:
         if diff == False:
             clevs = np.arange( 0,10.5,0.5) #np.linspace( 15.,45., num=31)
-            var   = spital_var(time,Var,time_s,time_e)*2
+            var   = spatial_var(time,Var,time_s,time_e)*2
         else:
             clevs = np.arange( -5,5.5,0.5)
-            var   = spital_var(time,Var,time_s,time_e)
+            var   = spatial_var(time,Var,time_s,time_e)
         cmap  = plt.cm.BrBG
         
     elif var_name in ['Qair','Qair_f_inst']:
@@ -79,7 +79,7 @@ def select_case(time, Var, var_name, time_s, time_e, month=None, diff=False):
             clevs = np.arange( -0.006,0.007, 0.001)
         cmap  = plt.cm.BrBG
         scale = get_scale(var_name)
-        var   = spital_var(time,Var,time_s,time_e)*scale
+        var   = spatial_var(time,Var,time_s,time_e)*scale
         
     elif var_name in ['Qle_tavg','Qh_tavg']:
         # W m-2
@@ -89,7 +89,7 @@ def select_case(time, Var, var_name, time_s, time_e, month=None, diff=False):
             clevs = np.arange( -100.,110., 10.)
         cmap  = plt.cm.RdYlBu_r``
         scale = get_scale(var_name)
-        var   = spital_var(time,Var,time_s,time_e)*scale
+        var   = spatial_var(time,Var,time_s,time_e)*scale
         
     else:
         if diff == False:
@@ -98,7 +98,7 @@ def select_case(time, Var, var_name, time_s, time_e, month=None, diff=False):
             clevs = np.linspace( -5.,5., num=11)
         cmap  = plt.cm.GnBu # BrBG
         scale = get_scale(var_name)
-        var   = spital_var(time,Var,time_s,time_e)*scale
+        var   = spatial_var(time,Var,time_s,time_e)*scale
         
     return var, clevs, cmap 
 

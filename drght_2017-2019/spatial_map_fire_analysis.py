@@ -344,8 +344,8 @@ def read_LIS_diff(var_name,file_name,land_ctl_path,land_sen_path, lat_names, lon
         time, Ctl_temp = read_var_multi_file(land_ctl_files, 'SoilMoist_inst', loc_lat, loc_lon, lat_names, lon_names)
         time, Sen_temp = read_var_multi_file(land_sen_files, 'SoilMoist_inst', loc_lat, loc_lon, lat_names, lon_names)
         # [.022, .058, .154, .409, 1.085, 2.872]
-        Ctl_tmp    = Ctl_temp[:,0,:,:]*0.022 + Ctl_temp[:,1,:,:]*0.058 + Ctl_temp[:,2,:,:]*0.154 + Ctl_temp[:,3,:,:]*0.266
-        Sen_tmp    = Sen_temp[:,0,:,:]*0.022 + Sen_temp[:,1,:,:]*0.058 + Sen_temp[:,2,:,:]*0.154 + Sen_temp[:,3,:,:]*0.266
+        Ctl_tmp    = (Ctl_temp[:,0,:,:]*0.022 + Ctl_temp[:,1,:,:]*0.058 + Ctl_temp[:,2,:,:]*0.154 + Ctl_temp[:,3,:,:]*0.266)/0.5
+        Sen_tmp    = (Sen_temp[:,0,:,:]*0.022 + Sen_temp[:,1,:,:]*0.058 + Sen_temp[:,2,:,:]*0.154 + Sen_temp[:,3,:,:]*0.266)/0.5
     elif var_name in ['VPD','VPDmax','VPDmin']:
         tair_ctl_files= [land_ctl_path+'Tair_f_inst/'+file_name]
         tair_sen_files= [land_sen_path+'Tair_f_inst/'+file_name]
@@ -384,23 +384,23 @@ def read_LIS_diff(var_name,file_name,land_ctl_path,land_sen_path, lat_names, lon
 
     if 'max' in var_name:
         # average of daily max
-        ctl_in       = spital_var_max(time,Ctl_tmp,time_s,time_e)
-        sen_in       = spital_var_max(time,Sen_tmp,time_s,time_e)
+        ctl_in       = spatial_var_max(time,Ctl_tmp,time_s,time_e)
+        sen_in       = spatial_var_max(time,Sen_tmp,time_s,time_e)
     elif 'min' in var_name:
         # average of daily min
-        ctl_in       = spital_var_min(time,Ctl_tmp,time_s,time_e)
-        sen_in       = spital_var_min(time,Sen_tmp,time_s,time_e)
+        ctl_in       = spatial_var_min(time,Ctl_tmp,time_s,time_e)
+        sen_in       = spatial_var_min(time,Sen_tmp,time_s,time_e)
     elif 'TDR' in var_name:
         # average of daily min
-        ctl_in_max   = spital_var_max(time,Ctl_tmp,time_s,time_e)
-        sen_in_max   = spital_var_max(time,Sen_tmp,time_s,time_e)
-        ctl_in_min   = spital_var_min(time,Ctl_tmp,time_s,time_e)
-        sen_in_min   = spital_var_min(time,Sen_tmp,time_s,time_e)
+        ctl_in_max   = spatial_var_max(time,Ctl_tmp,time_s,time_e)
+        sen_in_max   = spatial_var_max(time,Sen_tmp,time_s,time_e)
+        ctl_in_min   = spatial_var_min(time,Ctl_tmp,time_s,time_e)
+        sen_in_min   = spatial_var_min(time,Sen_tmp,time_s,time_e)
         ctl_in       = ctl_in_max - ctl_in_min
         sen_in       = sen_in_max - sen_in_min
     else:
-        ctl_in       = spital_var(time,Ctl_tmp,time_s,time_e)
-        sen_in       = spital_var(time,Sen_tmp,time_s,time_e)
+        ctl_in       = spatial_var(time,Ctl_tmp,time_s,time_e)
+        sen_in       = spatial_var(time,Sen_tmp,time_s,time_e)
 
     if var_name in ['WaterTableD_tavg','WatTable']:
         ctl_in     = ctl_in/1000.

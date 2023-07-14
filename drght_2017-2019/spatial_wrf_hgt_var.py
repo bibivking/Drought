@@ -324,14 +324,14 @@ def plot_spatial_map_wrf_hgt(file_paths, var_name, height, time_s, time_e, var_u
     # Va1   = read_wrf_hgt_var(file_paths[0], "va", "m s-1", height, loc_lat, loc_lon)
 
     if var_name in ['temp']:
-        var1  = spital_var(time,Var1,time_s,time_e)
+        var1  = spatial_var(time,Var1,time_s,time_e)
     else:
         scale = get_scale(var_name)
-        var1  = spital_var(time,Var1,time_s,time_e)*scale
+        var1  = spatial_var(time,Var1,time_s,time_e)*scale
     #
-    # z1   = spital_var(time,Z1,time_s,time_e)
-    # ua1  = spital_var(time,Ua1,time_s,time_e)
-    # va1  = spital_var(time,Va1,time_s,time_e)
+    # z1   = spatial_var(time,Z1,time_s,time_e)
+    # ua1  = spatial_var(time,Ua1,time_s,time_e)
+    # va1  = spatial_var(time,Va1,time_s,time_e)
 
     if len(file_paths) > 1:
         Var2  = read_wrf_hgt_var(file_paths[1], var_name, var_unit, height, loc_lat, loc_lon)
@@ -340,14 +340,14 @@ def plot_spatial_map_wrf_hgt(file_paths, var_name, height, time_s, time_e, var_u
         # Va2   = read_wrf_hgt_var(file_paths[1], "va", "m s-1", height, loc_lat, loc_lon)
 
         if var_name in ['temp']:
-            var2  = spital_var(time,Var2,time_s,time_e)
+            var2  = spatial_var(time,Var2,time_s,time_e)
         else:
             scale = get_scale(var_name)
-            var2  = spital_var(time,Var2,time_s,time_e)*scale
+            var2  = spatial_var(time,Var2,time_s,time_e)*scale
         #
-        # z2   = spital_var(time,Z2,time_s,time_e)
-        # ua2  = spital_var(time,Ua2,time_s,time_e)
-        # va2  = spital_var(time,Va2,time_s,time_e)
+        # z2   = spatial_var(time,Z2,time_s,time_e)
+        # ua2  = spatial_var(time,Ua2,time_s,time_e)
+        # va2  = spatial_var(time,Va2,time_s,time_e)
         # Calculate difference
         var = var2 - var1
         # u   = ua2 - ua1

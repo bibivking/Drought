@@ -17,7 +17,7 @@ from cartopy.feature import NaturalEarthFeature, OCEAN
 from common_utils import *
 
 
-def read_LIS_diff(var_name,file_name,land_ctl_path,land_sen_path, lat_names, lon_names,time_s=None,time_e=None):
+def read_LIS_diff(var_name,file_name,land_ctl_path,land_sen_path, lat_names, lon_names, loc_lat=None, loc_lon=None, time_s=None,time_e=None):
 
     print("plotting "+var_name)
 
@@ -99,23 +99,23 @@ def read_LIS_diff(var_name,file_name,land_ctl_path,land_sen_path, lat_names, lon
 
     if 'max' in var_name:
         # average of daily max
-        ctl_in       = spital_var_max(time,Ctl_tmp,time_s,time_e)
-        sen_in       = spital_var_max(time,Sen_tmp,time_s,time_e)
+        ctl_in       = spatial_var_max(time,Ctl_tmp,time_s,time_e)
+        sen_in       = spatial_var_max(time,Sen_tmp,time_s,time_e)
     elif 'min' in var_name:
         # average of daily min
-        ctl_in       = spital_var_min(time,Ctl_tmp,time_s,time_e)
-        sen_in       = spital_var_min(time,Sen_tmp,time_s,time_e)
+        ctl_in       = spatial_var_min(time,Ctl_tmp,time_s,time_e)
+        sen_in       = spatial_var_min(time,Sen_tmp,time_s,time_e)
     elif 'TDR' in var_name:
         # average of daily min
-        ctl_in_max   = spital_var_max(time,Ctl_tmp,time_s,time_e)
-        sen_in_max   = spital_var_max(time,Sen_tmp,time_s,time_e)
-        ctl_in_min   = spital_var_min(time,Ctl_tmp,time_s,time_e)
-        sen_in_min   = spital_var_min(time,Sen_tmp,time_s,time_e)
+        ctl_in_max   = spatial_var_max(time,Ctl_tmp,time_s,time_e)
+        sen_in_max   = spatial_var_max(time,Sen_tmp,time_s,time_e)
+        ctl_in_min   = spatial_var_min(time,Ctl_tmp,time_s,time_e)
+        sen_in_min   = spatial_var_min(time,Sen_tmp,time_s,time_e)
         ctl_in       = ctl_in_max - ctl_in_min
         sen_in       = sen_in_max - sen_in_min
     else:
-        ctl_in       = spital_var(time,Ctl_tmp,time_s,time_e)
-        sen_in       = spital_var(time,Sen_tmp,time_s,time_e)
+        ctl_in       = spatial_var(time,Ctl_tmp,time_s,time_e)
+        sen_in       = spatial_var(time,Sen_tmp,time_s,time_e)
 
     if var_name in ['WaterTableD_tavg','WatTable']:
         ctl_in     = ctl_in/1000.
@@ -212,17 +212,24 @@ def plot_Tmax_Burn_Date(fire_path, file_name, land_ctl_path, land_sen_path, time
     Burn_Date  = fire_file.variables['Burn_Date'][2:8,:,:]  # 2019-09 - 2020-02
     lat_fire   = fire_file.variables['lat'][:]
     lon_fire   = fire_file.variables['lon'][:]
-    Burn_Date  = np.where(Burn_Date<=0, np.nan, Burn_Date)
+
+    Burn_Date  = np.where(Burn_Date<=0, 99999, Burn_Date)
+
     Burn_Date[3:5,:,:] = Burn_Date[3:5,:,:]+365 # Add 365 to Jan-Feb 2020
-    Burn_Date  = np.nanmin(Burn_Date, axis=0)
-    Burn_Date_index = np.where(Burn_Date<273, 1009, Burn_Date)
-    Burn_Date_index = np.where(Burn_Date<304, 1010, Burn_Date)
-    Burn_Date_index = np.where(Burn_Date<334, 1011, Burn_Date)
-    Burn_Date_index = np.where(Burn_Date<365, 1012, Burn_Date)
-    Burn_Date_index = np.where(Burn_Date<396, 1013, Burn_Date)
-    Burn_Date_index = np.where(Burn_Date<425, 1014, Burn_Date)
 
+    Burn_Date_tmp  = np.nanmin(Burn_Date, axis=0)
 
+    print("Burn_Date_tmp",Burn_Date_tmp)
+    np.savetxt("Burn_Date_tmp.txt",Burn_Date_tmp,delimiter=",")
+    Burn_Date_index = np.where(Burn_Date_tmp<=273,   1009, Burn_Date_tmp)
+    Burn_Date_index = np.where(Burn_Date_index<=304, 1010, Burn_Date_index)
+    Burn_Date_index = np.where(Burn_Date_index<=334, 1011, Burn_Date_index)
+    Burn_Date_index = np.where(Burn_Date_index<=365, 1012, Burn_Date_index)
+    Burn_Date_index = np.where(Burn_Date_index<=396, 1013, Burn_Date_index)
+    Burn_Date_index = np.where(Burn_Date_index<=425, 1014, Burn_Date_index)
+    Burn_Date_index = np.where(Burn_Date_index>=99999, np.nan, Burn_Date_index)
+
+    np.savetxt("Burn_Date_index.txt",Burn_Date_index,delimiter=",")
     # read in var
     Tmax_diff_Dec, clevs, cmap = read_LIS_diff("Tmax", file_name, land_ctl_path, land_sen_path,
                                                 lat_names, lon_names, loc_lat, loc_lon, time_s=time_ss[0], time_e=time_es[0])
@@ -232,18 +239,18 @@ def plot_Tmax_Burn_Date(fire_path, file_name, land_ctl_path, land_sen_path, time
                                                 lat_names, lon_names, loc_lat, loc_lon, time_s=time_ss[2], time_e=time_es[2])
 
     # ================== Start Plotting =================
-    fig, axs = plt.subplots(nrows=1, ncols=4, figsize=[10,6],sharex=True,
+    fig, axs = plt.subplots(nrows=1, ncols=4, figsize=[10,4],sharex=True,
                 sharey=True, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()})
 
     plt.rcParams['text.usetex']     = False
     plt.rcParams['font.family']     = "sans-serif"
     plt.rcParams['font.serif']      = "Helvetica"
     plt.rcParams['axes.linewidth']  = 1.5
-    plt.rcParams['axes.labelsize']  = 14
-    plt.rcParams['font.size']       = 14
-    plt.rcParams['legend.fontsize'] = 14
-    plt.rcParams['xtick.labelsize'] = 14
-    plt.rcParams['ytick.labelsize'] = 14
+    plt.rcParams['axes.labelsize']  = 12
+    plt.rcParams['font.size']       = 12
+    plt.rcParams['legend.fontsize'] = 12
+    plt.rcParams['xtick.labelsize'] = 12
+    plt.rcParams['ytick.labelsize'] = 12
 
     almost_black                    = '#262626'
     # change the tick colors also to the almost black
@@ -267,10 +274,10 @@ def plot_Tmax_Burn_Date(fire_path, file_name, land_ctl_path, land_sen_path, time
 
     # =============== CHANGE HERE ===============
 
-    axs.set_extent([135,155,-39,-23])
-    axs.add_feature(states, linewidth=.5, edgecolor="black")
     for i in np.arange(4):
 
+        axs[i].set_extent([135,155,-39,-24])
+        axs[i].add_feature(states, linewidth=.5, edgecolor="black")
         axs[i].set_facecolor('lightgray')
         axs[i].coastlines(resolution="50m",linewidth=1)
 
@@ -288,22 +295,36 @@ def plot_Tmax_Burn_Date(fire_path, file_name, land_ctl_path, land_sen_path, time
         gl.yformatter   = LATITUDE_FORMATTER
         gl.xlabel_style = {'size':12, 'color':almost_black}#,'rotation': 90}
         gl.ylabel_style = {'size':12, 'color':almost_black}
+        if i == 0:
+            gl.ylabels_left   = True
+        else:
+            gl.ylabels_left   = False
 
         gl.xlabels_bottom = True
-        gl.ylabels_left   = True
 
     extent   = (135, 155, -39, -23)
-    plot1    = axs[0].imshow(Burn_Date_index, origin="lower", extent=extent, vmin=1009, vmax=1015, transform=ccrs.PlateCarree(), cmap=cmap)
+
+    cmap1 = plt.cm.Pastel2
+    plot1    = axs[0].imshow(Burn_Date_index, origin="lower", extent=extent, vmin=1008.5, vmax=1014.5, transform=ccrs.PlateCarree(), cmap=cmap1)
     axs[0].add_feature(OCEAN,edgecolor='none', facecolor="lightgray")
-    cbar = plt.colorbar(plot1, ax=axs[0], ticklocation="right", pad=0.05, orientation="horizontal",
-                        aspect=20, shrink=0.6) # cax=cax,
+    cbar = plt.colorbar(plot1, ax=axs[0], ticklocation="right", pad=0.1, orientation="horizontal",
+                        aspect=10, shrink=1.) # cax=cax,
+    cbar.set_ticks([1009,1010,1011,1012,1013,1014])
+    cbar.set_ticklabels(['Sep','Oct','Nov','Dec','Jan','Feb']) # cax=cax,
+    cbar.ax.tick_params(labelsize=15,labelrotation=45)
 
     plot2 = axs[1].contourf(lon_in, lat_in, Tmax_diff_Dec, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
-    plot3 = axs[2].contourf(lon_In, lat_in, Tmax_diff_Jan, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
+    plot3 = axs[2].contourf(lon_in, lat_in, Tmax_diff_Jan, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
     plot4 = axs[3].contourf(lon_in, lat_in, Tmax_diff_Feb, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
-    cbar = plt.colorbar(plot4, ax=axs[1:5], ticklocation="right", pad=0.05, orientation="horizontal",
-            aspect=20, shrink=0.6) # cax=cax,
-    cbar.ax.tick_params(labelsize=10,labelrotation=45)
+    cbar = plt.colorbar(plot4, ax=axs[1:5], ticklocation="right", pad=0.1, orientation="horizontal",
+            aspect=40, shrink=0.9) # cax=cax,
+    cbar.ax.tick_params(labelsize=12,labelrotation=45)
+    cbar.set_label('ΔT$\mathregular{_{max}}$ ($\mathregular{^{o}}$C)', loc='center',size=12)# rotation=270,
+
+    axs[0].set_title("First burn month", fontsize=12)
+    axs[1].set_title("Dec 2019", fontsize=12)
+    axs[2].set_title("Jan 2020", fontsize=12)
+    axs[3].set_title("Feb 2020", fontsize=12)
 
     plt.savefig('./plots/spatial_map_' +message + '.png',dpi=300)
 
@@ -320,7 +341,7 @@ if __name__ == "__main__":
     case_sen       = "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB"
 
     fire_path      = '/g/data/w97/mm3972/data/MODIS/MODIS_fire/MCD64A1.061_500m_aid0001.nc'
-    wrf_path       = "/scratch/w97/mm3972/model/NUWRF/Tinderbox_drght_LAI_ALB/output/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/wrfout_d01_2017-02-01_06:00:00"
+    wrf_path       = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/wrfout_d01_2019-12-01_01:00:00"
     land_sen_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_sen+"/LIS_output/"
     land_ctl_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_ctl+"/LIS_output/"
 

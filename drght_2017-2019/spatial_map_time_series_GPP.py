@@ -51,9 +51,9 @@ def spital_map(file_paths_ctl,file_paths_sen,obs_path, time_s, time_e, loc_lat=N
     lons_out          = lis_cable.variables['lon'][:,:]
 
     # clip and resample sims to daily data
-    ctl_sum           = spital_var(time_var, ctl_tmp, time_s, time_e, seconds=None)
-    sen_sum           = spital_var(time_var, sen_tmp, time_s, time_e, seconds=None)
-    obs_sum           = spital_var_sum(time_obs, obs_tmp, time_s, time_e, seconds=None)
+    ctl_sum           = spatial_var(time_var, ctl_tmp, time_s, time_e, seconds=None)
+    sen_sum           = spatial_var(time_var, sen_tmp, time_s, time_e, seconds=None)
+    obs_sum           = spatial_var_sum(time_obs, obs_tmp, time_s, time_e, seconds=None)
 
     ctl_sum           = ctl_sum * GPP_scale * (time_e-time_s).days
     sen_sum           = sen_sum * GPP_scale * (time_e-time_s).days

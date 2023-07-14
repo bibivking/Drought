@@ -51,9 +51,9 @@ def plot_spatial_LIS_wind( file_path_ctl, file_path_sen, time_s, time_e, lat_nam
     print('time_s',time_s)
     print('time_e',time_e)
 
-    ua       = spital_var_mean(time, ua_tmp, time_s, time_e, seconds)
-    va       = spital_var_mean(time, va_tmp, time_s, time_e, seconds)
-    th       = spital_var_mean(time, th_tmp, time_s, time_e, seconds)
+    ua       = spatial_var_mean(time, ua_tmp, time_s, time_e, seconds)
+    va       = spatial_var_mean(time, va_tmp, time_s, time_e, seconds)
+    th       = spatial_var_mean(time, th_tmp, time_s, time_e, seconds)
     th       = th - 273.15
 
     # ================== Start Plotting =================

@@ -54,7 +54,7 @@ def calc_cable_tws(file_path, loc_lat, loc_lon, lat_name, lon_name):
     year_2004       = datetime(2004,1,1)
     year_2009       = datetime(2009,12,31)
 
-    TWS_0409 = spital_var(time1,TWS,year_2004,year_2009)
+    TWS_0409 = spatial_var(time1,TWS,year_2004,year_2009)
     print('np.shape(TWS_0409)')
     print(np.shape(TWS_0409))
     TWS      = TWS - TWS_0409
@@ -77,10 +77,10 @@ def plot_spital_map(file_paths, var_names, time_s, time_e, file_paths2=None, loc
     time_tmp, lons1 = read_var(file_paths[0], lon_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
     
     if var_names[0] in ['Evap_tavg','TVeg_tavg','ESoil_tavg','ECanop_tavg']:
-        var1        = spital_var_sum(time1,Var1,time_s,time_e)*3600.
+        var1        = spatial_var_sum(time1,Var1,time_s,time_e)*3600.
     else:
         scale           = get_scale(var_names[0])
-        var1        = spital_var_mean(time1,Var1,time_s,time_e)*scale
+        var1        = spatial_var_mean(time1,Var1,time_s,time_e)*scale
         
     if file_paths2 is not None:
         
@@ -89,9 +89,9 @@ def plot_spital_map(file_paths, var_names, time_s, time_e, file_paths2=None, loc
         time_tmp, lons2 = read_var(file_paths2[0], lon_names[1], loc_lat, loc_lon, lat_names[1], lon_names[1])
         scale           = get_scale(var_names[1])
         if var_names[1] in ['E','Et','Ei','Es']:
-            var2            = spital_var_sum(time2,Var2,time_s,time_e)
+            var2            = spatial_var_sum(time2,Var2,time_s,time_e)
         else:
-            var2            = spital_var_mean(time2,Var2,time_s,time_e)*scale
+            var2            = spatial_var_mean(time2,Var2,time_s,time_e)*scale
 
         lat_in_1D       = lats2.flatten()
         lon_in_1D       = lons2.flatten()

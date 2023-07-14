@@ -145,20 +145,20 @@ def plot_spatial_fwsoil_qle_qh_tmax_qair(land_20181201_path,land_20191201_path, 
         time, Clim_Qair = read_var_multi_file(land_clim_files, "Qair_f_inst", loc_lat, loc_lon, "lat", "lon")
 
         print("time = ", time)
-        dec1_Tmax       = spital_var_max(time,Dec1_T,time_s,time_e)
-        clim_Tmax       = spital_var_max(time,Clim_T,time_s,time_e)
+        dec1_Tmax       = spatial_var_max(time,Dec1_T,time_s,time_e)
+        clim_Tmax       = spatial_var_max(time,Clim_T,time_s,time_e)
 
-        dec1_Qle        = spital_var(time,Dec1_Qle,time_s,time_e)
-        clim_Qle        = spital_var(time,Clim_Qle,time_s,time_e)
+        dec1_Qle        = spatial_var(time,Dec1_Qle,time_s,time_e)
+        clim_Qle        = spatial_var(time,Clim_Qle,time_s,time_e)
 
-        dec1_FWsoil     = spital_var(time,Dec1_FWsoil,time_s,time_e)
-        clim_FWsoil     = spital_var(time,Clim_FWsoil,time_s,time_e)
+        dec1_FWsoil     = spatial_var(time,Dec1_FWsoil,time_s,time_e)
+        clim_FWsoil     = spatial_var(time,Clim_FWsoil,time_s,time_e)
 
-        dec1_Qh         = spital_var(time,Dec1_Qh,time_s,time_e)
-        clim_Qh         = spital_var(time,Clim_Qh,time_s,time_e)
+        dec1_Qh         = spatial_var(time,Dec1_Qh,time_s,time_e)
+        clim_Qh         = spatial_var(time,Clim_Qh,time_s,time_e)
 
-        dec1_Qair       = spital_var(time,Dec1_Qair,time_s,time_e)
-        clim_Qair       = spital_var(time,Clim_Qair,time_s,time_e)
+        dec1_Qair       = spatial_var(time,Dec1_Qair,time_s,time_e)
+        clim_Qair       = spatial_var(time,Clim_Qair,time_s,time_e)
 
 
         # "Tmax":
@@ -449,20 +449,20 @@ def plot_spatial_fwsoil_qle_qh_tmax_qrate(land_20181201_path,land_20191201_path,
         time, Clim_Qair = read_var_multi_file(land_clim_files, "Qair_f_inst", loc_lat, loc_lon, "lat", "lon")
 
         print("time = ", time)
-        dec1_Tmax       = spital_var_max(time,Dec1_T,time_s,time_e)
-        clim_Tmax       = spital_var_max(time,Clim_T,time_s,time_e)
+        dec1_Tmax       = spatial_var_max(time,Dec1_T,time_s,time_e)
+        clim_Tmax       = spatial_var_max(time,Clim_T,time_s,time_e)
 
-        dec1_Qle        = spital_var(time,Dec1_Qle,time_s,time_e)
-        clim_Qle        = spital_var(time,Clim_Qle,time_s,time_e)
+        dec1_Qle        = spatial_var(time,Dec1_Qle,time_s,time_e)
+        clim_Qle        = spatial_var(time,Clim_Qle,time_s,time_e)
 
-        dec1_FWsoil     = spital_var(time,Dec1_FWsoil,time_s,time_e)
-        clim_FWsoil     = spital_var(time,Clim_FWsoil,time_s,time_e)
+        dec1_FWsoil     = spatial_var(time,Dec1_FWsoil,time_s,time_e)
+        clim_FWsoil     = spatial_var(time,Clim_FWsoil,time_s,time_e)
 
-        dec1_Qh         = spital_var(time,Dec1_Qh,time_s,time_e)
-        clim_Qh         = spital_var(time,Clim_Qh,time_s,time_e)
+        dec1_Qh         = spatial_var(time,Dec1_Qh,time_s,time_e)
+        clim_Qh         = spatial_var(time,Clim_Qh,time_s,time_e)
 
-        dec1_Qair       = spital_var(time,Dec1_Qair,time_s,time_e)
-        clim_Qair       = spital_var(time,Clim_Qair,time_s,time_e)
+        dec1_Qair       = spatial_var(time,Dec1_Qair,time_s,time_e)
+        clim_Qair       = spatial_var(time,Clim_Qair,time_s,time_e)
 
 
         # "Tmax":
@@ -755,14 +755,14 @@ def plot_spatial_sm_qle_qh_tmax_qair(land_20181201_path,land_20191201_path, land
         time, Clim_Qair = read_var_multi_file(land_clim_files, "Qair_f_inst", loc_lat, loc_lon, "lat", "lon")
 
         print("time = ", time)
-        dec1_Tmax       = spital_var_max(time,Dec1_T,time_s,time_e)
-        clim_Tmax       = spital_var_max(time,Clim_T,time_s,time_e)
+        dec1_Tmax       = spatial_var_max(time,Dec1_T,time_s,time_e)
+        clim_Tmax       = spatial_var_max(time,Clim_T,time_s,time_e)
 
-        dec1_Qle        = spital_var(time,Dec1_Qle,time_s,time_e)
-        clim_Qle        = spital_var(time,Clim_Qle,time_s,time_e)
+        dec1_Qle        = spatial_var(time,Dec1_Qle,time_s,time_e)
+        clim_Qle        = spatial_var(time,Clim_Qle,time_s,time_e)
 
-        dec1_SM_tmp     = spital_var(time,Dec1_SM,time_s,time_e)
-        clim_SM_tmp     = spital_var(time,Clim_SM,time_s,time_e)
+        dec1_SM_tmp     = spatial_var(time,Dec1_SM,time_s,time_e)
+        clim_SM_tmp     = spatial_var(time,Clim_SM,time_s,time_e)
 
         dec1_SM         = (dec1_SM_tmp[0,:,:]*0.005+
                            dec1_SM_tmp[1,:,:]*0.075+
@@ -780,11 +780,11 @@ def plot_spatial_sm_qle_qh_tmax_qair(land_20181201_path,land_20191201_path, land
                            clim_SM_tmp[5,:,:]*0.272
                            )/2.
 
-        dec1_Qh         = spital_var(time,Dec1_Qh,time_s,time_e)
-        clim_Qh         = spital_var(time,Clim_Qh,time_s,time_e)
+        dec1_Qh         = spatial_var(time,Dec1_Qh,time_s,time_e)
+        clim_Qh         = spatial_var(time,Clim_Qh,time_s,time_e)
 
-        dec1_Qair       = spital_var(time,Dec1_Qair,time_s,time_e)
-        clim_Qair       = spital_var(time,Clim_Qair,time_s,time_e)
+        dec1_Qair       = spatial_var(time,Dec1_Qair,time_s,time_e)
+        clim_Qair       = spatial_var(time,Clim_Qair,time_s,time_e)
 
 
         # "Tmax":
@@ -1070,26 +1070,26 @@ def plot_spatial_Rnet_LW_SW(land_1201_path, land_clim_path, atmo_1201_path, atmo
         time, Dec1_LWDNB = read_wrf_surf_var_multi_files(atmo_1201_files, "LWDNB", loc_lat, loc_lon)
         time, Clim_LWDNB = read_wrf_surf_var_multi_files(atmo_clim_files, "LWDNB", loc_lat, loc_lon)
 
-        dec1_Qle         = spital_var(time,Dec1_Qle,time_s,time_e)
-        clim_Qle         = spital_var(time,Clim_Qle,time_s,time_e)
+        dec1_Qle         = spatial_var(time,Dec1_Qle,time_s,time_e)
+        clim_Qle         = spatial_var(time,Clim_Qle,time_s,time_e)
 
-        dec1_Qh          = spital_var(time,Dec1_Qh,time_s,time_e)
-        clim_Qh          = spital_var(time,Clim_Qh,time_s,time_e)
+        dec1_Qh          = spatial_var(time,Dec1_Qh,time_s,time_e)
+        clim_Qh          = spatial_var(time,Clim_Qh,time_s,time_e)
 
-        dec1_Qg          = spital_var(time,Dec1_Qg,time_s,time_e)
-        clim_Qg          = spital_var(time,Clim_Qg,time_s,time_e)
+        dec1_Qg          = spatial_var(time,Dec1_Qg,time_s,time_e)
+        clim_Qg          = spatial_var(time,Clim_Qg,time_s,time_e)
 
-        dec1_Lwnet       = spital_var(time,Dec1_Lwnet,time_s,time_e)
-        clim_Lwnet       = spital_var(time,Clim_Lwnet,time_s,time_e)
+        dec1_Lwnet       = spatial_var(time,Dec1_Lwnet,time_s,time_e)
+        clim_Lwnet       = spatial_var(time,Clim_Lwnet,time_s,time_e)
 
-        dec1_Swnet       = spital_var(time,Dec1_Swnet,time_s,time_e)
-        clim_Swnet       = spital_var(time,Clim_Swnet,time_s,time_e)
+        dec1_Swnet       = spatial_var(time,Dec1_Swnet,time_s,time_e)
+        clim_Swnet       = spatial_var(time,Clim_Swnet,time_s,time_e)
 
-        dec1_LWUPB       = spital_var(time,Dec1_LWUPB,time_s,time_e)
-        clim_LWUPB       = spital_var(time,Clim_LWUPB,time_s,time_e)
+        dec1_LWUPB       = spatial_var(time,Dec1_LWUPB,time_s,time_e)
+        clim_LWUPB       = spatial_var(time,Clim_LWUPB,time_s,time_e)
 
-        dec1_LWDNB       = spital_var(time,Dec1_LWDNB,time_s,time_e)
-        clim_LWDNB       = spital_var(time,Clim_LWDNB,time_s,time_e)
+        dec1_LWDNB       = spatial_var(time,Dec1_LWDNB,time_s,time_e)
+        clim_LWDNB       = spatial_var(time,Clim_LWDNB,time_s,time_e)
 
         # "Rnet":
         rnet_diff        = (dec1_Qle+dec1_Qh+dec1_Qg)-(clim_Qle+clim_Qh+clim_Qg)

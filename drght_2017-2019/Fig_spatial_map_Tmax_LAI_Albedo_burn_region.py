@@ -58,8 +58,8 @@ def read_LIS_diff(var_name,file_name,land_ctl_path, land_sen_path, lat_names, lo
         time, Ctl_temp = read_var_multi_file(land_ctl_files, 'SoilMoist_inst', loc_lat, loc_lon, lat_names, lon_names)
         time, Sen_temp = read_var_multi_file(land_sen_files, 'SoilMoist_inst', loc_lat, loc_lon, lat_names, lon_names)
         # [.022, .058, .154, .409, 1.085, 2.872]
-        Ctl_tmp    = Ctl_temp[:,0,:,:]*0.022 + Ctl_temp[:,1,:,:]*0.058 + Ctl_temp[:,2,:,:]*0.154 + Ctl_temp[:,3,:,:]*0.266
-        Sen_tmp    = Sen_temp[:,0,:,:]*0.022 + Sen_temp[:,1,:,:]*0.058 + Sen_temp[:,2,:,:]*0.154 + Sen_temp[:,3,:,:]*0.266
+        Ctl_tmp    = (Ctl_temp[:,0,:,:]*0.022 + Ctl_temp[:,1,:,:]*0.058 + Ctl_temp[:,2,:,:]*0.154 + Ctl_temp[:,3,:,:]*0.266)/0.5
+        Sen_tmp    = (Sen_temp[:,0,:,:]*0.022 + Sen_temp[:,1,:,:]*0.058 + Sen_temp[:,2,:,:]*0.154 + Sen_temp[:,3,:,:]*0.266)/0.5
     elif var_name in ['VPD','VPDmax','VPDmin']:
         tair_ctl_files= [land_ctl_path+'Tair_f_inst/'+file_name]
         tair_sen_files= [land_sen_path+'Tair_f_inst/'+file_name]
@@ -98,23 +98,23 @@ def read_LIS_diff(var_name,file_name,land_ctl_path, land_sen_path, lat_names, lo
 
     if 'max' in var_name:
         # average of daily max
-        ctl_in       = spital_var_max(time,Ctl_tmp,time_s,time_e)
-        sen_in       = spital_var_max(time,Sen_tmp,time_s,time_e)
+        ctl_in       = spatial_var_max(time,Ctl_tmp,time_s,time_e)
+        sen_in       = spatial_var_max(time,Sen_tmp,time_s,time_e)
     elif 'min' in var_name:
         # average of daily min
-        ctl_in       = spital_var_min(time,Ctl_tmp,time_s,time_e)
-        sen_in       = spital_var_min(time,Sen_tmp,time_s,time_e)
+        ctl_in       = spatial_var_min(time,Ctl_tmp,time_s,time_e)
+        sen_in       = spatial_var_min(time,Sen_tmp,time_s,time_e)
     elif 'TDR' in var_name:
         # average of daily min
-        ctl_in_max   = spital_var_max(time,Ctl_tmp,time_s,time_e)
-        sen_in_max   = spital_var_max(time,Sen_tmp,time_s,time_e)
-        ctl_in_min   = spital_var_min(time,Ctl_tmp,time_s,time_e)
-        sen_in_min   = spital_var_min(time,Sen_tmp,time_s,time_e)
+        ctl_in_max   = spatial_var_max(time,Ctl_tmp,time_s,time_e)
+        sen_in_max   = spatial_var_max(time,Sen_tmp,time_s,time_e)
+        ctl_in_min   = spatial_var_min(time,Ctl_tmp,time_s,time_e)
+        sen_in_min   = spatial_var_min(time,Sen_tmp,time_s,time_e)
         ctl_in       = ctl_in_max - ctl_in_min
         sen_in       = sen_in_max - sen_in_min
     else:
-        ctl_in       = spital_var(time,Ctl_tmp,time_s,time_e)
-        sen_in       = spital_var(time,Sen_tmp,time_s,time_e)
+        ctl_in       = spatial_var(time,Ctl_tmp,time_s,time_e)
+        sen_in       = spatial_var(time,Sen_tmp,time_s,time_e)
 
     if var_name in ['WaterTableD_tavg','WatTable']:
         ctl_in     = ctl_in/1000.
@@ -282,20 +282,20 @@ def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path
     FW_regrid_Feb,   lats, lons = regrid_to_fire_map_resolution(fire_path, FW_diff_Feb, lat_in, lon_in, burn=burn)
 
     # ================== Start Plotting =================
-    fig, axs = plt.subplots(nrows=3, ncols=3, figsize=[9,9],sharex=True,
+    fig, axs = plt.subplots(nrows=3, ncols=3, figsize=[8,9],sharex=True,
                 sharey=True, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()})
 
-    plt.subplots_adjust(wspace=-0.25, hspace=0.05)
+    # plt.subplots_adjust(wspace=-0.4, hspace=0.1)
 
     plt.rcParams['text.usetex']     = False
     plt.rcParams['font.family']     = "sans-serif"
     plt.rcParams['font.serif']      = "Helvetica"
     plt.rcParams['axes.linewidth']  = 1.5
-    plt.rcParams['axes.labelsize']  = 14
-    plt.rcParams['font.size']       = 14
-    plt.rcParams['legend.fontsize'] = 14
-    plt.rcParams['xtick.labelsize'] = 14
-    plt.rcParams['ytick.labelsize'] = 14
+    plt.rcParams['axes.labelsize']  = 12
+    plt.rcParams['font.size']       = 12
+    plt.rcParams['legend.fontsize'] = 12
+    plt.rcParams['xtick.labelsize'] = 12
+    plt.rcParams['ytick.labelsize'] = 12
 
     almost_black                    = '#262626'
     # change the tick colors also to the almost black
@@ -318,7 +318,9 @@ def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path
                                         name="admin_1_states_provinces_shp")
 
     # =============== CHANGE HERE ===============
-
+    x_ticks = [146, 148, 150, 152, 154]      # Example x-axis tick positions
+    y_ticks = [-38, -36, -34, -32, -30,-28]  # Example y-axis tick positions
+    
     for i in np.arange(3):
         for j in np.arange(3):
             axs[i,j].set_facecolor('lightgray')
@@ -326,28 +328,48 @@ def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path
             axs[i,j].set_extent([146,154,-39,-27])
             axs[i,j].add_feature(states, linewidth=.5, edgecolor="black")
 
-            # Add gridlines
-            gl = axs[i,j].gridlines(crs=ccrs.PlateCarree(), draw_labels=True, linewidth=1, color=almost_black, linestyle='--')
-            gl.xlabels_top  = False
-            gl.ylabels_right= False
+            # Set the ticks on the x-axis and y-axis
+            axs[i,j].tick_params(axis='x', direction='out')
+            axs[i,j].tick_params(axis='y', direction='out')
+            x_ticks = np.arange(146, 155, 2)
+            y_ticks = np.arange(-40, -26, 2)
+            axs[i,j].set_xticks(x_ticks)
+            axs[i,j].set_yticks(y_ticks)
 
-            if j==2:
-                gl.xlabels_bottom = True
-            else:
-                gl.xlabels_bottom = False
-            if i ==0:
-                gl.ylabels_left   = True
-            else:
-                gl.ylabels_left   = False
+            # # Add gridlines
+            # gl = axs[i,j].gridlines(crs=ccrs.PlateCarree(), draw_labels=True, linewidth=1, color=almost_black, linestyle='--')
+            # gl.xlabels_top  = False
+            # gl.ylabels_right= False
+            # gl.xlines       = False
+            # gl.ylines       = False
+            # gl.xlocator     = mticker.FixedLocator(np.arange(126,160,2))
+            # gl.ylocator     = mticker.FixedLocator(np.arange(-40,-20,2))
+            # gl.xformatter   = LONGITUDE_FORMATTER
+            # gl.yformatter   = LATITUDE_FORMATTER
+            # gl.xlabel_style = {'size':12, 'color':almost_black}#,'rotation': 90}
+            # gl.ylabel_style = {'size':12, 'color':almost_black}
+
+            # if i==2:
+            #     gl.xlabels_bottom = True
+            # else:
+            #     gl.xlabels_bottom = False
+            # if j==0:
+            #     gl.ylabels_left   = True
+            # else:
+            #     gl.ylabels_left   = False
                 
-            gl.xlines       = False
-            gl.ylines       = False
-            gl.xlocator     = mticker.FixedLocator(np.arange(126,160,2))
-            gl.ylocator     = mticker.FixedLocator(np.arange(-40,-20,2))
-            gl.xformatter   = LONGITUDE_FORMATTER
-            gl.yformatter   = LATITUDE_FORMATTER
-            gl.xlabel_style = {'size':12, 'color':almost_black}#,'rotation': 90}
-            gl.ylabel_style = {'size':12, 'color':almost_black}
+            if i==2: 
+                axs[i, j].set_xticklabels([])
+            else:
+                axs[i, j].set_xticklabels(['146$\mathregular{^{o}}$E','148$\mathregular{^{o}}$E','150$\mathregular{^{o}}$E',
+                                           '152$\mathregular{^{o}}$E','154$\mathregular{^{o}}$E'])
+            if j==0:
+                axs[i, j].set_yticklabels(['40$\mathregular{^{o}}$S','38$\mathregular{^{o}}$S','36$\mathregular{^{o}}$S',
+                                           '34$\mathregular{^{o}}$S','32$\mathregular{^{o}}$S','30$\mathregular{^{o}}$S',
+                                           '28$\mathregular{^{o}}$S'])
+            else:
+                axs[i, j].set_yticklabels([])
+
 
 
     Tmax_regrid_Dec, lats, lons = regrid_to_fire_map_resolution(fire_path, Tmax_diff_Dec, lat_in, lon_in, burn=burn)
@@ -361,7 +383,12 @@ def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path
 
     cbar = plt.colorbar(plot1, ax=axs[0,2], ticklocation="right", pad=0.05, orientation="vertical",
             aspect=30, shrink=0.9) # cax=cax,
-    cbar.ax.tick_params(labelsize=10,labelrotation=45)
+    cbar.set_label('$\mathregular{^{o}}$C', loc='center',size=12)# rotation=270,
+    cbar.ax.tick_params(labelsize=12)#,labelrotation=45)
+
+    axs[0,0].add_feature(OCEAN,edgecolor='none', facecolor="white")
+    axs[0,1].add_feature(OCEAN,edgecolor='none', facecolor="white")
+    axs[0,2].add_feature(OCEAN,edgecolor='none', facecolor="white")
 
     # LAI
     plot2 = axs[1,0].contourf(lons, lats, LAI_regrid_Dec, clevs_LAI, transform=ccrs.PlateCarree(), cmap=cmap_LAI, extend='both')
@@ -369,7 +396,12 @@ def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path
     plot2 = axs[1,2].contourf(lons, lats, LAI_regrid_Feb, clevs_LAI, transform=ccrs.PlateCarree(), cmap=cmap_LAI, extend='both')
     cbar  = plt.colorbar(plot2, ax=axs[1,2], ticklocation="right", pad=0.05, orientation="vertical",
             aspect=30, shrink=0.9) # cax=cax,
-    cbar.ax.tick_params(labelsize=10,labelrotation=45)
+    cbar.set_label('m$\mathregular{^{2}}$ m$\mathregular{^{-2}}$', loc='center',size=12)# rotation=270,
+    cbar.ax.tick_params(labelsize=12)#,labelrotation=45)
+
+    axs[1,0].add_feature(OCEAN,edgecolor='none', facecolor="white")
+    axs[1,1].add_feature(OCEAN,edgecolor='none', facecolor="white")
+    axs[1,2].add_feature(OCEAN,edgecolor='none', facecolor="white")
 
     # Albedo
     plot3 = axs[2,0].contourf(lons, lats, ALB_regrid_Dec, clevs_ALB, transform=ccrs.PlateCarree(), cmap=cmap_ALB, extend='both')
@@ -377,33 +409,40 @@ def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path
     plot3 = axs[2,2].contourf(lons, lats, ALB_regrid_Feb, clevs_ALB, transform=ccrs.PlateCarree(), cmap=cmap_ALB, extend='both')
     cbar  = plt.colorbar(plot3, ax=axs[2,2], ticklocation="right", pad=0.05, orientation="vertical",
             aspect=30, shrink=0.9) # cax=cax,
-    cbar.ax.tick_params(labelsize=10,labelrotation=45)
+    cbar.set_label('(-)', loc='center',size=12)# rotation=270,
+    cbar.ax.tick_params(labelsize=12)#,labelrotation=45)
+
+    axs[2,0].add_feature(OCEAN,edgecolor='none', facecolor="white")
+    axs[2,1].add_feature(OCEAN,edgecolor='none', facecolor="white")
+    axs[2,2].add_feature(OCEAN,edgecolor='none', facecolor="white")
 
     # Add boxes, lines
     for i in np.arange(3):
         axs[0,0].add_patch(Polygon([[reg_lons[i][0], reg_lats[i][0]], [reg_lons[i][1], reg_lats[i][0]],
                                     [reg_lons[i][1], reg_lats[i][1]], [reg_lons[i][0], reg_lats[i][1]]],
-                                    closed=True,color=almost_black, fill=False),linewidth=0.6)
+                                    closed=True,color=almost_black, fill=False,linewidth=0.8))
 
-    axs[0,1].plot([ 146, 154], [-30, -30],    c=almost_black, lw=0.6, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
-    axs[0,1].plot([ 146, 154], [-33, -33],    c=almost_black, lw=0.6, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
-    axs[0,1].plot([ 146, 154], [-37.5, -37.5],c=almost_black, lw=0.6, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
+    axs[0,1].plot([ 149, 154], [-30, -30],    c=almost_black, lw=0.8, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
+    axs[0,1].plot([ 148, 153], [-33, -33],    c=almost_black, lw=0.8, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
+    axs[0,1].plot([ 146, 151], [-37.5, -37.5],c=almost_black, lw=0.8, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
 
     # Adding titles
-    axs[0,0].set_title("Dec 2019")
-    axs[0,1].set_title("Jan 2020")
-    axs[0,2].set_title("Feb 2020")
+    axs[0,0].set_title("Dec 2019", fontsize=12)
+    axs[0,1].set_title("Jan 2020", fontsize=12)
+    axs[0,2].set_title("Feb 2020", fontsize=12)
 
-    axs[0,0].text(-0.3, 0.53, "ΔTmax", va='bottom', ha='center',
+    axs[0,0].text(-0.32, 0.53, 'ΔT$\mathregular{_{max}}$', va='bottom', ha='center',
               rotation='vertical', rotation_mode='anchor',
-              transform=axs[0,0].transAxes)
-    axs[1,0].text(-0.3, 0.50, "ΔLAI", va='bottom', ha='center',
+              transform=axs[0,0].transAxes, fontsize=12)
+    axs[1,0].text(-0.32, 0.50, "ΔLAI", va='bottom', ha='center',
               rotation='vertical', rotation_mode='anchor',
-              transform=axs[1,0].transAxes)
-    axs[2,0].text(-0.3, 0.48, "Δalbedo", va='bottom', ha='center',
+              transform=axs[1,0].transAxes, fontsize=12)
+    axs[2,0].text(-0.32, 0.48, "Δ$α$", va='bottom', ha='center',
               rotation='vertical', rotation_mode='anchor',
-              transform=axs[2,0].transAxes)
-
+              transform=axs[2,0].transAxes, fontsize=12)
+    
+    # Apply tight layout
+    plt.tight_layout()
     plt.savefig('./plots/spatial_map_' +message + '.png',dpi=300)
 
 

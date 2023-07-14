@@ -166,7 +166,7 @@ def get_vertcross(wrf_path, z, t, s, ua, wa, lat_slt, lon_min, lon_max, doy, sec
             print("loct", loct)
 
             # setting the vertical levels to interpolate
-            vrt = np.arange(0, 3025., 25.)
+            vrt = np.arange(0, 3010., 10.)
 
         # Interpolate to make the contour plot more smooth
         t_tmp, s_tmp, ua_tmp, wa_tmp = \
@@ -301,10 +301,10 @@ def get_LAI_ALBEDO(wrf_path, z, lai, albedo, lat_slt, lon_min, lon_max):
     # Open the file
     ncfile      = Dataset(wrf_path)
 
-    # Extend to 3D 
+    # Extend to 3D
     lai_3D      = np.expand_dims(lai,axis=0).repeat(29,axis=0)
     alb_3D      = np.expand_dims(albedo,axis=0).repeat(29,axis=0)
-    
+
     print("np.shape(lai_3D)",lai_3D)
 
     # Get the transect from 3D dataset
@@ -345,8 +345,8 @@ def get_interpolation(t_crs, s_crs, ua_crs, wa_crs, loct, vrt):
 
     return t_out, s_out, ua_out, wa_out
 
-def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ctl, land_path_sen, 
-                            wrf_path, land_path, file_name_wrf, file_name_lis, time_s, time_e, 
+def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ctl, land_path_sen,
+                            wrf_path, land_path, file_name_wrf, file_name_lis, time_s, time_e,
                             lat_slt=36, lon_min=130, lon_max=160):
 
     # ================ Get time coordiation ================
@@ -433,10 +433,10 @@ def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ct
     coord_values = {'south_north': template['south_north'].values,
                     'west_east': template['west_east'].values}
 
-    # Read LAI and Albedo data 
+    # Read LAI and Albedo data
     lai_file     = Dataset(land_path_ctl + "LAI_inst/" + file_name_lis, mode='r')
     LAI_ctl      = lai_file.variables['LAI_inst'][:]
-    
+
     time_tmp     = nc.num2date(lai_file.variables['time'][:],lai_file.variables['time'].units,
                    only_use_cftime_datetimes=False, only_use_python_datetimes=True)
     time         = UTC_to_AEST(time_tmp) - datetime(2000,1,1,0,0,0)
@@ -457,7 +457,7 @@ def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ct
     alb_file.close()
 
     # Calculate difference
-    LAI_diff     = LAI_sen - LAI_ctl  
+    LAI_diff     = LAI_sen - LAI_ctl
     ALB_diff     = ALB_sen - ALB_ctl
 
     # Change datetime to timedelta
@@ -468,7 +468,7 @@ def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ct
     # for all days
     time_lai_alb_mask = (time>=Time_s) & (time<Time_e)
 
-    # Get time masked 
+    # Get time masked
     LAI          = np.nanmean(LAI_diff[time_lai_alb_mask,:,:],axis=0)
     ALB          = np.nanmean(ALB_diff[time_lai_alb_mask,:,:],axis=0)
 
@@ -477,7 +477,7 @@ def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ct
     albedo       = xr.DataArray(ALB, dims=('south_north', 'west_east'), coords=coord_values)
 
     # Get the transect
-    lai_crs, alb_crs = get_LAI_ALBEDO(wrf_path, z1_day[0,:,:,:], lai, albedo, lat_slt, lon_min, lon_max) # z1_day can be replaced as others 
+    lai_crs, alb_crs = get_LAI_ALBEDO(wrf_path, z1_day[0,:,:,:], lai, albedo, lat_slt, lon_min, lon_max) # z1_day can be replaced as others
 
     # ================== make output file ==================
 
@@ -493,11 +493,11 @@ def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ct
     # set dimensions
     nvrt                = len(vertical)
     nlon                = len(xy_loc)
-    
+
     f.createDimension('bottom_top', nvrt)
     f.createDimension('east_west',  nlon)
 
-    # Set cooridiates 
+    # Set cooridiates
     level               = f.createVariable('level', 'f4', ('bottom_top'))
     level.standard_name = "Height_MSL"
     level.long_name     = "heights above mean sea level"
@@ -523,12 +523,12 @@ def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ct
     rh_day_diff                 = f.createVariable('rh_day_diff', 'f4', ('bottom_top', 'east_west'))
     rh_day_diff.standard_name   = "Relative humidity difference at daytime (sen-ctl)"
     rh_day_diff.units           = "%"
-    rh_day_diff[:]              = s_day_crs  
+    rh_day_diff[:]              = s_day_crs
 
     rh_night_diff               = f.createVariable('rh_night_diff', 'f4', ('bottom_top', 'east_west'))
     rh_night_diff.standard_name = "Relative humidity difference at night (sen-ctl)"
     rh_night_diff.units         = "%"
-    rh_night_diff[:]            = s_night_crs  
+    rh_night_diff[:]            = s_night_crs
 
     ua_day_diff                 = f.createVariable('ua_day_diff', 'f4', ('bottom_top', 'east_west'))
     ua_day_diff.standard_name   = "u-wind difference at daytime (sen-ctl)"
@@ -582,7 +582,7 @@ def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ct
     pbl_night_sen[:]            = pbl1_night_crs
 
     f.close()
-    
+
 def plot_profile_wrf_wind(file_out,message=None):
 
     # ****************** Read data *****************
@@ -592,9 +592,9 @@ def plot_profile_wrf_wind(file_out,message=None):
     xy_loc        = ncfile.variables['lon'][:]
 
     th_day_diff   = ncfile.variables['th_day_diff'][:]
-    th_night_diff = ncfile.variables['th_night_diff'][:]  
-    rh_day_diff   = ncfile.variables['rh_day_diff'][:]   
-    rh_night_diff = ncfile.variables['rh_night_diff'][:]  
+    th_night_diff = ncfile.variables['th_night_diff'][:]
+    rh_day_diff   = ncfile.variables['rh_day_diff'][:]
+    rh_night_diff = ncfile.variables['rh_night_diff'][:]
     ua_day_diff   = ncfile.variables['ua_day_diff'][:]
     ua_night_diff = ncfile.variables['ua_night_diff'][:]
     wa_day_diff   = ncfile.variables['wa_day_diff'][:]
@@ -606,7 +606,7 @@ def plot_profile_wrf_wind(file_out,message=None):
     pbl_night_ctl = ncfile.variables['pbl_night_ctl'][:]
     pbl_day_sen   = ncfile.variables['pbl_day_sen'][:]
     pbl_night_sen = ncfile.variables['pbl_night_sen'][:]
-    
+
     # ****************** plotting ******************
     fig, ax = plt.subplots(nrows=2, ncols=2, figsize=[8,10],sharex=True, sharey=True, squeeze=True)
     plt.subplots_adjust(wspace=0.05, hspace=0.05)
@@ -719,7 +719,7 @@ def plot_profile_wrf_wind(file_out,message=None):
 
     line1     = ax[1,0].plot(xy_loc,pbl_day_ctl,ls="-", color="black")
     line2     = ax[1,0].plot(xy_loc,pbl_day_sen,ls="--", color="black")
-    
+
     q         = ax[1,0].quiver(xy_loc[::30], vertical[::3], ua_day_diff[::3,::30],
                               wa_day_diff[::3,::30], angles='xy', scale_units='xy',
                               scale=scale, pivot='middle', color="white")
@@ -764,7 +764,7 @@ def plot_profile_wrf_wind(file_out,message=None):
     cb_alb        = fig.colorbar(cntr_alb, ax=ax, pad=0.07, cax=position_alb, orientation="horizontal", aspect=60, shrink=0.8)
     cb_alb.set_label('Albedo', loc='center',size=10)# rotation=270,
     cb_alb.ax.tick_params(labelsize=12)
-    
+
     fig.savefig("./plots/profile_wrf_"+message, bbox_inches='tight', pad_inches=0.3)
 
 if __name__ == "__main__":
@@ -773,12 +773,12 @@ if __name__ == "__main__":
     lon_min        = 145.0
     lon_max        = 154.0
 
-    file_name_wrf  = "wrfout_201912-202002.nc"
+    file_name_wrf  = "wrfout_201912-202002_hourly.nc"
     file_name_lis  = "LIS.CABLE.201912-202002.nc"
     path           = '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/'
 
 
-    wrf_path      = path+ 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/wrfout_d01_2017-02-01_06:00:00'
+    wrf_path      = path+ 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/wrfout_d01_2019-12-01_01:00:00'
     land_path     = path+ 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/geo_em.d01.nc'
 
     atmo_path_ctl = path + 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/'
@@ -786,38 +786,38 @@ if __name__ == "__main__":
 
     land_path_ctl = path + 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/LIS_output/'
     land_path_sen = path + 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/LIS_output/'
-    
+
     message        = "201920_Dec_lat"+str(lat_slt)
     time_s         = datetime(2019,12,1,0,0,0,0)
     time_e         = datetime(2020,1,1,0,0,0,0)
-    file_out       = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_"+message+".nc"
-    
-    output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, 
-                            land_path_ctl, land_path_sen, 
-                            wrf_path, land_path, 
-                            file_name_wrf, file_name_lis, 
+    file_out       = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_"+message+"_houly.nc"
+
+    output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen,
+                            land_path_ctl, land_path_sen,
+                            wrf_path, land_path,
+                            file_name_wrf, file_name_lis,
                             time_s, time_e, lat_slt=lat_slt, lon_min=lon_min, lon_max=lon_max)
 
     message        = "201920_Jan_lat"+str(lat_slt)
     time_s         = datetime(2020,1,1,0,0,0,0)
     time_e         = datetime(2020,2,1,0,0,0,0)
-    file_out       = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_"+message+".nc"
-    
-    output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, 
-                            land_path_ctl, land_path_sen, 
-                            wrf_path, land_path, 
-                            file_name_wrf, file_name_lis, 
+    file_out       = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_"+message+"_houly.nc"
+
+    output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen,
+                            land_path_ctl, land_path_sen,
+                            wrf_path, land_path,
+                            file_name_wrf, file_name_lis,
                             time_s, time_e, lat_slt=lat_slt, lon_min=lon_min, lon_max=lon_max)
 
     message        = "201920_Feb_lat"+str(lat_slt)
     time_s         = datetime(2020,2,1,0,0,0,0)
     time_e         = datetime(2020,3,1,0,0,0,0)
-    file_out       = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_"+message+".nc"
-    
-    output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, 
-                            land_path_ctl, land_path_sen, 
-                            wrf_path, land_path, 
-                            file_name_wrf, file_name_lis, 
+    file_out       = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_"+message+"_houly.nc"
+
+    output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen,
+                            land_path_ctl, land_path_sen,
+                            wrf_path, land_path,
+                            file_name_wrf, file_name_lis,
                             time_s, time_e, lat_slt=lat_slt, lon_min=lon_min, lon_max=lon_max)
-    
+
     # plot_profile_wrf_wind(file_out,message=message)

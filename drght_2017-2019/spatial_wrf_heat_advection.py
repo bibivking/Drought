@@ -114,14 +114,14 @@ def heat_advection_metpy_rubbish(file_paths, var_name, height, time_s, time_e, v
     Va1   = read_wrf_hgt_var(file_paths[0], "va", "m s-1", height, loc_lat, loc_lon)
 
     if var_name in ['temp']:
-        var1  = spital_var(time,Var1,time_s,time_e) * units.K
+        var1  = spatial_var(time,Var1,time_s,time_e) * units.K
     else:
         scale = get_scale(var_name)
-        var1  = spital_var(time,Var1,time_s,time_e)*scale
+        var1  = spatial_var(time,Var1,time_s,time_e)*scale
 
-    # z1   = spital_var(time,Z1,time_s,time_e)
-    ua1  = spital_var(time,Ua1,time_s,time_e) * units('m/sec')
-    va1  = spital_var(time,Va1,time_s,time_e) * units('m/sec')
+    # z1   = spatial_var(time,Z1,time_s,time_e)
+    ua1  = spatial_var(time,Ua1,time_s,time_e) * units('m/sec')
+    va1  = spatial_var(time,Va1,time_s,time_e) * units('m/sec')
 
     # dx   = 25000
     # dy   = 25000
@@ -142,14 +142,14 @@ def heat_advection_metpy_rubbish(file_paths, var_name, height, time_s, time_e, v
     #     Va2   = read_wrf_hgt_var(file_paths[1], "va", "m s-1", height, loc_lat, loc_lon)
     #
     #     if var_name in ['temp']:
-    #         var2  = spital_var(time,Var2,time_s,time_e)
+    #         var2  = spatial_var(time,Var2,time_s,time_e)
     #     else:
     #         scale = get_scale(var_name)
-    #         var2  = spital_var(time,Var2,time_s,time_e)*scale
+    #         var2  = spatial_var(time,Var2,time_s,time_e)*scale
     #
-    #     z2   = spital_var(time,Z2,time_s,time_e)
-    #     ua2  = spital_var(time,Ua2,time_s,time_e)
-    #     va2  = spital_var(time,Va2,time_s,time_e)
+    #     z2   = spatial_var(time,Z2,time_s,time_e)
+    #     ua2  = spatial_var(time,Ua2,time_s,time_e)
+    #     va2  = spatial_var(time,Va2,time_s,time_e)
     #
     #     # Calculate temperature advection using metpy function
     #     adv2 = mpcalc.advection(var2[0], [ua2[0], va2[0]], dx=25000, dy=25000, x_dim=0,y_dim=1)
@@ -313,14 +313,14 @@ def heat_advection(file_paths, var_name, height, time_s, time_e, seconds=None, v
     Va1   = read_wrf_hgt_var(file_paths[0], "va", "m s-1", height, loc_lat, loc_lon)
 
     if var_name in ['temp']:
-        var1  = spital_var(time,Var1,time_s,time_e,seconds)
+        var1  = spatial_var(time,Var1,time_s,time_e,seconds)
     else:
         scale = get_scale(var_name)
-        var1  = spital_var(time,Var1,time_s,time_e,seconds)*scale
+        var1  = spatial_var(time,Var1,time_s,time_e,seconds)*scale
 
-    # z1   = spital_var(time,Z1,time_s,time_e)
-    ua1  = spital_var(time,Ua1,time_s,time_e,seconds)
-    va1  = spital_var(time,Va1,time_s,time_e,seconds)
+    # z1   = spatial_var(time,Z1,time_s,time_e)
+    ua1  = spatial_var(time,Ua1,time_s,time_e,seconds)
+    va1  = spatial_var(time,Va1,time_s,time_e,seconds)
 
     adv1 = cal_heat_advection(var1,ua1,va1,lat,lon)
 
@@ -332,14 +332,14 @@ def heat_advection(file_paths, var_name, height, time_s, time_e, seconds=None, v
         Va2   = read_wrf_hgt_var(file_paths[1], "va", "m s-1", height, loc_lat, loc_lon)
 
         if var_name in ['temp']:
-            var2  = spital_var(time,Var2,time_s,time_e,seconds)
+            var2  = spatial_var(time,Var2,time_s,time_e,seconds)
         else:
             scale = get_scale(var_name)
-            var2  = spital_var(time,Var2,time_s,time_e,seconds)*scale
+            var2  = spatial_var(time,Var2,time_s,time_e,seconds)*scale
 
-        # z2   = spital_var(time,Z2,time_s,time_e)
-        ua2  = spital_var(time,Ua2,time_s,time_e,seconds)
-        va2  = spital_var(time,Va2,time_s,time_e,seconds)
+        # z2   = spatial_var(time,Z2,time_s,time_e)
+        ua2  = spatial_var(time,Ua2,time_s,time_e,seconds)
+        va2  = spatial_var(time,Va2,time_s,time_e,seconds)
 
         adv2 = cal_heat_advection(var2,ua2,va2,lat,lon)
 

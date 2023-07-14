@@ -410,19 +410,19 @@ def plot_spatial_wrf_surf(file_paths, var_name, time_s, time_e, loc_lat=None, lo
     Var1  = read_wrf_surf_var(file_paths[0], var_name, loc_lat, loc_lon)
 
     if var_name in ['T2','td2']:
-        var1  = spital_var(time,Var1,time_s,time_e)-273.15
+        var1  = spatial_var(time,Var1,time_s,time_e)-273.15
     else:
         scale = get_scale(var_name)
-        var1  = spital_var(time,Var1,time_s,time_e)*scale
+        var1  = spatial_var(time,Var1,time_s,time_e)*scale
 
     if len(file_paths) > 1:
         Var2  = read_wrf_surf_var(file_paths[1], var_name, loc_lat, loc_lon)
 
         if var_name in ['T2','td2']:
-            var2  = spital_var(time,Var2,time_s,time_e)-273.15
+            var2  = spatial_var(time,Var2,time_s,time_e)-273.15
         else:
             scale = get_scale(var_name)
-            var2  = spital_var(time,Var2,time_s,time_e)*scale
+            var2  = spatial_var(time,Var2,time_s,time_e)*scale
 
         # Calculate difference
         var = var2 - var1

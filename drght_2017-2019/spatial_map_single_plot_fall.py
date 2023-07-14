@@ -155,7 +155,7 @@ def spatial_map_single_plot(file_path, var_name, time_s, time_e, lat_name, lon_n
 
     time, Var  = read_var(file_path, var_name, loc_lat, loc_lon, lat_name, lon_name)
     print(time)
-    var        = spital_var(time,Var,time_s,time_e)
+    var        = spatial_var(time,Var,time_s,time_e)
 
     if 'LIS' in file_path:
         wrf        = Dataset(wrf_path,  mode='r')
@@ -259,7 +259,7 @@ def spatial_map_single_plot_diff(file_paths, var_names, time_s=None, time_e=None
         time1, Var1  = read_var(file_paths[0], var_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
         time1, lats  = read_var(file_paths[0], lat_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
         time1, lons  = read_var(file_paths[0], lon_names[0], loc_lat, loc_lon, lat_names[0], lon_names[0])
-        var1         = spital_var(time1,Var1,time_s,time_e)
+        var1         = spatial_var(time1,Var1,time_s,time_e)
 
     if 'LIS' in file_paths[0] and var_names[0] in ['WaterTableD_tavg','WatTable']:
         var1     = var1/1000.
@@ -276,7 +276,7 @@ def spatial_map_single_plot_diff(file_paths, var_names, time_s=None, time_e=None
     if 'cable_out' in file_paths[1]:
         # offline sim
         time2, Var2 = read_var(file_paths[1], var_names[1], loc_lat, loc_lon, lat_names[1], lon_names[1])
-        var2        = spital_var(time2,Var2,time_s,time_e)
+        var2        = spatial_var(time2,Var2,time_s,time_e)
     elif '-' in file_paths[1]:
         # lis-cable hist
         time2, Var2 = read_var(file_paths[1], var_names[1], loc_lat, loc_lon, lat_names[1], lon_names[1])
@@ -583,8 +583,8 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
             time, Ctl_temp = read_var_multi_file(land_ctl_files, 'SoilMoist_inst', loc_lat, loc_lon, lat_names, lon_names)
             time, Sen_temp = read_var_multi_file(land_sen_files, 'SoilMoist_inst', loc_lat, loc_lon, lat_names, lon_names)
             # [.022, .058, .154, .409, 1.085, 2.872]
-            Ctl_tmp    = Ctl_temp[:,0,:,:]*0.022 + Ctl_temp[:,1,:,:]*0.058 + Ctl_temp[:,2,:,:]*0.154 + Ctl_temp[:,3,:,:]*0.266
-            Sen_tmp    = Sen_temp[:,0,:,:]*0.022 + Sen_temp[:,1,:,:]*0.058 + Sen_temp[:,2,:,:]*0.154 + Sen_temp[:,3,:,:]*0.266
+            Ctl_tmp    = (Ctl_temp[:,0,:,:]*0.022 + Ctl_temp[:,1,:,:]*0.058 + Ctl_temp[:,2,:,:]*0.154 + Ctl_temp[:,3,:,:]*0.266)/0.5
+            Sen_tmp    = (Sen_temp[:,0,:,:]*0.022 + Sen_temp[:,1,:,:]*0.058 + Sen_temp[:,2,:,:]*0.154 + Sen_temp[:,3,:,:]*0.266)/0.5
         elif var_name in ['VPD','VPDmax','VPDmin']:
             tair_ctl_files= [land_ctl_path+'Tair_f_inst/LIS.CABLE.201701-202002.nc']
             tair_sen_files= [land_sen_path+'Tair_f_inst/LIS.CABLE.201701-202002.nc']
@@ -626,23 +626,23 @@ def spatial_map_single_plot_LIS_diff(land_ctl_path, land_sen_path, var_names, ti
 
         if 'max' in var_name:
             # average of daily max
-            ctl_in       = spital_var_max(time,Ctl_tmp,time_s,time_e)
-            sen_in       = spital_var_max(time,Sen_tmp,time_s,time_e)
+            ctl_in       = spatial_var_max(time,Ctl_tmp,time_s,time_e)
+            sen_in       = spatial_var_max(time,Sen_tmp,time_s,time_e)
         elif 'min' in var_name:
             # average of daily min
-            ctl_in       = spital_var_min(time,Ctl_tmp,time_s,time_e)
-            sen_in       = spital_var_min(time,Sen_tmp,time_s,time_e)
+            ctl_in       = spatial_var_min(time,Ctl_tmp,time_s,time_e)
+            sen_in       = spatial_var_min(time,Sen_tmp,time_s,time_e)
         elif 'TDR' in var_name:
             # average of daily min
-            ctl_in_max   = spital_var_max(time,Ctl_tmp,time_s,time_e)
-            sen_in_max   = spital_var_max(time,Sen_tmp,time_s,time_e)
-            ctl_in_min   = spital_var_min(time,Ctl_tmp,time_s,time_e)
-            sen_in_min   = spital_var_min(time,Sen_tmp,time_s,time_e)
+            ctl_in_max   = spatial_var_max(time,Ctl_tmp,time_s,time_e)
+            sen_in_max   = spatial_var_max(time,Sen_tmp,time_s,time_e)
+            ctl_in_min   = spatial_var_min(time,Ctl_tmp,time_s,time_e)
+            sen_in_min   = spatial_var_min(time,Sen_tmp,time_s,time_e)
             ctl_in       = ctl_in_max - ctl_in_min
             sen_in       = sen_in_max - sen_in_min
         else:
-            ctl_in       = spital_var(time,Ctl_tmp,time_s,time_e)
-            sen_in       = spital_var(time,Sen_tmp,time_s,time_e)
+            ctl_in       = spatial_var(time,Ctl_tmp,time_s,time_e)
+            sen_in       = spatial_var(time,Sen_tmp,time_s,time_e)
 
         wrf            = Dataset(wrf_path,  mode='r')
         lons           = wrf.variables['XLONG'][0,:,:]
@@ -950,11 +950,11 @@ def spatial_map_single_plot_WRF_diff(atmo_ctl_path, atmo_sen_path, var_names, ti
             ctl_in = np.zeros((np.shape(Ctl_tmp)[0],np.shape(Ctl_tmp)[2],np.shape(Ctl_tmp)[3]))
             sen_in = np.zeros((np.shape(Sen_tmp)[0],np.shape(Sen_tmp)[2],np.shape(Sen_tmp)[3]))
             for i in np.arange(np.shape(Ctl_tmp)[0]):
-                ctl_in[i,:,:] = spital_var(time,Ctl_tmp[i],time_s,time_e)
-                sen_in[i,:,:] = spital_var(time,Sen_tmp[i],time_s,time_e)
+                ctl_in[i,:,:] = spatial_var(time,Ctl_tmp[i],time_s,time_e)
+                sen_in[i,:,:] = spatial_var(time,Sen_tmp[i],time_s,time_e)
         else:
-            ctl_in     = spital_var(time,Ctl_tmp,time_s,time_e)
-            sen_in     = spital_var(time,Sen_tmp,time_s,time_e)
+            ctl_in     = spatial_var(time,Ctl_tmp,time_s,time_e)
+            sen_in     = spatial_var(time,Sen_tmp,time_s,time_e)
         if var_name in ['T2']:
             ctl_in     = ctl_in-273.15
             sen_in     = sen_in-273.15
@@ -1446,7 +1446,7 @@ def spatial_map_wrf_hgt(file_paths, var_name, height, time_s, time_e, var_unit=N
     time, var_tmp = read_wrf_hgt_var_multi_files(file_paths, var_name, var_unit, height, loc_lat, loc_lon)
 
     scale      = get_scale(var_name)
-    var        = spital_var(time,var_tmp,time_s,time_e)*scale
+    var        = spatial_var(time,var_tmp,time_s,time_e)*scale
 
     # Get the lat/lon coordinates
     ncfile     = Dataset(file_paths[0])
@@ -1532,10 +1532,10 @@ def spatial_map_wrf_surf(file_paths, var_name, time_s, time_e, loc_lat=None, loc
     time, Var = read_wrf_surf_var_multi_files(file_paths, var_name, loc_lat, loc_lon)
 
     if var_name in ['T2','td2']:
-        var   = spital_var(time,Var,time_s,time_e)-273.15
+        var   = spatial_var(time,Var,time_s,time_e)-273.15
     else:
         scale = get_scale(var_name)
-        var   = spital_var(time,Var,time_s,time_e)*scale
+        var   = spatial_var(time,Var,time_s,time_e)*scale
 
     # Get the lat/lon coordinates
     ncfile    = Dataset(file_paths[0])
