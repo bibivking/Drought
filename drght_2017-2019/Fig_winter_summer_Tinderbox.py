@@ -213,10 +213,10 @@ def spatial_map_winter_summer(file_name, land_ctl_path, land_sen_path, var_names
         var_diff, cmap, clevs = read_LIS_var(file_name, land_ctl_path, land_sen_path, var_name, loc_lat, loc_lon, lat_names, lon_names, time_ss, time_es)
 
         # ================== Start Plotting =================
-        fig, axs = plt.subplots(nrows=3, ncols=2, figsize=[8,10],sharex=True,
-                    sharey=True, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()})
+        fig, axs = plt.subplots(nrows=3, ncols=2, figsize=[8,10],sharex=False,
+                    sharey=False, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()})
 
-        plt.subplots_adjust(wspace=-0.2, hspace=0.6)
+        plt.subplots_adjust(wspace=-0.23, hspace=0.105)
 
         plt.rcParams['text.usetex']     = False
         plt.rcParams['font.family']     = "sans-serif"
@@ -265,11 +265,12 @@ def spatial_map_winter_summer(file_name, land_ctl_path, land_sen_path, var_names
             axs[row,col].set_xticks(x_ticks)
             axs[row,col].set_yticks(y_ticks)
 
-            if row==2:
-                axs[row,col].set_xticklabels([])
-            else:
+            if row==2:                
                 axs[row,col].set_xticklabels(['135$\mathregular{^{o}}$E','140$\mathregular{^{o}}$E','145$\mathregular{^{o}}$E',
-                                              '150$\mathregular{^{o}}$E','155$\mathregular{^{o}}$E'])
+                                              '150$\mathregular{^{o}}$E','155$\mathregular{^{o}}$E'],rotation=25)
+            else:
+                axs[row,col].set_xticklabels([])
+
             if col==0:
                 axs[row,col].set_yticklabels(['40$\mathregular{^{o}}$S','35$\mathregular{^{o}}$S',
                                               '30$\mathregular{^{o}}$S','25$\mathregular{^{o}}$S'])
@@ -278,32 +279,8 @@ def spatial_map_winter_summer(file_name, land_ctl_path, land_sen_path, var_names
 
             plot1 = axs[row,col].contourf(lons, lats, var_diff[i,:,:], clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
 
-            # # Add gridlines
-            # gl = axs[row,col].gridlines(crs=ccrs.PlateCarree(), draw_labels=True, linewidth=1, color=almost_black, linestyle='--')
-            # gl.xlabels_top  = False
-            # gl.ylabels_right= False
-            # gl.xlines       = False
-            # gl.ylines       = False
-            # # gl.xlocator     = mticker.FixedLocator(np.arange(125,160,1))
-            # # gl.ylocator     = mticker.FixedLocator(np.arange(-40,-20,1))
-            # gl.xlocator     = mticker.FixedLocator([130,135,140,145,150,155,160])
-            # gl.ylocator     = mticker.FixedLocator([-40,-35,-30,-25,-20])
-            # gl.xformatter   = LONGITUDE_FORMATTER
-            # gl.yformatter   = LATITUDE_FORMATTER
-            # gl.xlabel_style = {'size':12, 'color':almost_black}#,'rotation': 90}
-            # gl.ylabel_style = {'size':12, 'color':almost_black}
-            # if row == 2:
-            #     gl.xlabels_bottom = True
-            # else:
-            #     gl.xlabels_bottom = False
 
-            # if col == 0:
-            #     gl.ylabels_left   = True
-            # else:
-            #     gl.ylabels_left   = False
-
-
-        cbar = plt.colorbar(plot1, ax=axs, ticklocation="right", pad=0.05, orientation="horizontal",
+        cbar = plt.colorbar(plot1, ax=axs, ticklocation="right", pad=0.06, orientation="horizontal",
                 aspect=50, shrink=0.8) # cax=cax,
 
         if var_name == "Albedo_inst":
@@ -316,13 +293,13 @@ def spatial_map_winter_summer(file_name, land_ctl_path, land_sen_path, var_names
             cbar.set_label('ΔT$\mathregular{_{min}}$ ($\mathregular{^{o}}$C)', loc='center',size=12)# rotation=270,
         cbar.ax.tick_params(labelsize=12)#,labelrotation=45)
 
-        axs[0,0].text(-0.32, 0.53, "2017-18", va='bottom', ha='center',
+        axs[0,0].text(-0.25, 0.53, "2017-18", va='bottom', ha='center',
                 rotation='vertical', rotation_mode='anchor',
                 transform=axs[0,0].transAxes, fontsize=12)
-        axs[1,0].text(-0.32, 0.50, "2018-19", va='bottom', ha='center',
+        axs[1,0].text(-0.25, 0.50, "2018-19", va='bottom', ha='center',
                 rotation='vertical', rotation_mode='anchor',
                 transform=axs[1,0].transAxes, fontsize=12)
-        axs[2,0].text(-0.32, 0.48, "2019-20", va='bottom', ha='center',
+        axs[2,0].text(-0.25, 0.48, "2019-20", va='bottom', ha='center',
                 rotation='vertical', rotation_mode='anchor',
                 transform=axs[2,0].transAxes, fontsize=12)
 
@@ -344,7 +321,7 @@ if __name__ == "__main__":
         loc_lat    = [-44,-10]
         loc_lon    = [112,154]
     elif region == "SE Aus":
-        loc_lat    = [-40,-23.6]
+        loc_lat    = [-40,-23]
         loc_lon    = [134,155]
     elif region == "CORDEX":
         loc_lat    = [-52.36,3.87]
@@ -369,19 +346,15 @@ if __name__ == "__main__":
         atmo_sen_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_sen+"/WRF_output/"
         atmo_ctl_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_ctl+"/WRF_output/"
 
-        var_names  = [ "Albedo_inst"]#,"LAI_inst","Tmax","Tmin" ]
+        var_names  = [ "Albedo_inst","LAI_inst","Tmax","Tmin" ]
 
         time_ss    = [  datetime(2017,6,1,0,0,0,0), datetime(2017,12,1,0,0,0,0),
                         datetime(2018,6,1,0,0,0,0), datetime(2018,12,1,0,0,0,0),
                         datetime(2019,6,1,0,0,0,0), datetime(2019,12,1,0,0,0,0)]
 
-        time_es    = [  datetime(2017,6,3,0,0,0,0), datetime(2017,12,3,0,0,0,0),
-                        datetime(2018,6,3,0,0,0,0), datetime(2018,12,3,0,0,0,0),
-                        datetime(2019,6,3,0,0,0,0), datetime(2019,12,3,0,0,0,0)]
-
-        # time_es    = [datetime(2017,9,1,0,0,0,0), datetime(2018,3,1,0,0,0,0),
-        #               datetime(2018,9,1,0,0,0,0), datetime(2019,3,1,0,0,0,0),
-        #               datetime(2019,9,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
+        time_es    = [datetime(2017,9,1,0,0,0,0), datetime(2018,3,1,0,0,0,0),
+                      datetime(2018,9,1,0,0,0,0), datetime(2019,3,1,0,0,0,0),
+                      datetime(2019,9,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
 
         message    = "Winter_Summer"
         file_name  = "LIS.CABLE.201701-202002.nc"

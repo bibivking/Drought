@@ -183,7 +183,7 @@ def read_LIS_diff(var_name,file_name,land_ctl_path, land_sen_path, lat_names, lo
     elif var_name in ["Albedo_inst"]:
         clevs = [-0.08,-0.07,-0.06,-0.05,-0.04,-0.03,-0.02,-0.01,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08]
         clevs_percentage =   [-70,-60,-50,-40,-30,-20,-10,-5,5,10,20,30,40,50,60,70]
-        cmap  = plt.cm.BrBG_r
+        cmap  = plt.cm.BrBG
     else:
         clevs = [-0.5,-0.4,-0.3,-0.2,-0.1,-0.05,0.05,0.1,0.2,0.3,0.4,0.5]
 
@@ -282,10 +282,10 @@ def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path
     FW_regrid_Feb,   lats, lons = regrid_to_fire_map_resolution(fire_path, FW_diff_Feb, lat_in, lon_in, burn=burn)
 
     # ================== Start Plotting =================
-    fig, axs = plt.subplots(nrows=3, ncols=3, figsize=[8,9],sharex=True,
-                sharey=True, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()})
+    fig, axs = plt.subplots(nrows=3, ncols=3, figsize=[7,9],sharex=False,
+                sharey=False, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()})
 
-    # plt.subplots_adjust(wspace=-0.4, hspace=0.1)
+    plt.subplots_adjust(wspace=-0.6, hspace=-0.05)
 
     plt.rcParams['text.usetex']     = False
     plt.rcParams['font.family']     = "sans-serif"
@@ -331,45 +331,21 @@ def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path
             # Set the ticks on the x-axis and y-axis
             axs[i,j].tick_params(axis='x', direction='out')
             axs[i,j].tick_params(axis='y', direction='out')
-            x_ticks = np.arange(146, 155, 2)
-            y_ticks = np.arange(-40, -26, 2)
+            x_ticks = np.arange(148, 155, 4)
+            y_ticks = np.arange(-40, -26, 4)
             axs[i,j].set_xticks(x_ticks)
             axs[i,j].set_yticks(y_ticks)
-
-            # # Add gridlines
-            # gl = axs[i,j].gridlines(crs=ccrs.PlateCarree(), draw_labels=True, linewidth=1, color=almost_black, linestyle='--')
-            # gl.xlabels_top  = False
-            # gl.ylabels_right= False
-            # gl.xlines       = False
-            # gl.ylines       = False
-            # gl.xlocator     = mticker.FixedLocator(np.arange(126,160,2))
-            # gl.ylocator     = mticker.FixedLocator(np.arange(-40,-20,2))
-            # gl.xformatter   = LONGITUDE_FORMATTER
-            # gl.yformatter   = LATITUDE_FORMATTER
-            # gl.xlabel_style = {'size':12, 'color':almost_black}#,'rotation': 90}
-            # gl.ylabel_style = {'size':12, 'color':almost_black}
-
-            # if i==2:
-            #     gl.xlabels_bottom = True
-            # else:
-            #     gl.xlabels_bottom = False
-            # if j==0:
-            #     gl.ylabels_left   = True
-            # else:
-            #     gl.ylabels_left   = False
                 
             if i==2: 
-                axs[i, j].set_xticklabels([])
+                axs[i, j].set_xticklabels(['148$\mathregular{^{o}}$E','152$\mathregular{^{o}}$E'])
             else:
-                axs[i, j].set_xticklabels(['146$\mathregular{^{o}}$E','148$\mathregular{^{o}}$E','150$\mathregular{^{o}}$E',
-                                           '152$\mathregular{^{o}}$E','154$\mathregular{^{o}}$E'])
+                axs[i, j].set_xticklabels([])
+
             if j==0:
-                axs[i, j].set_yticklabels(['40$\mathregular{^{o}}$S','38$\mathregular{^{o}}$S','36$\mathregular{^{o}}$S',
-                                           '34$\mathregular{^{o}}$S','32$\mathregular{^{o}}$S','30$\mathregular{^{o}}$S',
-                                           '28$\mathregular{^{o}}$S'])
+                axs[i, j].set_yticklabels(['40$\mathregular{^{o}}$S','36$\mathregular{^{o}}$S',
+                                           '32$\mathregular{^{o}}$S','28$\mathregular{^{o}}$S'])
             else:
                 axs[i, j].set_yticklabels([])
-
 
 
     Tmax_regrid_Dec, lats, lons = regrid_to_fire_map_resolution(fire_path, Tmax_diff_Dec, lat_in, lon_in, burn=burn)

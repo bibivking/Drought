@@ -164,9 +164,8 @@ def plot_correl_map(land_ctl_path, land_sen_path, var_names, summer_ss=None,summ
     time, lats       = read_var(land_ctl, lat_names, loc_lat, loc_lon, lat_names, lon_names)
     time, lons       = read_var(land_ctl, lon_names, loc_lat, loc_lon, lat_names, lon_names)
 
-    ntime            = np.shape(ctl_one)[0]
-    nlat             = np.shape(ctl_one)[1]
-    nlon             = np.shape(ctl_one)[2]
+    nlat             = np.shape(ctl_one_summer)[1]
+    nlon             = np.shape(ctl_one_summer)[2]
 
     # ======== calcualte metrics =========
     r_summer    = np.zeros((nlat,nlon))
@@ -197,10 +196,10 @@ def plot_correl_map(land_ctl_path, land_sen_path, var_names, summer_ss=None,summ
                     r_winter[x,y],p_winter[x,y]    = stats.spearmanr(one_tmp_winter, two_tmp_winter)
 
     # ================== Start Plotting =================
-    fig, axs = plt.subplots(nrows=1, ncols=2, figsize=[6,4],sharex=True,
-                sharey=True, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()})
+    fig, axs = plt.subplots(nrows=1, ncols=2, figsize=[6,4],sharex=False,
+                sharey=False, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()})
 
-    plt.subplots_adjust(wspace=0, hspace=0.)
+    plt.subplots_adjust(wspace=0.12, hspace=0.)
 
     plt.rcParams['text.usetex']     = False
     plt.rcParams['font.family']     = "sans-serif"
@@ -236,49 +235,45 @@ def plot_correl_map(land_ctl_path, land_sen_path, var_names, summer_ss=None,summ
     cmap  = plt.cm.BrBG# seismic_r
     clevs = [-1,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1]
 
-    # start plotting
-    if loc_lat == None:
-        axs.set_extent([135,155,-40,-25])
-    else:
-        axs.set_extent([loc_lon[0],loc_lon[1],loc_lat[0],loc_lat[1]])
+    for i in np.arange(2):
 
-    ax.coastlines(resolution="50m",linewidth=1)
+        # start plotting
+        axs[i].coastlines(resolution="50m",linewidth=1)
+        axs[i].set_extent([135,155,-39,-24])
+        axs[i].add_feature(states, linewidth=.5, edgecolor="black")
 
-    # Add gridlines
-    gl = axs.gridlines(crs=ccrs.PlateCarree(), draw_labels=True,linewidth=1, color='black', linestyle='--')
-    gl.xlabels_top    = False
-    gl.ylabels_right  = False
-    gl.xlabels_bottom = True
-    gl.ylabels_left   = True
-    gl.xlines         = False
-    gl.xlines         = False
+        # Set the ticks on the x-axis and y-axis
+        axs[i].tick_params(axis='x', direction='out')
+        axs[i].tick_params(axis='y', direction='out')
+        x_ticks = np.arange(135, 156, 5)
+        y_ticks = np.arange(-40, -20, 5)
+        axs[i].set_xticks(x_ticks)
+        axs[i].set_yticks(y_ticks)
+        axs[i].set_facecolor('lightgray')
+        axs[i].add_feature(OCEAN,edgecolor='none', facecolor="white")
 
-    if loc_lat == None:
-        gl.xlocator  = mticker.FixedLocator([135,140,145,150,155])
-        gl.ylocator  = mticker.FixedLocator([-40,-35,-30,-25])
-    else:
-        gl.xlocator  = mticker.FixedLocator(loc_lon)
-        gl.ylocator  = mticker.FixedLocator(loc_lat)
+    axs[0].set_xticklabels(['135$\mathregular{^{o}}$E','140$\mathregular{^{o}}$E','145$\mathregular{^{o}}$E',
+                                    '150$\mathregular{^{o}}$E','155$\mathregular{^{o}}$E'],rotation=25)
 
-    gl.xformatter = LONGITUDE_FORMATTER
-    gl.yformatter = LATITUDE_FORMATTER
-    gl.xlabel_style = {'size':10, 'color':'black'}
-    gl.ylabel_style = {'size':10, 'color':'black'}
+    axs[1].set_xticklabels(['135$\mathregular{^{o}}$E','140$\mathregular{^{o}}$E','145$\mathregular{^{o}}$E',
+                                    '150$\mathregular{^{o}}$E','155$\mathregular{^{o}}$E'],rotation=25)
 
-    axs[0].set_facecolor('lightgray')
-    axs[1].set_facecolor('lightgray')
+    axs[0].set_yticklabels(['40$\mathregular{^{o}}$S','35$\mathregular{^{o}}$S',
+                                    '30$\mathregular{^{o}}$S','25$\mathregular{^{o}}$S'])
+    axs[1].set_yticklabels([])
 
     r_summer              = np.where(p_summer<0.05, r_summer, np.nan)
-    axs[0].contourf(lons, lats, r_summer, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
+    plot1 = axs[0].contourf(lons, lats, r_summer, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
 
     r_winter              = np.where(p_winter<0.05, r_winter, np.nan)
-    axs[1].contourf(lons, lats, r_winter, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
-    axs[0].add_feature(OCEAN,edgecolor='none', facecolor="white")
-    axs[1].add_feature(OCEAN,edgecolor='none', facecolor="white")
+    plot2 = axs[1].contourf(lons, lats, r_winter, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both') #
 
-    cb = plt.colorbar(ax=axs, orientation="horizontal", pad=0.02, aspect=16, shrink=0.8)
-    cb.set_label('r', loc='center',size=12)# rotation=270,
-    cb.ax.tick_params(labelsize=12)
+    cbar = plt.colorbar(plot1, ax=axs, ticklocation="right", pad=0.13, orientation="horizontal",
+            aspect=40, shrink=1.) # cax=cax,
+    # cbar_ax = fig.add_axes([0.15, 0.05, 0.7, 0.02])  # Adjust the position and size of the colorbar axes
+    # cb = plt.colorbar(cax=cbar_ax, orientation="horizontal")
+    cbar.set_label('r', loc='center', size=12)
+    cbar.ax.tick_params(labelsize=12)
 
     axs[0].set_title("Winter", fontsize=12)
     axs[1].set_title("Summer", fontsize=12)
@@ -294,7 +289,7 @@ if __name__ == "__main__":
         loc_lat    = [-44,-10]
         loc_lon    = [112,154]
     elif region == "SE Aus":
-        loc_lat    = [-40,-25]
+        loc_lat    = [-40,-23]
         loc_lon    = [135,155]
     elif region == "CORDEX":
         loc_lat    = [-52.36,3.87]
@@ -308,7 +303,6 @@ if __name__ == "__main__":
         Test WRF-CABLE output
         '''
 
-        case_name      = "ALB-CTL_new" #"bl_pbl2_mp4_sf_sfclay2" #
         case_ctl       = "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2"
         case_sen       = "drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB"
 
@@ -319,7 +313,7 @@ if __name__ == "__main__":
         if 1:
 
             # Calculate correlation coefficent between Tmax and LAI_inst
-            summer_ss    = [datetime(2017,1,1,0,0,0,0),datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
+            summer_ss    = [datetime(2017,1,1,0,0,0,0), datetime(2018,12,1,0,0,0,0),datetime(2019,12,1,0,0,0,0)]
             summer_es    = [datetime(2020,3,1,0,0,0,0), datetime(2019,3,1,0,0,0,0), datetime(2020,3,1,0,0,0,0)]
 
             winter_ss    = [datetime(2017,6,1,0,0,0,0), datetime(2018,6,1,0,0,0,0), datetime(2019,6,1,0,0,0,0)]
