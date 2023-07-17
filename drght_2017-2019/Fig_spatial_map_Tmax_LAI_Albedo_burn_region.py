@@ -285,7 +285,7 @@ def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path
     fig, axs = plt.subplots(nrows=3, ncols=3, figsize=[7,9],sharex=False,
                 sharey=False, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()})
 
-    plt.subplots_adjust(wspace=-0.6, hspace=-0.05)
+    plt.subplots_adjust(wspace=-0.6, hspace=-0.11)
 
     plt.rcParams['text.usetex']     = False
     plt.rcParams['font.family']     = "sans-serif"

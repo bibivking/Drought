@@ -339,15 +339,15 @@ def plot_Tmax_Burn_Date(fire_path, file_name, land_ctl_path, land_sen_path, time
     extent   = (min(lon_fire), max(lon_fire), min(lat_fire), max(lat_fire))
 
     # Create a custom colormap using the ListedColormap class
-    colors = ['yellow','orange','darkorange','orangered', 'red', 'brown']#,'black'] # 'coral',
+    colors = ['yellow','gold','orange','tomato', 'red', 'brown']#,'black'] # 'coral',
     custom_cmap = ListedColormap(colors)
 
     # cmap1 = plt.cm.Pastel2
-    plot1 = axs[0].contourf( lon_fire, lat_fire, Burn_Date_index, levels=[1009,1010,1011,1012,1013,1014], transform=ccrs.PlateCarree(), cmap=custom_cmap, extend='neither')
+    plot1 = axs[0].contourf( lon_fire, lat_fire, Burn_Date_index, levels=[1008.5,1009.5,1010.5,1011.5,1012.5,1013.5,1014.5], transform=ccrs.PlateCarree(), cmap=custom_cmap, extend='neither')
     # plot1    = axs[0].imshow(Burn_Date_index, origin="lower", extent=extent,  transform=ccrs.PlateCarree(), cmap=custom_cmap) # vmin=1008.5, vmax=1015.5,
     # axs[0].add_feature(OCEAN,edgecolor='none', facecolor="lightgray")
-    cbar = plt.colorbar(plot1, ax=axs[0], ticklocation="right", pad=0.12, orientation="horizontal",
-                        aspect=18, shrink=1.) # cax=cax,
+    cbar = plt.colorbar(plot1, ax=axs[0], ticklocation="right", pad=0.14, orientation="horizontal",
+                        aspect=15, shrink=1.) # cax=cax,
     cbar.set_ticks([1009,1010,1011,1012,1013,1014])
     cbar.set_ticklabels(['Sep','Oct','Nov','Dec','Jan','Feb']) # cax=cax,
     cbar.ax.tick_params(labelsize=12,labelrotation=45)

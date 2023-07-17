@@ -519,7 +519,6 @@ if __name__ == "__main__":
     land_sen_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_sen+"/LIS_output/"
     land_ctl_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_ctl+"/LIS_output/"
 
-
     time_s         = datetime(2019,10,1,0,0,0,0)
     # time_e         = datetime(2019,10,5,0,0,0,0)
     time_e         = datetime(2020,3,1,0,0,0,0)
@@ -530,9 +529,8 @@ if __name__ == "__main__":
 
     message        = "time_series_201910-202002_burnt"
 
-    var_name       = "Tmax"
-    var_unit       = "deg C"
-
+    var_name       = "Albedo"
+    var_unit       = "-"
     file_out       = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/times_series_201910-202002"+var_name+".nc"
 
     output_time_series_burn_region(var_name, var_unit, file_out, fire_path, wrf_path, file_name, land_ctl_path, land_sen_path,

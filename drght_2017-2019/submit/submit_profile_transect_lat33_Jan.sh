@@ -2,9 +2,9 @@
 
 #PBS -m ae
 #PBS -P w97
-#PBS -q normalsr
-#PBS -l walltime=5:00:00
-#PBS -l mem=300GB
+#PBS -q hugemem
+#PBS -l walltime=24:00:00
+#PBS -l mem=1024GB
 #PBS -l ncpus=1
 #PBS -j oe
 #PBS -l wd
@@ -13,5 +13,5 @@
 module use /g/data/hh5/public/modules
 module load conda/analysis3-22.01
 cd /g/data/w97/mm3972/scripts/Drought/drght_2017-2019/
-python profile_transect_lat35.py
+python profile_transect_lat33_Jan.py 
 #spatial_map_T_R_metrics.py

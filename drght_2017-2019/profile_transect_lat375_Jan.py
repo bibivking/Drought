@@ -166,7 +166,7 @@ def get_vertcross(wrf_path, z, t, s, ua, wa, lat_slt, lon_min, lon_max, doy, sec
             print("loct", loct)
 
             # setting the vertical levels to interpolate
-            vrt = np.arange(0, 3025., 25.)
+            vrt = np.arange(0, 3010., 10.)
 
         # Interpolate to make the contour plot more smooth
         t_tmp, s_tmp, ua_tmp, wa_tmp = \
@@ -301,10 +301,10 @@ def get_LAI_ALBEDO(wrf_path, z, lai, albedo, lat_slt, lon_min, lon_max):
     # Open the file
     ncfile      = Dataset(wrf_path)
 
-    # Extend to 3D 
+    # Extend to 3D
     lai_3D      = np.expand_dims(lai,axis=0).repeat(29,axis=0)
     alb_3D      = np.expand_dims(albedo,axis=0).repeat(29,axis=0)
-    
+
     print("np.shape(lai_3D)",lai_3D)
 
     # Get the transect from 3D dataset
@@ -345,8 +345,8 @@ def get_interpolation(t_crs, s_crs, ua_crs, wa_crs, loct, vrt):
 
     return t_out, s_out, ua_out, wa_out
 
-def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ctl, land_path_sen, 
-                            wrf_path, land_path, file_name_wrf, file_name_lis, time_s, time_e, 
+def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ctl, land_path_sen,
+                            wrf_path, land_path, file_name_wrf, file_name_lis, time_s, time_e,
                             lat_slt=36, lon_min=130, lon_max=160):
 
     # ================ Get time coordiation ================
@@ -433,10 +433,10 @@ def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ct
     coord_values = {'south_north': template['south_north'].values,
                     'west_east': template['west_east'].values}
 
-    # Read LAI and Albedo data 
+    # Read LAI and Albedo data
     lai_file     = Dataset(land_path_ctl + "LAI_inst/" + file_name_lis, mode='r')
     LAI_ctl      = lai_file.variables['LAI_inst'][:]
-    
+
     time_tmp     = nc.num2date(lai_file.variables['time'][:],lai_file.variables['time'].units,
                    only_use_cftime_datetimes=False, only_use_python_datetimes=True)
     time         = UTC_to_AEST(time_tmp) - datetime(2000,1,1,0,0,0)
@@ -457,7 +457,7 @@ def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ct
     alb_file.close()
 
     # Calculate difference
-    LAI_diff     = LAI_sen - LAI_ctl  
+    LAI_diff     = LAI_sen - LAI_ctl
     ALB_diff     = ALB_sen - ALB_ctl
 
     # Change datetime to timedelta
@@ -468,7 +468,7 @@ def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ct
     # for all days
     time_lai_alb_mask = (time>=Time_s) & (time<Time_e)
 
-    # Get time masked 
+    # Get time masked
     LAI          = np.nanmean(LAI_diff[time_lai_alb_mask,:,:],axis=0)
     ALB          = np.nanmean(ALB_diff[time_lai_alb_mask,:,:],axis=0)
 
@@ -477,7 +477,7 @@ def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ct
     albedo       = xr.DataArray(ALB, dims=('south_north', 'west_east'), coords=coord_values)
 
     # Get the transect
-    lai_crs, alb_crs = get_LAI_ALBEDO(wrf_path, z1_day[0,:,:,:], lai, albedo, lat_slt, lon_min, lon_max) # z1_day can be replaced as others 
+    lai_crs, alb_crs = get_LAI_ALBEDO(wrf_path, z1_day[0,:,:,:], lai, albedo, lat_slt, lon_min, lon_max) # z1_day can be replaced as others
 
     # ================== make output file ==================
 
@@ -493,11 +493,11 @@ def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ct
     # set dimensions
     nvrt                = len(vertical)
     nlon                = len(xy_loc)
-    
+
     f.createDimension('bottom_top', nvrt)
     f.createDimension('east_west',  nlon)
 
-    # Set cooridiates 
+    # Set cooridiates
     level               = f.createVariable('level', 'f4', ('bottom_top'))
     level.standard_name = "Height_MSL"
     level.long_name     = "heights above mean sea level"
@@ -523,12 +523,12 @@ def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ct
     rh_day_diff                 = f.createVariable('rh_day_diff', 'f4', ('bottom_top', 'east_west'))
     rh_day_diff.standard_name   = "Relative humidity difference at daytime (sen-ctl)"
     rh_day_diff.units           = "%"
-    rh_day_diff[:]              = s_day_crs  
+    rh_day_diff[:]              = s_day_crs
 
     rh_night_diff               = f.createVariable('rh_night_diff', 'f4', ('bottom_top', 'east_west'))
     rh_night_diff.standard_name = "Relative humidity difference at night (sen-ctl)"
     rh_night_diff.units         = "%"
-    rh_night_diff[:]            = s_night_crs  
+    rh_night_diff[:]            = s_night_crs
 
     ua_day_diff                 = f.createVariable('ua_day_diff', 'f4', ('bottom_top', 'east_west'))
     ua_day_diff.standard_name   = "u-wind difference at daytime (sen-ctl)"
@@ -582,23 +582,44 @@ def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ct
     pbl_night_sen[:]            = pbl1_night_crs
 
     f.close()
-    
-def plot_profile_wrf_wind(file_outs,message=None):
+
+def plot_profile_wrf_wind(file_out,message=None):
+
+    # ****************** Read data *****************
+    ncfile        = Dataset(file_out, mode='r')
+
+    vertical      = ncfile.variables['level'][:]
+    xy_loc        = ncfile.variables['lon'][:]
+
+    th_day_diff   = ncfile.variables['th_day_diff'][:]
+    th_night_diff = ncfile.variables['th_night_diff'][:]
+    rh_day_diff   = ncfile.variables['rh_day_diff'][:]
+    rh_night_diff = ncfile.variables['rh_night_diff'][:]
+    ua_day_diff   = ncfile.variables['ua_day_diff'][:]
+    ua_night_diff = ncfile.variables['ua_night_diff'][:]
+    wa_day_diff   = ncfile.variables['wa_day_diff'][:]
+    wa_night_diff = ncfile.variables['wa_night_diff'][:]
+
+    lai_diff      = ncfile.variables['lai_diff'][:]
+    alb_diff      = ncfile.variables['alb_diff'][:]
+    pbl_day_ctl   = ncfile.variables['pbl_day_ctl'][:]
+    pbl_night_ctl = ncfile.variables['pbl_night_ctl'][:]
+    pbl_day_sen   = ncfile.variables['pbl_day_sen'][:]
+    pbl_night_sen = ncfile.variables['pbl_night_sen'][:]
 
     # ****************** plotting ******************
+    fig, ax = plt.subplots(nrows=2, ncols=2, figsize=[8,10],sharex=True, sharey=True, squeeze=True)
+    plt.subplots_adjust(wspace=0.05, hspace=0.05)
 
-    fig, ax = plt.subplots(nrows=3, ncols=3, figsize=[7,10],sharex=False, sharey=True, squeeze=True)
-    plt.subplots_adjust(wspace=0.05, hspace=0.13)
-    
     plt.rcParams['text.usetex']     = False
     plt.rcParams['font.family']     = "sans-serif"
     plt.rcParams['font.serif']      = "Helvetica"
     plt.rcParams['axes.linewidth']  = 1.5
-    plt.rcParams['axes.labelsize']  = 12
-    plt.rcParams['font.size']       = 12
+    plt.rcParams['axes.labelsize']  = 14
+    plt.rcParams['font.size']       = 14
     plt.rcParams['legend.fontsize'] = 12
-    plt.rcParams['xtick.labelsize'] = 12
-    plt.rcParams['ytick.labelsize'] = 12
+    plt.rcParams['xtick.labelsize'] = 14
+    plt.rcParams['ytick.labelsize'] = 14
 
     almost_black = '#262626'
     # change the tick colors also to the almost black
@@ -618,6 +639,10 @@ def plot_profile_wrf_wind(file_outs,message=None):
     # ===== set plot =====
     # color map
     color_map_1   = get_cmap("seismic")
+    blue_map_neg  = truncate_colormap(color_map_1, minval=0., maxval=0.5)
+    color_map_2   = get_cmap("seismic").reversed()
+    blue_map_pos  = truncate_colormap(color_map_2, minval=0.5, maxval=1.)
+    cmap          = color_map_1
     cmap1         = plt.cm.BrBG #YlGnBu_r #get_cmap("Greens").reversed()
     cmap2         = plt.cm.BrBG_r #YlGnBu_r #get_cmap("Greens").reversed()
 
@@ -626,116 +651,134 @@ def plot_profile_wrf_wind(file_outs,message=None):
 
     # contour levels
     levels1    = [-1.2,-1.1,-1,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.,1.1,1.2]
+    levels2    = [-10,-9,-8,-7,-6,-5,-4,-3,-2,-1,1,2,3,4,5,6,7,8,9,10]
     levels_lai = [-2,-1.8,-1.6,-1.4,-1.2,-1.,-0.8,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.,1.2,1.4,1.6,1.8,2]
     levels_alb = [-0.08,-0.07,-0.06,-0.05,-0.04,-0.03,-0.02,-0.01,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08]
 
+    # Water table depth height
+    lai_hgt          = [130,260]
+    lai_diff_2D      = np.zeros((2,len(lai_diff)))
+    lai_diff_2D[0,:] = lai_diff
+    lai_diff_2D[1,:] = lai_diff
 
-    # ****************** Read data *****************
-    for i, file_out in enumerate(file_outs):
-
-        row = int(i / 3)
-        col = i % 3
-
-        ncfile        = Dataset(file_out, mode='r')
-        vertical      = ncfile.variables['level'][:]
-        xy_loc        = ncfile.variables['lon'][:]
-
-        th_day_diff   = ncfile.variables['th_day_diff'][:]
-        ua_day_diff   = ncfile.variables['ua_day_diff'][:]
-        wa_day_diff   = ncfile.variables['wa_day_diff'][:]
-
-        lai_diff      = ncfile.variables['lai_diff'][:]
-        alb_diff      = ncfile.variables['alb_diff'][:]
-        pbl_day_ctl   = ncfile.variables['pbl_day_ctl'][:]
-        pbl_day_sen   = ncfile.variables['pbl_day_sen'][:]
-        
-        # Water table depth height
-        lai_hgt          = [0,100]
-        lai_diff_2D      = np.zeros((2,len(lai_diff)))
-        lai_diff_2D[0,:] = lai_diff
-        lai_diff_2D[1,:] = lai_diff
-
-        alb_hgt          = [-100,0]
-        alb_diff_2D      = np.zeros((2,len(alb_diff)))
-        alb_diff_2D[0,:] = alb_diff
-        alb_diff_2D[1,:] = alb_diff
-
-        # Set color for topography
-        ax[row, col].set_facecolor('lightgray')
-
-        # Set the lons boundaries of the transect  
-        if row ==0:
-            ax[0, col].set_xlim(149, 154)
-            ax[0, col].set_xticks([150, 152, 154])
-            ax[0, col].set_xticklabels(['150','152','154'])
-        elif row ==1:
-            ax[1, col].set_xlim(148, 153)
-            ax[1, col].set_xticks([148, 150, 152])
-            ax[1, col].set_xticklabels(['148','150','152'])
-        elif row ==2:
-            ax[2, col].set_xlim(146, 151)
-            ax[2, col].set_xticks([146, 148, 150])
-            ax[2, col].set_xticklabels(['146','148','150'])
+    alb_hgt          = [0,130]
+    alb_diff_2D      = np.zeros((2,len(alb_diff)))
+    alb_diff_2D[0,:] = alb_diff
+    alb_diff_2D[1,:] = alb_diff
 
 
-        # Plot variables
-        contour   = ax[row, col].contourf(xy_loc, vertical, th_day_diff, levels=levels1, cmap=color_map_1, extend='both')
-        cntr_lai  = ax[row, col].contourf(xy_loc, lai_hgt,  lai_diff_2D, levels=levels_lai, cmap=cmap1, extend='both')
-        cntr_alb  = ax[row, col].contourf(xy_loc, alb_hgt,  alb_diff_2D, levels=levels_alb, cmap=cmap1, extend='both')
-        line1     = ax[row, col].plot(xy_loc,pbl_day_ctl,ls="-", lw=0.5, color=almost_black)
-        line2     = ax[row, col].plot(xy_loc,pbl_day_sen,ls="--", lw=0.5, color=almost_black)
-        line3     = ax[row, col].axhline(y=0,   color=almost_black, lw=0.5, linestyle='-')
-        line4     = ax[row, col].axhline(y=100, color=almost_black, lw=0.5, linestyle='-')
+    # Day temperature
+    ax[0,0].set_facecolor('lightgray')
+    contour   = ax[0,0].contourf(xy_loc, vertical, th_day_diff, levels=levels1, cmap=color_map_1, extend='both')
+    cntr_lai  = ax[0,0].contourf(xy_loc, lai_hgt,  lai_diff_2D, levels=levels_lai, cmap=cmap1, extend='both')
+    cntr_alb  = ax[0,0].contourf(xy_loc, alb_hgt,  alb_diff_2D, levels=levels_alb, cmap=cmap2, extend='both')
 
-        q         = ax[row, col].quiver(xy_loc[::30], vertical[::3], ua_day_diff[::3,::30],
-                                wa_day_diff[::3,::30], angles='xy', scale_units='xy',
-                                scale=scale, pivot='middle', color="lightgrey")
-        ax[row, col].set_ylim(-100,3000)
+    line1     = ax[0,0].plot(xy_loc,pbl_day_ctl,ls="-", color="black")
+    line2     = ax[0,0].plot(xy_loc,pbl_day_sen,ls="--", color="black")
+
+    q         = ax[0,0].quiver(xy_loc[::30], vertical[::3], ua_day_diff[::3,::30],
+                              wa_day_diff[::3,::30], angles='xy', scale_units='xy',
+                              scale=scale, pivot='middle', color="white")
+    ax[0,0].text(0.02, 0.95, "(a) Δθ$\mathregular{_{max}}$", transform=ax[0,0].transAxes, verticalalignment='top', bbox=props) # fontsize=14,
+
+    ax[0,0].set_ylabel("Geopotential Height (m)")#, fontsize=12)
+    ax[0,0].set_ylim(0,3000)
+    # ax[0,0].axhline(y=300, color='white', linestyle='-')
+    # ax[0,0].axhline(y=100, color='white', linestyle='-')
 
 
-    # Set titles
-    ax[0,0].set_title("Dec 2019")
-    ax[0,1].set_title("Jan 2020")
-    ax[0,2].set_title("Feb 2020")
+    # Night temperature
+    ax[0,1].set_facecolor('lightgray')
+    contour   = ax[0,1].contourf(xy_loc, vertical, th_night_diff, levels=levels1, cmap=color_map_1, extend='both')
+    cntr_lai  = ax[0,1].contourf(xy_loc, lai_hgt,  lai_diff_2D, levels=levels_lai, cmap=cmap1, extend='both')
+    cntr_alb  = ax[0,1].contourf(xy_loc, alb_hgt,  alb_diff_2D, levels=levels_alb, cmap=cmap2, extend='both')
 
-    ax[0,0].set_ylabel("North", fontsize=12)
-    ax[1,0].set_ylabel("Central", fontsize=12)
-    ax[2,0].set_ylabel("South", fontsize=12)
+    line1     = ax[0,1].plot(xy_loc,pbl_night_ctl,ls="-", color="black")
+    line2     = ax[0,1].plot(xy_loc,pbl_night_sen,ls="--", color="black")
 
-    fig.text(0.01, 0.5, 'Geopotential Height (m)', va='center', rotation='vertical')
+    q         = ax[0,1].quiver(xy_loc[::30], vertical[::3], ua_night_diff[::3,::30],
+                              wa_night_diff[::3,::30], angles='xy', scale_units='xy',
+                              scale=scale, pivot='middle', color="white")
+    ax[0,1].text(0.02, 0.95, "(b) Δθ$\mathregular{_{min}}$", transform=ax[0,1].transAxes, verticalalignment='top', bbox=props) # fontsize=14,
+    cb_var    = fig.colorbar(contour, ax=ax[0], pad=0.01, orientation="vertical", aspect=20, shrink=0.88)
+    cb_var.set_label('Δθ (${^o}$C)', loc='center') # rotation=270,
+    ax[0,1].set_ylim(0,3000)
 
-    # Add Tmax colorbar
-    cbar  = plt.colorbar(contour, ax=ax, ticklocation="right", pad=0.03, orientation="vertical",
-            aspect=40, shrink=0.9) # cax=cax,
-    cbar.set_label('ΔT$\mathregular{_{max}}$ ($\mathregular{^{o}}$C)', loc='center',size=12)# rotation=270,
-    cbar.ax.tick_params(labelsize=12) # ,labelrotation=45
+    # ax[0,1].axhline(y=300, color='white', linestyle='-')
+    # ax[0,1].axhline(y=100, color='white', linestyle='-')
 
-    # Add LAI and albedo colorbar
-    position_lai  = fig.add_axes([0.1, 0.06, 0.34, 0.014]) # [left, bottom, width, height]
-    cb_lai        = fig.colorbar(cntr_lai, ax=ax, pad=0.08, cax=position_lai, orientation="horizontal", aspect=60, shrink=0.8)
-    cb_lai.set_label('LAI (m$\mathregular{^{2}}$ m$\mathregular{^{-2}}$)', loc='center',size=12)# rotation=270,
-    cb_lai.ax.tick_params(labelsize=12,rotation=45)
+    # Day relative humidity
+    color_map = get_cmap("seismic")
+    cmap      = color_map.reversed()
 
-    position_alb  = fig.add_axes([0.48, 0.06, 0.34, 0.014]) # [left, bottom, width, height]
-    cb_alb        = fig.colorbar(cntr_alb, ax=ax, pad=0.08, cax=position_alb, orientation="horizontal", aspect=60, shrink=0.8)
-    cb_alb.set_label('Δ$α$ (-)', loc='center',size=12)# rotation=270,
-    cb_alb.ax.tick_params(labelsize=12,rotation=45)
+    ax[1,0].set_facecolor('lightgray')
+    contour   = ax[1,0].contourf(xy_loc, vertical, rh_day_diff, levels=levels2, cmap=color_map_2, extend='both')
+    cntr_lai  = ax[1,0].contourf(xy_loc, lai_hgt,  lai_diff_2D, levels=levels_lai, cmap=cmap1, extend='both')
+    cntr_alb  = ax[1,0].contourf(xy_loc, alb_hgt,  alb_diff_2D, levels=levels_alb, cmap=cmap2, extend='both')
+
+
+    line1     = ax[1,0].plot(xy_loc,pbl_day_ctl,ls="-", color="black")
+    line2     = ax[1,0].plot(xy_loc,pbl_day_sen,ls="--", color="black")
+
+    q         = ax[1,0].quiver(xy_loc[::30], vertical[::3], ua_day_diff[::3,::30],
+                              wa_day_diff[::3,::30], angles='xy', scale_units='xy',
+                              scale=scale, pivot='middle', color="white")
+    ax[1,0].text(0.02, 0.95, "(c) ΔRH$\mathregular{_{day}}$", transform=ax[1,0].transAxes, verticalalignment='top', bbox=props) # fontsize=14,
+    # ax[1,0].set_xlabel("Longitude")#, fontsize=12)
+    ax[1,0].set_ylabel("Geopotential Height (m)")#, fontsize=12)
+    ax[1,0].set_ylim(0,3000)
+    # ax[1,0].axhline(y=300, color='white', linestyle='-')
+    # ax[1,0].axhline(y=100, color='white', linestyle='-')
+
+    # Day relative humidity
+    ax[1,1].set_facecolor('lightgray')
+    contour   = ax[1,1].contourf(xy_loc, vertical, rh_night_diff, levels=levels2, cmap=color_map_2, extend='both')
+    cntr_lai  = ax[1,1].contourf(xy_loc, lai_hgt,  lai_diff_2D, levels=levels_lai, cmap=cmap1, extend='both')
+    cntr_alb  = ax[1,1].contourf(xy_loc, alb_hgt,  alb_diff_2D, levels=levels_alb, cmap=cmap2, extend='both')
+
+
+    line1     = ax[1,1].plot(xy_loc,pbl_night_ctl,ls="-", color="black")
+    line2     = ax[1,1].plot(xy_loc,pbl_night_sen,ls="--", color="black")
+
+    q         = ax[1,1].quiver(xy_loc[::30], vertical[::3], ua_night_diff[::3,::30],
+                              wa_night_diff[::3,::30], angles='xy', scale_units='xy',
+                              scale=scale, pivot='middle', color="white")
+
+    ax[1,1].quiverkey(q,X=0.80, Y=2.1, U=scale, label=str(scale)+' m/s', labelpos='E', color="black")
+    ax[1,1].text(0.02, 0.95, "(d) ΔRH$\mathregular{_{night}}$", transform=ax[1,1].transAxes, verticalalignment='top', bbox=props) # fontsize=14,
+    # ax[1,1].set_xlabel("Longitude")#, fontsize=12)
+
+    cb_var    = fig.colorbar(contour, ax=ax[1], pad=0.01, orientation="vertical", aspect=20, shrink=0.88)
+    cb_var.set_label('ΔRH (%)', loc='center')
+    ax[1,1].set_ylim(0,3000)
+    # ax[1,1].axhline(y=300, color='white', linestyle='-')
+    # ax[1,1].axhline(y=100, color='white', linestyle='-')
+
+    # colorbar position
+    position_lai  = fig.add_axes([0.14, 0.06, 0.62, 0.01]) # [left, bottom, width, height]
+    cb_lai        = fig.colorbar(cntr_lai, ax=ax, pad=0.07, cax=position_lai, orientation="horizontal", aspect=60, shrink=0.8)
+    cb_lai.set_label('LAI (m$\mathregular{^{3}}$ m$\mathregular{^{-3}}$)', loc='center',size=10)# rotation=270,
+    cb_lai.ax.tick_params(labelsize=12)
+
+    position_alb  = fig.add_axes([0.14, 0.02, 0.62, 0.01]) # [left, bottom, width, height]
+    cb_alb        = fig.colorbar(cntr_alb, ax=ax, pad=0.07, cax=position_alb, orientation="horizontal", aspect=60, shrink=0.8)
+    cb_alb.set_label('Albedo', loc='center',size=10)# rotation=270,
+    cb_alb.ax.tick_params(labelsize=12)
 
     fig.savefig("./plots/profile_wrf_"+message, bbox_inches='tight', pad_inches=0.3)
 
 if __name__ == "__main__":
 
-
     lat_slt        = -37.5
     lon_min        = 145.0
     lon_max        = 154.0
 
-    file_name_wrf  = "wrfout_201912-202002.nc"
+    file_name_wrf  = "wrfout_201912-202002_hourly.nc"
     file_name_lis  = "LIS.CABLE.201912-202002.nc"
     path           = '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/'
 
 
-    wrf_path      = path+ 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/wrfout_d01_2017-02-01_06:00:00'
+    wrf_path      = path+ 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/wrfout_d01_2019-12-01_01:00:00'
     land_path     = path+ 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/geo_em.d01.nc'
 
     atmo_path_ctl = path + 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/'
@@ -743,28 +786,38 @@ if __name__ == "__main__":
 
     land_path_ctl = path + 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/LIS_output/'
     land_path_sen = path + 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/LIS_output/'
-    
-    message        = "profile_transect"
 
-    # file_outs = [ "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Dec_lat-30.nc",
-    #               "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Jan_lat-30.nc",
-    #               "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Feb_lat-30.nc",
-    #               "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Dec_lat-33.nc",
-    #               "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Jan_lat-33.nc",
-    #               "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Feb_lat-33.nc",
-    #               "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Dec_lat-375.nc",
-    #               "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Jan_lat-375.nc",
-    #               "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Feb_lat-375.nc"]
-    
+    # message        = "201920_Dec_lat"+str(-375)
+    # time_s         = datetime(2019,12,1,0,0,0,0)
+    # time_e         = datetime(2020,1,1,0,0,0,0)
+    # file_out       = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_"+message+"_houly.nc"
 
-    file_outs = [ "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Dec_lat-30.nc",
-                  "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Jan_lat-30.nc",
-                  "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Dec_lat-30.nc",
-                  "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Dec_lat-33.nc",
-                  "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Dec_lat-33.nc",
-                  "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Dec_lat-33.nc",
-                  "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Dec_lat-375.nc",
-                  "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Dec_lat-375.nc",
-                  "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Dec_lat-375.nc"]    
-    
-    plot_profile_wrf_wind(file_outs,message=message)
+    # output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen,
+    #                         land_path_ctl, land_path_sen,
+    #                         wrf_path, land_path,
+    #                         file_name_wrf, file_name_lis,
+    #                         time_s, time_e, lat_slt=lat_slt, lon_min=lon_min, lon_max=lon_max)
+
+    message        = "201920_Jan_lat"+str(-375)
+    time_s         = datetime(2020,1,1,0,0,0,0)
+    time_e         = datetime(2020,2,1,0,0,0,0)
+    file_out       = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_"+message+"_houly.nc"
+
+    output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen,
+                            land_path_ctl, land_path_sen,
+                            wrf_path, land_path,
+                            file_name_wrf, file_name_lis,
+                            time_s, time_e, lat_slt=lat_slt, lon_min=lon_min, lon_max=lon_max)
+
+    # message        = "201920_Feb_lat"+str(-375)
+    # time_s         = datetime(2020,2,1,0,0,0,0)
+    # time_e         = datetime(2020,3,1,0,0,0,0)
+    # file_out       = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_"+message+"_houly.nc"
+
+    # output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen,
+    #                         land_path_ctl, land_path_sen,
+    #                         wrf_path, land_path,
+    #                         file_name_wrf, file_name_lis,
+    #                         time_s, time_e, lat_slt=lat_slt, lon_min=lon_min, lon_max=lon_max)
+
+    # plot_profile_wrf_wind(file_out,message=message)
