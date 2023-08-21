@@ -14,7 +14,7 @@ module use /g/data/hh5/public/modules
 module load conda/analysis3-22.04
 
 case_name="drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB"
-var_names=("rh")
+var_names=("rh2")
 #"wa" "z" "ua" "va" "th" "rh" "PBLH" "p" "td2" "T2" "rh2" "slp" "pw" "cloudfrac" "cape_2d" "tc"
 
 for var_name in "${var_names[@]}"; do

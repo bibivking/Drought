@@ -177,11 +177,13 @@ def plot_trend_map(LAI_trend_file, ALB_trend_file, wrf_path, message=None, conto
     LAI_trend = f_LAI.variables['trend'][:,0,:,:] # nseason, nindex, nlat, nlon
     LAI_Mask  = f_LAI.variables['lon'][:,:]
     LAI_trend = np.where(LAI_Mask <0, np.nan, LAI_trend)
+    f_LAI.close()
 
     f_ALB     = Dataset(ALB_trend_file, 'r')
     ALB_trend = f_ALB.variables['trend'][:,0,:,:] # nseason, nindex, nlat, nlon
     ALB_Mask  = f_ALB.variables['lon'][:,:]
     ALB_trend = np.where(ALB_Mask <0, np.nan, ALB_trend)
+    f_ALB.close()
 
     # Read in no Nan WRF lat and lon
     wrf   = Dataset(wrf_path, 'r')
@@ -196,12 +198,12 @@ def plot_trend_map(LAI_trend_file, ALB_trend_file, wrf_path, message=None, conto
 
         # Regrid to lat-lon projection
         LAI_trend_regrid= np.zeros((4,len(lat_out),len(lon_out)))
-        LAI_Mask_regrid = np.zeros((len(lat_out),len(lon_out)))
         LAI_Mask        = np.where(LAI_Mask < 0, 0, 1)
 
         ALB_trend_regrid= np.zeros((4,len(lat_out),len(lon_out)))
-        ALB_Mask_regrid = np.zeros((len(lat_out),len(lon_out)))
         ALB_Mask        = np.where(ALB_Mask < 0, 0, 1)
+
+        Mask_regrid     = np.zeros((len(lat_out),len(lon_out)))
 
         for i in np.arange(4):
             LAI_trend_in_1D_tmp = LAI_trend[i,:,:].flatten()
@@ -209,26 +211,26 @@ def plot_trend_map(LAI_trend_file, ALB_trend_file, wrf_path, message=None, conto
             lat_in_1D           = lat.flatten()
             lon_in_1D           = lon.flatten()
 
-            LAI_trend_in_1D_tmp = LAI_trend_in_1D_tmp[~np.isnan(LAI_trend_in_1D_tmp)]
-            ALB_trend_in_1D_tmp = ALB_trend_in_1D_tmp[~np.isnan(ALB_trend_in_1D_tmp)]
+            LAI_trend_in_1D     = LAI_trend_in_1D_tmp[~np.isnan(LAI_trend_in_1D_tmp)]
+            ALB_trend_in_1D     = ALB_trend_in_1D_tmp[~np.isnan(ALB_trend_in_1D_tmp)]
             lat_in_1D           = lat_in_1D[~np.isnan(LAI_trend_in_1D_tmp)]    # here I make nan in values as the standard
             lon_in_1D           = lon_in_1D[~np.isnan(LAI_trend_in_1D_tmp)]
 
 
-            LAI_trend_regrid[i,:,:]   = griddata((lat_in_1D, lon_in_1D), LAI_trend_in_1D_tmp, (lat_out_2D, lon_out_2D), method='nearest')
-            ALB_trend_regrid[i,:,:]   = griddata((lat_in_1D, lon_in_1D), ALB_trend_in_1D_tmp, (lat_out_2D, lon_out_2D), method='nearest')
+            LAI_trend_regrid[i,:,:] = griddata((lat_in_1D, lon_in_1D), LAI_trend_in_1D, (lat_out_2D, lon_out_2D), method='nearest')
+            ALB_trend_regrid[i,:,:] = griddata((lat_in_1D, lon_in_1D), ALB_trend_in_1D, (lat_out_2D, lon_out_2D), method='nearest')
             if i == 0:
-                LAI_Mask_in_1D      = LAI_Mask.flatten()
+                LAI_Mask_in_1D  = LAI_Mask.flatten()
                 lat_mask_1D     = lat.flatten()
                 lon_mask_1D     = lon.flatten()
                 Mask_regrid     = griddata((lat_mask_1D, lon_mask_1D), LAI_Mask_in_1D, (lat_out_2D, lon_out_2D), method='nearest')
             LAI_trend_regrid[i,:,:] = np.where(Mask_regrid==1,LAI_trend_regrid[i,:,:],np.nan)
             ALB_trend_regrid[i,:,:] = np.where(Mask_regrid==1,ALB_trend_regrid[i,:,:],np.nan)
 
-
-    fig, ax = plt.subplots(nrows=2, ncols=4, figsize=[12,8],sharex=True, sharey=True, squeeze=True,
+    # ============ Plotting ============
+    fig, ax = plt.subplots(nrows=2, ncols=2, figsize=[7,6],sharex=True, sharey=True, squeeze=True,
                             subplot_kw={'projection': ccrs.PlateCarree()})
-    plt.subplots_adjust(wspace=0.05, hspace=0.) # left=0.15,right=0.95,top=0.85,bottom=0.05,
+    plt.subplots_adjust(wspace=-0.05, hspace=0.05) # left=0.15,right=0.95,top=0.85,bottom=0.05,
 
     plt.rcParams['text.usetex']     = False
     plt.rcParams['font.family']     = "sans-serif"
@@ -274,12 +276,13 @@ def plot_trend_map(LAI_trend_file, ALB_trend_file, wrf_path, message=None, conto
                               "hotpink",               # 8: 1st on trend, 2nd decrease a lot
                               ]) #plt.cm.tab10 #BrBG
     label_x = [ "MAM", "JJA", "SON", "DJF",]
-                         #  0,   1,   2,   3,   4,  11,   12,   21,   22,
+
+                     #  0,   1,   2,   3,   4,  11,   12,   21,   22,
     clevs_trend = [-0.5, 0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5]
     cnt         = 0
 
     for i in np.arange(2):
-        for j in np.arange(4):
+        for j in np.arange(2):
 
             ax[i,j].coastlines(resolution="50m",linewidth=1)
             ax[i,j].set_extent([135,155,-39,-24])
@@ -289,7 +292,10 @@ def plot_trend_map(LAI_trend_file, ALB_trend_file, wrf_path, message=None, conto
             gl = ax[i,j].gridlines(crs=ccrs.PlateCarree(), draw_labels=True, linewidth=1, color=almost_black, linestyle='--')
             gl.top_labels   = False
             gl.right_labels = False
-            gl.bottom_labels= True
+            if i == 0:
+                gl.bottom_labels= False
+            else:
+                gl.bottom_labels= True
             if j ==0:
                 gl.left_labels  = True
             else:
@@ -303,26 +309,41 @@ def plot_trend_map(LAI_trend_file, ALB_trend_file, wrf_path, message=None, conto
             gl.xlabel_style = {'size':10, 'color':almost_black}#,'rotation': 90}
             gl.ylabel_style = {'size':10, 'color':almost_black}
 
-            if contour== False:
-                extent=(135, 155, -39, -24)
-                print(np.min(lon),np.max(lon), np.min(lat), np.max(lat))
-                plot1    = ax[0,j].imshow(LAI_trend_regrid[j,:,:], origin="lower", extent=extent, vmin=-0.5, vmax=8.5, transform=ccrs.PlateCarree(), cmap=cmap)
-                plot2    = ax[1,j].imshow(ALB_trend_regrid[j,:,:], origin="lower", extent=extent, vmin=-0.5, vmax=8.5, transform=ccrs.PlateCarree(), cmap=cmap)
-            else:
-                plot1 = ax[0,j].contourf(lon, lat, LAI_trend[j,:,:], clevs_trend, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
-                plot2 = ax[1,j].contourf(lon, lat, ALB_trend[j,:,:], clevs_trend, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
-
-            # ax[i,j].text(0.02, 0.15, label_x[cnt], transform=ax[j].transAxes, fontsize=14, verticalalignment='top', bbox=props)
-            # ax[0].add_feature(OCEAN,edgecolor='none', facecolor="lightgray")
-            ax[i,j].add_feature(OCEAN,edgecolor='none', facecolor="lightgray")
-
-    cbar = plt.colorbar(plot1, ax=ax, ticklocation="bottom", pad=0.1, orientation="horizontal", aspect=40, shrink=0.6) # cax=cax,
-    cbar.ax.tick_params(labelsize=8, labelrotation=45)
-    if message != None:
-        plt.savefig('./plots/spatial_map_trend_'+message+'.png',dpi=300)
+    if contour== False:
+        extent=(135, 155, -39, -24)
+        print(np.min(lon),np.max(lon), np.min(lat), np.max(lat))
+        plot1 = ax[0,0].imshow(LAI_trend_regrid[1,:,:], origin="lower", extent=extent, interpolation="none", vmin=-0.5, vmax=8.5, transform=ccrs.PlateCarree(), cmap=cmap) # resample=False,
+        plot1 = ax[0,1].imshow(LAI_trend_regrid[3,:,:], origin="lower", extent=extent, interpolation="none", vmin=-0.5, vmax=8.5, transform=ccrs.PlateCarree(), cmap=cmap)
+        plot2 = ax[1,0].imshow(ALB_trend_regrid[1,:,:], origin="lower", extent=extent, interpolation="none", vmin=-0.5, vmax=8.5, transform=ccrs.PlateCarree(), cmap=cmap)
+        plot2 = ax[1,1].imshow(ALB_trend_regrid[3,:,:], origin="lower", extent=extent, interpolation="none",  vmin=-0.5, vmax=8.5, transform=ccrs.PlateCarree(), cmap=cmap)
     else:
-        plt.savefig('./plots/spatial_map_trend.png',dpi=300)
+        plt.rcParams["lines.linewidth"] = 0
+        plot1 = ax[0,0].contourf(lon_out, lat_out, LAI_trend_regrid[1,:,:], clevs_trend, transform=ccrs.PlateCarree(),antialiased=False, cmap=cmap, extend='neither')
+        plot1 = ax[0,1].contourf(lon_out, lat_out, LAI_trend_regrid[3,:,:], clevs_trend, transform=ccrs.PlateCarree(),antialiased=False, cmap=cmap, extend='neither')
+        plot2 = ax[1,0].contourf(lon_out, lat_out, ALB_trend_regrid[1,:,:], clevs_trend, transform=ccrs.PlateCarree(),antialiased=False, cmap=cmap, extend='neither')
+        plot2 = ax[1,1].contourf(lon_out, lat_out, ALB_trend_regrid[3,:,:], clevs_trend, transform=ccrs.PlateCarree(),antialiased=False, cmap=cmap, extend='neither')
 
+        # ax[0].add_feature(OCEAN,edgecolor='none', facecolor="lightgray")
+        # ax[i,j].add_feature(OCEAN,edgecolor='none', facecolor="lightgray")
+
+    # Add titles
+
+    ax[0,0].set_title("Winter", fontsize=12)
+    ax[0,1].set_title("Summer", fontsize=12)
+
+    ax[0,0].set_ylabel("ΔLAI$ (m\mathregular{^{2}}$ m\mathregular{^{-2}}$")
+    ax[1,0].set_ylabel("Δ$α$ (-)")
+
+    ax[0,0].text(0.02, 0.15, "(a)", transform=ax[0,0].transAxes, fontsize=12, verticalalignment='top', bbox=props)
+    ax[0,1].text(0.02, 0.15, "(b)", transform=ax[0,1].transAxes, fontsize=12, verticalalignment='top', bbox=props)
+    ax[1,0].text(0.02, 0.15, "(c)", transform=ax[1,0].transAxes, fontsize=12, verticalalignment='top', bbox=props)
+    ax[1,1].text(0.02, 0.15, "(d)", transform=ax[1,1].transAxes, fontsize=12, verticalalignment='top', bbox=props)
+
+    cbar = plt.colorbar(plot1, ax=ax, ticklocation="bottom", pad=0.05, orientation="horizontal", aspect=25, shrink=1.) # cax=cax,
+    cbar.ax.tick_params(labelsize=12, labelrotation=45)
+
+    plt.savefig('./plots/spatial_map_trend_'+message+'.png',dpi=300)
+    return
 
 if __name__ == "__main__":
 
@@ -345,13 +366,13 @@ if __name__ == "__main__":
         var_name       = 'LAI_inst'
         path           = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"
         ctl_file_path  = [ path+"drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/LIS_output/"+var_name+"/LIS.CABLE.201701-202002.nc",]
-        sen_file_path  = [ path+"drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/LIS_output/"+var_name+"/LIS.CABLE.201701-202002.nc",]
+        sen_file_path  = [ path+"drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/LIS_output/"+var_name+"/LIS.CABLE.201701-202006.nc",]
         LAI_trend_file = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/LAI_trend.nc"
         ALB_trend_file = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/Albedo_trend.nc"
         time_s         = datetime(2017,3,1,0,0,0,0)
         time_e         = datetime(2020,3,1,0,0,0,0)
         threshold      = 0.000001
-        wrf_path       = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/p/wrfout_201701-202002.nc"
+        wrf_path       = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/p/wrfout_201912-202002.nc"
 
         message        = "LAI_ALB_trend_2017-2020"
-        plot_trend_map(LAI_trend_file, ALB_trend_file, wrf_path, message)
+        plot_trend_map(LAI_trend_file, ALB_trend_file, wrf_path, message,contour=False)

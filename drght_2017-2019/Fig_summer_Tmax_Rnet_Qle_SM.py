@@ -93,7 +93,7 @@ def read_LIS_var(file_name, land_ctl_path, land_sen_path, var_name, loc_lat, loc
 
     return var_diff, cmap, clevs
 
-def spatial_map_summer_Tmax_Rnet_Qle_SM(file_name, land_ctl_path, land_sen_path, time_ss=None,
+def spatial_map_summer_Tmax_Rnet_Qle_SM(file_names, land_ctl_path, land_sen_path, time_ss=None,
                               time_es=None, lat_names="lat", lon_names="lon",loc_lat=None,
                               loc_lon=None, wrf_path=None,  message=None):
 
@@ -110,7 +110,7 @@ def spatial_map_summer_Tmax_Rnet_Qle_SM(file_name, land_ctl_path, land_sen_path,
     fig, axs = plt.subplots(nrows=4, ncols=3, figsize=[10,12],sharex=False,
                 sharey=False, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()})
 
-    plt.subplots_adjust(wspace=0.06, hspace=-0.4) #-0.2
+    plt.subplots_adjust(wspace=0.12, hspace=-0.6) #-0.2
 
     plt.rcParams['text.usetex']     = False
     plt.rcParams['font.family']     = "sans-serif"
@@ -145,10 +145,10 @@ def spatial_map_summer_Tmax_Rnet_Qle_SM(file_name, land_ctl_path, land_sen_path,
     # WRF-CABLE
     for col in np.arange(3):
 
-        Tmax_diff, Tmax_cmap, Tmax_clevs = read_LIS_var(file_name, land_ctl_path, land_sen_path, 'Tmax', loc_lat, loc_lon, lat_names, lon_names, time_ss[col], time_es[col])
-        Rnet_diff, Rnet_cmap, Rnet_clevs = read_LIS_var(file_name, land_ctl_path, land_sen_path, 'Rnet', loc_lat, loc_lon, lat_names, lon_names, time_ss[col], time_es[col])
-        Qle_diff, Qle_cmap, Qle_clevs    = read_LIS_var(file_name, land_ctl_path, land_sen_path, 'Qle_tavg', loc_lat, loc_lon, lat_names, lon_names, time_ss[col], time_es[col])
-        SM_diff, SM_cmap, SM_clevs       = read_LIS_var(file_name, land_ctl_path, land_sen_path, 'SM_top50cm', loc_lat, loc_lon, lat_names, lon_names, time_ss[col], time_es[col])
+        Tmax_diff, Tmax_cmap, Tmax_clevs = read_LIS_var(file_names[col], land_ctl_path, land_sen_path, 'Tmax', None, None, lat_names, lon_names, time_ss[col], time_es[col])
+        Rnet_diff, Rnet_cmap, Rnet_clevs = read_LIS_var(file_names[col], land_ctl_path, land_sen_path, 'Rnet', None, None, lat_names, lon_names,  time_ss[col], time_es[col])
+        Qle_diff, Qle_cmap, Qle_clevs    = read_LIS_var(file_names[col], land_ctl_path, land_sen_path, 'Qle_tavg', None, None, lat_names, lon_names,  time_ss[col], time_es[col])
+        SM_diff, SM_cmap, SM_clevs       = read_LIS_var(file_names[col], land_ctl_path, land_sen_path, 'SM_top50cm', None, None, lat_names, lon_names,  time_ss[col], time_es[col])
 
         for row in np.arange(4):
 
@@ -184,19 +184,19 @@ def spatial_map_summer_Tmax_Rnet_Qle_SM(file_name, land_ctl_path, land_sen_path,
 
     # Adding colormap
     cbar = plt.colorbar(plot1, ax=axs[0], ticklocation="right", pad=0.01, orientation="vertical",
-        aspect=20, shrink=0.65) # cax=cax,
+        aspect=20, shrink=0.35) # cax=cax,
     cbar.set_label('$\mathregular{^{o}}$C', loc='center',size=12)# rotation=270,
 
     cbar = plt.colorbar(plot2, ax=axs[1], ticklocation="right", pad=0.01, orientation="vertical",
-        aspect=20, shrink=0.65) # cax=cax,
+        aspect=20, shrink=0.35) # cax=cax,
     cbar.set_label('W m$\mathregular{^{-2}}$', loc='center',size=12)# rotation=270,
 
     cbar = plt.colorbar(plot3, ax=axs[2], ticklocation="right", pad=0.01, orientation="vertical",
-        aspect=20, shrink=0.65) # cax=cax,
+        aspect=20, shrink=0.35) # cax=cax,
     cbar.set_label('W m$\mathregular{^{-2}}$', loc='center',size=12)# rotation=270,
 
     cbar = plt.colorbar(plot4, ax=axs[3], ticklocation="right", pad=0.01, orientation="vertical",
-        aspect=20, shrink=0.65) # cax=cax,
+        aspect=20, shrink=0.35) # cax=cax,
     cbar.set_label('m$\mathregular{^{3}}$ m$\mathregular{^{-3}}$', loc='center',size=12)# rotation=270,
 
     cbar.ax.tick_params(labelsize=12)#,labelrotation=45)
@@ -209,10 +209,22 @@ def spatial_map_summer_Tmax_Rnet_Qle_SM(file_name, land_ctl_path, land_sen_path,
     axs[0,0].set_ylabel("ΔT$\mathregular{_{max}}$")
     axs[1,0].set_ylabel("ΔR$\mathregular{_{net}}$")
     axs[2,0].set_ylabel("ΔLH")
-    axs[3,0].set_ylabel("ΔSM$\mathregular{_{top}}$")
+    axs[3,0].set_ylabel("ΔSM$\mathregular{_{0.5m}}$")
+
+    texts = ["(a)","(b)","(c)","(d)",
+             "(e)","(f)","(g)","(h)",
+             "(i)","(j)","(k)","(l)",
+             "(m)","(n)","(o)","(p)"]
+
+    cnt = 0
+    for i in np.arange(4):
+        for j in np.arange(3):
+            axs[i,j].text(0.02, 0.15, texts[cnt], transform=axs[i,j].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+            cnt = cnt + 1
 
     # Apply tight layout
     # plt.tight_layout()
+
     plt.savefig('./plots/spatial_map_summer_Tmax_Rnet_Qle_SM.png',dpi=300)
 
 
@@ -250,26 +262,17 @@ if __name__ == "__main__":
         atmo_sen_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_sen+"/WRF_output/"
         atmo_ctl_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_ctl+"/WRF_output/"
 
-        # time_ss    = [datetime(2017,12,1,0,0,0,0),
-        #               datetime(2018,12,1,0,0,0,0),
-        #               datetime(2019,12,1,0,0,0,0)]
-
-        time_ss    = [datetime(2019,12,1,0,0,0,0),
-                      datetime(2019,12,1,0,0,0,0),
+        time_ss    = [datetime(2017,12,1,0,0,0,0),
+                      datetime(2018,12,1,0,0,0,0),
                       datetime(2019,12,1,0,0,0,0)]
 
-        time_es    = [datetime(2019,12,10,0,0,0,0),
-                      datetime(2019,12,10,0,0,0,0),
-                      datetime(2019,12,10,0,0,0,0)]
+        time_es    = [datetime(2018,3,1,0,0,0,0),
+                      datetime(2019,3,1,0,0,0,0),
+                      datetime(2020,3,1,0,0,0,0)]
 
+        message    = "Summer_Tmax_Rnet_Qle_SM_all"
 
-        # time_es    = [datetime(2018,3,1,0,0,0,0),
-        #               datetime(2019,3,1,0,0,0,0),
-        #               datetime(2020,3,1,0,0,0,0)]
+        file_names  = ["LIS.CABLE.201712-201802.nc",  "LIS.CABLE.201812-201902.nc",  "LIS.CABLE.201912-202002.nc"]
 
-        message    = "Summer_Tmax_Rnet_Qle_SM"
-
-        file_name  = "LIS.CABLE.201912-202002.nc"
-
-        spatial_map_summer_Tmax_Rnet_Qle_SM(file_name, land_ctl_path, land_sen_path, time_ss=time_ss, time_es=time_es, lat_names="lat",
+        spatial_map_summer_Tmax_Rnet_Qle_SM(file_names, land_ctl_path, land_sen_path, time_ss=time_ss, time_es=time_es, lat_names="lat",
                             lon_names="lon",loc_lat=loc_lat, loc_lon=loc_lon, wrf_path=wrf_path, message=message)

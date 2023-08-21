@@ -166,6 +166,56 @@ def read_LIS_var(file_name, land_ctl_path, land_sen_path, var_name, loc_lat, loc
         var_diff     = var_diff*GPP_scale
 
     # =============== CHANGE HERE ===============
+    # Define the RGB values as a 2D array
+    rgb_17colors= np.array([
+                        [0.338024, 0.193310, 0.020377],
+                        [0.458593, 0.264360, 0.031142],
+                        [0.576471, 0.343483, 0.058055],
+                        [0.686275, 0.446828, 0.133410],
+                        [0.778547, 0.565859, 0.250288],
+                        [0.847443, 0.705805, 0.422530],
+                        [0.932872, 0.857209, 0.667820],
+                        [0.964091, 0.917801, 0.795463],
+                        [0.955517, 0.959016, 0.9570165],
+                        [0.808689, 0.924414, 0.907882],
+                        [0.627528, 0.855210, 0.820531],
+                        [0.426990, 0.749942, 0.706882],
+                        [0.265513, 0.633679, 0.599231],
+                        [0.135871, 0.524337, 0.492964],
+                        [0.023914, 0.418839, 0.387466],
+                        [0.002153, 0.325721, 0.287274],
+                        [0.000000, 0.235294, 0.188235]
+                    ])
+
+    rgb_21colors = np.array([
+                [0.338024, 0.193310, 0.020377],
+                [0.441369, 0.254210, 0.029604],
+                [0.544714, 0.315110, 0.038831],
+                [0.631373, 0.395156, 0.095732],
+                [0.733333, 0.491119, 0.165706],
+                [0.793310, 0.595848, 0.287197],
+                [0.857286, 0.725798, 0.447136],
+                [0.904575, 0.810458, 0.581699],
+                [0.947020, 0.880584, 0.710880],
+                [0.963629, 0.923799, 0.818531],
+                [0.955517, 0.959016, 0.9570165],
+                [0.822837, 0.927797, 0.912803],
+                [0.714879, 0.890888, 0.864821],
+                [0.583852, 0.837370, 0.798385],
+                [0.461592, 0.774856, 0.729950],
+                [0.311649, 0.666897, 0.629988],
+                [0.183852, 0.569550, 0.538178],
+                [0.087889, 0.479123, 0.447751],
+                [0.003691, 0.390311, 0.358016],
+                [0.001845, 0.312803, 0.273126],
+                [0.000000, 0.235294, 0.188235]
+            ])
+
+
+    # Create a colormap from the RGB values
+    cmap17 = plt.cm.colors.ListedColormap(rgb_17colors)
+    cmap21 = plt.cm.colors.ListedColormap(rgb_21colors)
+
     cmap  = plt.cm.BrBG
     if var_name in ['SoilMoist_inst','SoilMoist',"SM_top50cm"]:
         clevs = [-0.3,-0.25,-0.2,-0.15,-0.1,-0.05,0.05,0.1,0.15,0.2,0.25,0.3]
@@ -183,11 +233,11 @@ def read_LIS_var(file_name, land_ctl_path, land_sen_path, var_name, loc_lat, loc
     elif var_name in ["LAI_inst"]:
         clevs = [-2,-1.8,-1.6,-1.4,-1.2,-1.,-0.8,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.,1.2,1.4,1.6,1.8,2]
         clevs_percentage =  [-70,-60,-50,-40,-30,-20,-10,-5,5,10,20,30,40,50,60,70]
-        cmap  = plt.cm.BrBG
+        cmap  = cmap21
     elif var_name in ["Albedo_inst"]:
         clevs = [-0.08,-0.07,-0.06,-0.05,-0.04,-0.03,-0.02,-0.01,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08]
         clevs_percentage =   [-70,-60,-50,-40,-30,-20,-10,-5,5,10,20,30,40,50,60,70]
-        cmap  = plt.cm.BrBG
+        cmap  = cmap17
     else:
         clevs = [-0.5,-0.4,-0.3,-0.2,-0.1,-0.05,0.05,0.1,0.2,0.3,0.4,0.5]
 
@@ -247,7 +297,9 @@ def spatial_map_winter_summer(file_name, land_ctl_path, land_sen_path, var_names
         states= NaturalEarthFeature(category="cultural", scale="50m",
                                             facecolor="none",
                                             name="admin_1_states_provinces_shp")
-
+        texts = ["(a)","(b)",
+                 "(c)","(d)",
+                 "(e)","(f)"]
         for i in np.arange(6):
 
             row = int(i/2)
@@ -265,7 +317,7 @@ def spatial_map_winter_summer(file_name, land_ctl_path, land_sen_path, var_names
             axs[row,col].set_xticks(x_ticks)
             axs[row,col].set_yticks(y_ticks)
 
-            if row==2:                
+            if row==2:
                 axs[row,col].set_xticklabels(['135$\mathregular{^{o}}$E','140$\mathregular{^{o}}$E','145$\mathregular{^{o}}$E',
                                               '150$\mathregular{^{o}}$E','155$\mathregular{^{o}}$E'],rotation=25)
             else:
@@ -278,6 +330,7 @@ def spatial_map_winter_summer(file_name, land_ctl_path, land_sen_path, var_names
                 axs[row,col].set_yticklabels([])
 
             plot1 = axs[row,col].contourf(lons, lats, var_diff[i,:,:], clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
+            axs[row,col].text(0.02, 0.15, texts[i], transform=axs[row,col].transAxes, fontsize=14, verticalalignment='top', bbox=props)
 
 
         cbar = plt.colorbar(plot1, ax=axs, ticklocation="right", pad=0.06, orientation="horizontal",
@@ -346,7 +399,7 @@ if __name__ == "__main__":
         atmo_sen_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_sen+"/WRF_output/"
         atmo_ctl_path  = "/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/"+case_ctl+"/WRF_output/"
 
-        var_names  = [ "Albedo_inst","LAI_inst","Tmax","Tmin" ]
+        var_names  = [ "Tmax",]#"Albedo_inst","LAI_inst"]#,"Tmin" ]
 
         time_ss    = [  datetime(2017,6,1,0,0,0,0), datetime(2017,12,1,0,0,0,0),
                         datetime(2018,6,1,0,0,0,0), datetime(2018,12,1,0,0,0,0),

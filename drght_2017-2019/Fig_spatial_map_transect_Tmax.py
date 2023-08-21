@@ -1,7 +1,10 @@
+
+import os
 import sys
 import cartopy
 import numpy as np
 import pandas as pd
+import xarray as xr
 from netCDF4 import Dataset
 from datetime import datetime
 import matplotlib.pyplot as plt
@@ -15,6 +18,8 @@ from cartopy.mpl.gridliner import LONGITUDE_FORMATTER, LATITUDE_FORMATTER
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
 from cartopy.feature import NaturalEarthFeature, OCEAN
+from wrf import (getvar, to_np, vertcross, CoordPair,
+                 get_cartopy, latlon_coords, ALL_TIMES)
 from common_utils import *
 
 
@@ -191,7 +196,7 @@ def read_LIS_diff(var_name,file_name,land_ctl_path,land_sen_path, lat_names, lon
 
     return var_diff, clevs, cmap
 
-def plot_Tmax_Burn_Date(fire_path, file_name, land_ctl_path, land_sen_path, time_ss=None, time_es=None,
+def plot_spatial_map_Tmax(fire_path, file_name, land_ctl_path, land_sen_path, time_ss=None, time_es=None,
                         lat_names="lat", lon_names="lon", loc_lat=None, loc_lon=None, reg_lats=None, reg_lons=None,
                         wrf_path=None, message=None, burn=0):
 
@@ -204,68 +209,42 @@ def plot_Tmax_Burn_Date(fire_path, file_name, land_ctl_path, land_sen_path, time
     lon_in         = wrf.variables['XLONG'][0,:,:]
     lat_in         = wrf.variables['XLAT'][0,:,:]
 
-    # Read Burned Date
-    #               1,  2,  3,  4,   5,   6,   7,   8,   9,  10,  11,  12, 1
-    day_in_month   = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365]
+    # # Read Burned Date
+    # #               1,  2,  3,  4,   5,   6,   7,   8,   9,  10,  11,  12, 1
+    # day_in_month   = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365]
 
-    # =========== Read in data ===========
-    fire_file      = Dataset(fire_path, mode='r')
-    Burn_Date_tmp  = fire_file.variables['Burn_Date'][2:8,::-1,:]  # 2019-09 - 2020-02
-    lat_fire       = fire_file.variables['lat'][::-1]
-    lon_fire       = fire_file.variables['lon'][:]
+    # # =========== Read in data ===========
+    # fire_file      = Dataset(fire_path, mode='r')
+    # Burn_Date_tmp  = fire_file.variables['Burn_Date'][2:8,::-1,:]  # 2019-09 - 2020-02
+    # lat_fire       = fire_file.variables['lat'][::-1]
+    # lon_fire       = fire_file.variables['lon'][:]
 
-    Burn_Date      = Burn_Date_tmp.astype(float)
-    Burn_Date      = np.where(Burn_Date<=0, 99999, Burn_Date)
+    # Burn_Date      = Burn_Date_tmp.astype(float)
+    # Burn_Date      = np.where(Burn_Date<=0, 99999, Burn_Date)
 
-    Burn_Date[4:,:,:] = Burn_Date[4:,:,:]+365 # Add 365 to Jan-Feb 2020
+    # Burn_Date[4:,:,:] = Burn_Date[4:,:,:]+365 # Add 365 to Jan-Feb 2020
 
-    Burn_Date_min  = np.nanmin(Burn_Date, axis=0)
-    unique_values  = np.unique(Burn_Date)
-    print("Unique values:", unique_values)
+    # Burn_Date_min  = np.nanmin(Burn_Date, axis=0)
+    # unique_values  = np.unique(Burn_Date)
+    # print("Unique values:", unique_values)
 
-    Burn_Date_index = np.where(Burn_Date_min<=273,   1009, Burn_Date_min)
-    print('Burn_Date_index.count(1009)',np.count_nonzero(Burn_Date_index == 1009))
-    Burn_Date_index = np.where(Burn_Date_index<=304, 1010, Burn_Date_index)
-    print('Burn_Date_index.count(1010)',np.count_nonzero(Burn_Date_index == 1010))
-    Burn_Date_index = np.where(Burn_Date_index<=334, 1011, Burn_Date_index)
-    print('Burn_Date_index.count(1011)',np.count_nonzero(Burn_Date_index == 1011))
-    Burn_Date_index = np.where(Burn_Date_index<=365, 1012, Burn_Date_index)
-    print('Burn_Date_index.count(1012)',np.count_nonzero(Burn_Date_index == 1012))
-    Burn_Date_index = np.where(Burn_Date_index<=396, 1013, Burn_Date_index)
-    print('Burn_Date_index.count(1013)',np.count_nonzero(Burn_Date_index == 1013))
-    Burn_Date_index = np.where(Burn_Date_index<=425, 1014, Burn_Date_index)
-    print('Burn_Date_index.count(1014)',np.count_nonzero(Burn_Date_index == 1014))
-    Burn_Date_index = np.where(Burn_Date_index>=99999, np.nan, Burn_Date_index)
-    print('Burn_Date_index.count(np.nan)',np.count_nonzero( np.isnan(Burn_Date_index)))
+    # Burn_Date_index = np.where(Burn_Date_min<=273,   1009, Burn_Date_min)
+    # print('Burn_Date_index.count(1009)',np.count_nonzero(Burn_Date_index == 1009))
+    # Burn_Date_index = np.where(Burn_Date_index<=304, 1010, Burn_Date_index)
+    # print('Burn_Date_index.count(1010)',np.count_nonzero(Burn_Date_index == 1010))
+    # Burn_Date_index = np.where(Burn_Date_index<=334, 1011, Burn_Date_index)
+    # print('Burn_Date_index.count(1011)',np.count_nonzero(Burn_Date_index == 1011))
+    # Burn_Date_index = np.where(Burn_Date_index<=365, 1012, Burn_Date_index)
+    # print('Burn_Date_index.count(1012)',np.count_nonzero(Burn_Date_index == 1012))
+    # Burn_Date_index = np.where(Burn_Date_index<=396, 1013, Burn_Date_index)
+    # print('Burn_Date_index.count(1013)',np.count_nonzero(Burn_Date_index == 1013))
+    # Burn_Date_index = np.where(Burn_Date_index<=425, 1014, Burn_Date_index)
+    # print('Burn_Date_index.count(1014)',np.count_nonzero(Burn_Date_index == 1014))
+    # Burn_Date_index = np.where(Burn_Date_index>=99999, np.nan, Burn_Date_index)
+    # print('Burn_Date_index.count(np.nan)',np.count_nonzero( np.isnan(Burn_Date_index)))
 
-    print('Burn_Date_index.count(99999)',np.count_nonzero(Burn_Date_index == 99999))
-    # np.savetxt("Burn_Date_index.txt",Burn_Date_index,delimiter=",")
-
-    if 0:
-        # for j in np.arange(6):
-        fig1, ax1    = plt.subplots(nrows=1, ncols=1, figsize=[5,4],sharex=True, sharey=True, squeeze=True,
-                                    subplot_kw={'projection': ccrs.PlateCarree()})
-
-        states= NaturalEarthFeature(category="cultural", scale="50m",
-                                            facecolor="none",
-                                            name="admin_1_states_provinces_shp")
-
-        # ======================= Set colormap =======================
-        cmap    = plt.cm.BrBG
-        cmap.set_bad(color='lightgrey')
-        ax1.coastlines(resolution="50m",linewidth=1)
-        ax1.set_extent([135,155,-39,-23])
-        ax1.add_feature(states, linewidth=.5, edgecolor="black")
-
-        extent   = (135, 155, -39, -23)
-
-        plot1    = plt.imshow(Burn_Date_min, origin="lower", extent=extent, vmin=200, vmax=430, transform=ccrs.PlateCarree(), cmap=cmap)
-        # plot1  = ax1.contourf( lon_fire, lat_fire, Burn_Date_tmp, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
-        cbar1  = plt.colorbar(plot1, ax=ax1, ticklocation="right", pad=0.08, orientation="horizontal",
-                            aspect=40, shrink=0.6)
-        cbar1.ax.tick_params(labelsize=8, labelrotation=45)
-
-        plt.savefig('./plots/spatial_map_check_burn_region.png',dpi=300)
+    # print('Burn_Date_index.count(99999)',np.count_nonzero(Burn_Date_index == 99999))
+    # # np.savetxt("Burn_Date_index.txt",Burn_Date_index,delimiter=",")
 
     # read in var
     Tmax_diff_Dec, clevs, cmap = read_LIS_diff("Tmax", file_name, land_ctl_path, land_sen_path,
@@ -276,10 +255,10 @@ def plot_Tmax_Burn_Date(fire_path, file_name, land_ctl_path, land_sen_path, time
                                                 lat_names, lon_names, loc_lat, loc_lon, time_s=time_ss[2], time_e=time_es[2])
 
     # ================== Start Plotting =================
-    fig, axs = plt.subplots(nrows=1, ncols=4, figsize=[10,4],sharex=True,
+    fig, axs = plt.subplots(nrows=3, ncols=1, figsize=[4,10],sharex=False,
                 sharey=False, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()})
 
-    plt.subplots_adjust(wspace=0.18, hspace=0.)
+    plt.subplots_adjust(wspace=0., hspace=0.1)
 
     plt.rcParams['text.usetex']     = False
     plt.rcParams['font.family']     = "sans-serif"
@@ -313,7 +292,7 @@ def plot_Tmax_Burn_Date(fire_path, file_name, land_ctl_path, land_sen_path, time
 
     # =============== CHANGE HERE ===============
 
-    for i in np.arange(4):
+    for i in np.arange(3):
 
         axs[i].set_extent([135,155,-39,-24])
         axs[i].add_feature(states, linewidth=.5, edgecolor="black")
@@ -327,89 +306,59 @@ def plot_Tmax_Burn_Date(fire_path, file_name, land_ctl_path, land_sen_path, time
         axs[i].set_xticks(x_ticks)
         axs[i].set_yticks(y_ticks)
 
-    axs[0].set_xticklabels(['135$\mathregular{^{o}}$E','140$\mathregular{^{o}}$E','145$\mathregular{^{o}}$E',
-                                        '150$\mathregular{^{o}}$E','155$\mathregular{^{o}}$E'],rotation=25)
+    axs[0].set_xticklabels([])
     axs[0].set_yticklabels(['40$\mathregular{^{o}}$S','35$\mathregular{^{o}}$S',
                                     '30$\mathregular{^{o}}$S','25$\mathregular{^{o}}$S'])
-    for i in np.arange(1,4):
-        axs[i].set_xticklabels(['135$\mathregular{^{o}}$E','140$\mathregular{^{o}}$E','145$\mathregular{^{o}}$E',
+    axs[1].set_xticklabels([])
+    axs[1].set_yticklabels(['40$\mathregular{^{o}}$S','35$\mathregular{^{o}}$S',
+                                    '30$\mathregular{^{o}}$S','25$\mathregular{^{o}}$S'])
+    axs[2].set_xticklabels(['135$\mathregular{^{o}}$E','140$\mathregular{^{o}}$E','145$\mathregular{^{o}}$E',
                                         '150$\mathregular{^{o}}$E','155$\mathregular{^{o}}$E'],rotation=25)
-        axs[i].set_yticklabels([])
-
-    extent   = (min(lon_fire), max(lon_fire), min(lat_fire), max(lat_fire))
-
-    # Create a custom colormap using the ListedColormap class
-    colors = ['yellow','gold','orange','tomato', 'red', 'brown']#,'black'] # 'coral',
-    custom_cmap = ListedColormap(colors)
+    axs[2].set_yticklabels(['40$\mathregular{^{o}}$S','35$\mathregular{^{o}}$S',
+                                    '30$\mathregular{^{o}}$S','25$\mathregular{^{o}}$S'])
 
     # cmap1 = plt.cm.Pastel2
-    plot1 = axs[0].contourf( lon_fire, lat_fire, Burn_Date_index, levels=[1008.5,1009.5,1010.5,1011.5,1012.5,1013.5,1014.5], transform=ccrs.PlateCarree(), cmap=custom_cmap, extend='neither')
-    # plot1    = axs[0].imshow(Burn_Date_index, origin="lower", extent=extent,  transform=ccrs.PlateCarree(), cmap=custom_cmap) # vmin=1008.5, vmax=1015.5,
-    # axs[0].add_feature(OCEAN,edgecolor='none', facecolor="lightgray")
-    cbar = plt.colorbar(plot1, ax=axs[0], ticklocation="right", pad=0.14, orientation="horizontal",
-                        aspect=15, shrink=1.) # cax=cax,
-    cbar.set_ticks([1009,1010,1011,1012,1013,1014])
-    cbar.set_ticklabels(['Sep','Oct','Nov','Dec','Jan','Feb']) # cax=cax,
-    cbar.ax.tick_params(labelsize=12,labelrotation=45)
-
-    plot2 = axs[1].contourf(lon_in, lat_in, Tmax_diff_Dec, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
-    plot3 = axs[2].contourf(lon_in, lat_in, Tmax_diff_Jan, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
-    plot4 = axs[3].contourf(lon_in, lat_in, Tmax_diff_Feb, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
-    cbar = plt.colorbar(plot4, ax=axs[1:5], ticklocation="right", pad=0.14, orientation="horizontal",
-            aspect=45, shrink=0.9) # cax=cax,
+    plot1 = axs[0].contourf(lon_in, lat_in, Tmax_diff_Dec, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
+    plot2 = axs[1].contourf(lon_in, lat_in, Tmax_diff_Jan, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
+    plot3 = axs[2].contourf(lon_in, lat_in, Tmax_diff_Feb, clevs, transform=ccrs.PlateCarree(), cmap=cmap, extend='both')
+    cbar = plt.colorbar(plot3, ax=axs[0:3], ticklocation="right", pad=0.06, orientation="horizontal",
+            aspect=30, shrink=0.7) # cax=cax,
     cbar.ax.tick_params(labelsize=12,labelrotation=45)
     cbar.set_label('ΔT$\mathregular{_{max}}$ ($\mathregular{^{o}}$C)', loc='center',size=14)# rotation=270,
+    axs[0].text(0.02, 0.15, "(a)", transform=axs[0].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+    axs[1].text(0.02, 0.15, "(e)", transform=axs[1].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+    axs[2].text(0.02, 0.15, "(i)", transform=axs[2].transAxes, fontsize=14, verticalalignment='top', bbox=props)
 
-    axs[0].set_title("First Burn Month", fontsize=12)
-    axs[1].set_title("Dec 2019", fontsize=12)
-    axs[2].set_title("Jan 2020", fontsize=12)
-    axs[3].set_title("Feb 2020", fontsize=12)
+    # draw the burn box
+    if 0:
+        reg_lats = [-39,-27]
+        reg_lons = [146,154]
+        for i in np.arange(3):
+            axs[i].add_patch(Polygon([[reg_lons[0], reg_lats[0]], [reg_lons[1], reg_lats[0]],
+                                        [reg_lons[1], reg_lats[1]], [reg_lons[0], reg_lats[1]]],
+                                        closed=True,color=almost_black, fill=False,linewidth=0.8))
+
+
+    axs[0].set_ylabel("Dec 2019", fontsize=12)
+    axs[1].set_ylabel("Jan 2020", fontsize=12)
+    axs[2].set_ylabel("Feb 2020", fontsize=12)
+
+    for i in np.arange(3):
+        axs[i].plot([ 149, 154], [-30, -30],     c=almost_black, lw=0.8, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
+        axs[i].plot([ 148, 153], [-33, -33],     c=almost_black, lw=0.8, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
+        axs[i].plot([ 146, 151], [-37.5, -37.5], c=almost_black, lw=0.8, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
+
 
     # fig.tight_layout()
     plt.savefig('./plots/spatial_map_' +message + '.png',dpi=300)
+    return
 
+def plot_profile_wrf_wind(file_outs,message=None):
 
-def plot_Burn_Date(fire_path):
+    # ****************** plotting ******************
 
-    '''
-    plot LIS variables in burnt / unburnt / all regions
-    '''
-
-    # Read Burned Date
-    #               1,  2,  3,  4,   5,   6,   7,   8,   9,  10,  11,  12, 1
-    day_in_month   = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365]
-
-    # =========== Read in data ===========
-    fire_file      = Dataset(fire_path, mode='r')
-    Burn_Date_tmp  = fire_file.variables['Burn_Date'][2:8,::-1,:]  # 2019-09 - 2020-02
-    lat_fire       = fire_file.variables['lat'][::-1]
-    lon_fire       = fire_file.variables['lon'][:]
-
-    Burn_Date      = Burn_Date_tmp.astype(float)
-    Burn_Date      = np.where(Burn_Date<=0, 99999, Burn_Date)
-
-    Burn_Date[4:,:,:] = Burn_Date[4:,:,:]+365 # Add 365 to Jan-Feb 2020
-
-    Burn_Date_min  = np.nanmin(Burn_Date, axis=0)
-    unique_values  = np.unique(Burn_Date)
-    print("Unique values:", unique_values)
-
-    Burn_Date_index = np.where(Burn_Date_min<=273,   1009, Burn_Date_min)
-    Burn_Date_index = np.where(Burn_Date_index<=304, 1010, Burn_Date_index)
-    Burn_Date_index = np.where(Burn_Date_index<=334, 1011, Burn_Date_index)
-    Burn_Date_index = np.where(Burn_Date_index<=365, 1012, Burn_Date_index)
-    Burn_Date_index = np.where(Burn_Date_index<=396, 1013, Burn_Date_index)
-    Burn_Date_index = np.where(Burn_Date_index<=425, 1014, Burn_Date_index)
-    Burn_Date_index = np.where(Burn_Date_index>=99999, np.nan, Burn_Date_index)
-
-    print('Burn_Date_index.count(99999)',np.count_nonzero(Burn_Date_index == 99999))
-    # np.savetxt("Burn_Date_index.txt",Burn_Date_index,delimiter=",")
-
-    # ================== Start Plotting =================
-    fig, axs = plt.subplots(nrows=1, ncols=1, figsize=[4,4],sharex=True,
-                sharey=False, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()})
-
-    plt.subplots_adjust(wspace=0.18, hspace=0.)
+    fig, ax = plt.subplots(nrows=3, ncols=3, figsize=[7,10],sharex=False, sharey=True, squeeze=True)
+    plt.subplots_adjust(wspace=0.13, hspace=0.07)
 
     plt.rcParams['text.usetex']     = False
     plt.rcParams['font.family']     = "sans-serif"
@@ -421,7 +370,7 @@ def plot_Burn_Date(fire_path):
     plt.rcParams['xtick.labelsize'] = 12
     plt.rcParams['ytick.labelsize'] = 12
 
-    almost_black                    = '#262626'
+    almost_black = '#262626'
     # change the tick colors also to the almost black
     plt.rcParams['ytick.color']     = almost_black
     plt.rcParams['xtick.color']     = almost_black
@@ -434,70 +383,173 @@ def plot_Burn_Date(fire_path):
     plt.rcParams['axes.edgecolor']  = almost_black
     plt.rcParams['axes.labelcolor'] = almost_black
 
-    # set the box type of sequence number
     props = dict(boxstyle="round", facecolor='white', alpha=0.0, ec='white')
 
-    states= NaturalEarthFeature(category="cultural", scale="50m",
-                                        facecolor="none",
-                                        name="admin_1_states_provinces_shp")
+    # ===== set colormap =====
+    # color map
+    color_map_1   = get_cmap("seismic")
 
-    # =============== CHANGE HERE ===============
-    axs.set_extent([135,155,-39,-24])
-    axs.add_feature(states, linewidth=.5, edgecolor="black")
-    axs.set_facecolor('lightgray')
-    axs.coastlines(resolution="50m",linewidth=1)
+    # Define the RGB values as a 2D array
+    rgb_17colors= np.array([
+                        [0.338024, 0.193310, 0.020377],
+                        [0.458593, 0.264360, 0.031142],
+                        [0.576471, 0.343483, 0.058055],
+                        [0.686275, 0.446828, 0.133410],
+                        [0.778547, 0.565859, 0.250288],
+                        [0.847443, 0.705805, 0.422530],
+                        [0.932872, 0.857209, 0.667820],
+                        [0.964091, 0.917801, 0.795463],
+                        [0.955517, 0.959016, 0.9570165],
+                        [0.808689, 0.924414, 0.907882],
+                        [0.627528, 0.855210, 0.820531],
+                        [0.426990, 0.749942, 0.706882],
+                        [0.265513, 0.633679, 0.599231],
+                        [0.135871, 0.524337, 0.492964],
+                        [0.023914, 0.418839, 0.387466],
+                        [0.002153, 0.325721, 0.287274],
+                        [0.000000, 0.235294, 0.188235]
+                    ])
 
-    axs.tick_params(axis='x', direction='out')
-    axs.tick_params(axis='y', direction='out')
-    x_ticks = np.arange(135, 156, 5)
-    y_ticks = np.arange(-40, -20, 5)
-    axs.set_xticks(x_ticks)
-    axs.set_yticks(y_ticks)
-
-    axs.set_xticklabels(['135$\mathregular{^{o}}$E','140$\mathregular{^{o}}$E','145$\mathregular{^{o}}$E',
-                                        '150$\mathregular{^{o}}$E','155$\mathregular{^{o}}$E'],rotation=25)
-    axs.set_yticklabels(['40$\mathregular{^{o}}$S','35$\mathregular{^{o}}$S',
-                                    '30$\mathregular{^{o}}$S','25$\mathregular{^{o}}$S'])
- 
-
-    # Create a custom colormap using the ListedColormap class
-    # colors = ['yellow','gold','orange','tomato', 'red', 'brown']#,'black'] # 'coral',
-    colors = ['mediumblue','cornflowerblue','yellowgreen','orange','red','darkred']#,'black'] # 'coral',
-    custom_cmap = ListedColormap(colors)
-
-    # custom_cmap = plt.cm.turbo
-    # plot1 = axs.contourf( lon_fire, lat_fire, Burn_Date_index, levels=[1008.5,1009.5,1010.5,1011.5,1012.5,1013.5,1014.5], transform=ccrs.PlateCarree(), cmap=custom_cmap, extend='neither')
-    
-    extent   = (min(lon_fire), max(lon_fire), min(lat_fire), max(lat_fire))
-    plot1 = axs.imshow(Burn_Date_index, origin="lower", extent=extent, interpolation="none", vmin=1008.5, vmax=1014.5, transform=ccrs.PlateCarree(), cmap=custom_cmap) # resample=False, 
-    
-   
-    axs.plot([ 149, 154], [-30, -30],     c=almost_black, lw=0.8, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
-    axs.plot([ 148, 153], [-33, -33],     c=almost_black, lw=0.8, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
-    axs.plot([ 146, 151], [-37.5, -37.5], c=almost_black, lw=0.8, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
-
-    reg_lats      = [  [-32,-28.5],
-                        [-34.5,-32.5],
-                        [-38,-34.5]    ]
-
-    reg_lons      = [  [151.5,153.5],
-                        [149.5,151.5],
-                        [146.5,151]    ]
-    # Add boxes, lines
-    for i in np.arange(3):
-        axs.add_patch(Polygon([[reg_lons[i][0], reg_lats[i][0]], [reg_lons[i][1], reg_lats[i][0]],
-                                    [reg_lons[i][1], reg_lats[i][1]], [reg_lons[i][0], reg_lats[i][1]]],
-                                    closed=True,color=almost_black, fill=False,linewidth=0.8))
-
-    cbar = plt.colorbar(plot1, ax=axs, ticklocation="right", pad=0.14, orientation="horizontal",
-                        aspect=15, shrink=1.) # cax=cax,
-    cbar.set_ticks([1009,1010,1011,1012,1013,1014])
-    cbar.set_ticklabels(['Sep','Oct','Nov','Dec','Jan','Feb']) # cax=cax,
-    cbar.ax.tick_params(labelsize=12,labelrotation=45)
+    rgb_21colors = np.array([
+                [0.338024, 0.193310, 0.020377],
+                [0.441369, 0.254210, 0.029604],
+                [0.544714, 0.315110, 0.038831],
+                [0.631373, 0.395156, 0.095732],
+                [0.733333, 0.491119, 0.165706],
+                [0.793310, 0.595848, 0.287197],
+                [0.857286, 0.725798, 0.447136],
+                [0.904575, 0.810458, 0.581699],
+                [0.947020, 0.880584, 0.710880],
+                [0.963629, 0.923799, 0.818531],
+                [0.955517, 0.959016, 0.9570165],
+                [0.822837, 0.927797, 0.912803],
+                [0.714879, 0.890888, 0.864821],
+                [0.583852, 0.837370, 0.798385],
+                [0.461592, 0.774856, 0.729950],
+                [0.311649, 0.666897, 0.629988],
+                [0.183852, 0.569550, 0.538178],
+                [0.087889, 0.479123, 0.447751],
+                [0.003691, 0.390311, 0.358016],
+                [0.001845, 0.312803, 0.273126],
+                [0.000000, 0.235294, 0.188235]
+            ])
 
 
-    # fig.tight_layout()
-    plt.savefig('./plots/spatial_map_Burn_Date.png',dpi=300)
+    # Create a colormap from the RGB values
+    cmap17 = plt.cm.colors.ListedColormap(rgb_17colors)
+    cmap21 = plt.cm.colors.ListedColormap(rgb_21colors)
+
+    # quiver scale
+    scale = 1.
+
+    # contour levels
+    levels1    = [-1.2,-1.1,-1,-0.9,-0.8,-0.7,-0.6,-0.5,-0.4,-0.3,-0.2,-0.1,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.,1.1,1.2]
+    levels_lai = [-2,-1.8,-1.6,-1.4,-1.2,-1.,-0.8,-0.6,-0.4,-0.2,0.2,0.4,0.6,0.8,1.,1.2,1.4,1.6,1.8,2]
+    levels_alb = [-0.08,-0.07,-0.06,-0.05,-0.04,-0.03,-0.02,-0.01,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08]
+    texts = ["(b)","(c)","(d)",
+             "(f)","(g)","(h)",
+             "(j)","(k)","(l)"]
+    # ****************** Read data *****************
+    for i, file_out in enumerate(file_outs):
+
+        row = int(i / 3)
+        col = i % 3
+
+        ncfile        = Dataset(file_out, mode='r')
+        vertical      = ncfile.variables['level'][:]
+        xy_loc        = ncfile.variables['lon'][:]
+
+        th_day_diff   = ncfile.variables['th_day_diff'][:]
+        ua_day_diff   = ncfile.variables['ua_day_diff'][:]
+        wa_day_diff   = ncfile.variables['wa_day_diff'][:]
+
+        lai_diff      = ncfile.variables['lai_diff'][:]
+        alb_diff      = ncfile.variables['alb_diff'][:]
+        pbl_day_ctl   = ncfile.variables['pbl_day_ctl'][:]
+        pbl_day_sen   = ncfile.variables['pbl_day_sen'][:]
+
+        # Water table depth height
+        lai_hgt          = [0,100]
+        lai_diff_2D      = np.zeros((2,len(lai_diff)))
+        lai_diff_2D[0,:] = lai_diff
+        lai_diff_2D[1,:] = lai_diff
+
+        alb_hgt          = [-100,0]
+        alb_diff_2D      = np.zeros((2,len(alb_diff)))
+        alb_diff_2D[0,:] = alb_diff
+        alb_diff_2D[1,:] = alb_diff
+
+        # Set color for topography
+        ax[row, col].set_facecolor('lightgray')
+
+        # Set the lons boundaries of the transect
+        if row == 2:
+            ax[row, 0].set_xlim(149, 154)
+            ax[row, 0].set_xticks([150, 152, 154])
+            ax[row, 0].set_xticklabels(['150','152','154'],rotation=45)
+            ax[row, 1].set_xlim(148, 153)
+            ax[row, 1].set_xticks([148, 150, 152])
+            ax[row, 1].set_xticklabels(['148','150','152'],rotation=45)
+            ax[row, 2].set_xlim(146, 151)
+            ax[row, 2].set_xticks([146, 148, 150])
+            ax[row, 2].set_xticklabels(['146','148','150'],rotation=45)
+        else:
+            ax[row, 0].set_xlim(149, 154)
+            ax[row, 0].set_xticks([150, 152, 154])
+            ax[row, 0].set_xticklabels([])
+            ax[row, 1].set_xlim(148, 153)
+            ax[row, 1].set_xticks([148, 150, 152])
+            ax[row, 1].set_xticklabels([])
+            ax[row, 2].set_xlim(146, 151)
+            ax[row, 2].set_xticks([146, 148, 150])
+            ax[row, 2].set_xticklabels([])
+
+
+        ax[row,col].text(0.02, 0.13, texts[i], transform=ax[row,col].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+        # Plot variables
+        contour   = ax[row, col].contourf(xy_loc, vertical, th_day_diff, levels=levels1, cmap=color_map_1, extend='both')
+        cntr_lai  = ax[row, col].contourf(xy_loc, lai_hgt,  lai_diff_2D, levels=levels_lai, cmap=cmap21, extend='both')
+        cntr_alb  = ax[row, col].contourf(xy_loc, alb_hgt,  alb_diff_2D, levels=levels_alb, cmap=cmap17, extend='both')
+        line1     = ax[row, col].plot(xy_loc,pbl_day_ctl,ls="-", lw=0.5, color=almost_black)
+        line2     = ax[row, col].plot(xy_loc,pbl_day_sen,ls="--", lw=0.5, color=almost_black)
+        line3     = ax[row, col].axhline(y=0,   color=almost_black, lw=0.5, linestyle='-')
+        line4     = ax[row, col].axhline(y=100, color=almost_black, lw=0.5, linestyle='-')
+
+        # q         = ax[row, col].quiver(xy_loc[::30], vertical[::3], ua_day_diff[::3,::30],
+        #                         wa_day_diff[::3,::30], angles='xy', scale_units='xy',
+        #                         scale=scale, pivot='middle', color="lightgrey")
+        ax[row, col].set_ylim(-100,3000)
+
+
+    # # Set titles
+    # ax[0,0].set_ylabel("Dec 2019")
+    # ax[0,1].set_ylabel("Jan 2020")
+    # ax[0,2].set_ylabel("Feb 2020")
+
+    ax[0,0].set_title("North", fontsize=12)
+    ax[0,1].set_title("Central", fontsize=12)
+    ax[0,2].set_title("South", fontsize=12)
+
+    # fig.text(0.01, 0.5, 'Geopotential Height (m)', va='center', rotation='vertical')
+
+    # Add Tmax colorbar
+    cbar  = plt.colorbar(contour, ax=ax, ticklocation="right", pad=0.03, orientation="vertical",
+            aspect=45, shrink=0.9) # cax=cax,
+    cbar.set_label('Δθ$\mathregular{_{max}}$ ($\mathregular{^{o}}$C)', loc='center',size=12)# rotation=270,
+    cbar.ax.tick_params(labelsize=12) # ,labelrotation=45
+
+    # Add LAI and albedo colorbar
+    position_lai  = fig.add_axes([0.1, 0.055, 0.34, 0.014]) # [left, bottom, width, height]
+    cb_lai        = fig.colorbar(cntr_lai, ax=ax, pad=0.08, cax=position_lai, orientation="horizontal", aspect=60, shrink=0.8)
+    cb_lai.set_label('LAI (m$\mathregular{^{2}}$ m$\mathregular{^{-2}}$)', loc='center',size=12)# rotation=270,
+    cb_lai.ax.tick_params(labelsize=12,rotation=45)
+
+    position_alb  = fig.add_axes([0.48, 0.055, 0.34, 0.014]) # [left, bottom, width, height]
+    cb_alb        = fig.colorbar(cntr_alb, ax=ax, pad=0.08, cax=position_alb, orientation="horizontal", aspect=60, shrink=0.8)
+    cb_alb.set_label('Δ$α$ (-)', loc='center',size=12)# rotation=270,
+    cb_alb.ax.tick_params(labelsize=12,rotation=45)
+
+    fig.savefig("./plots/profile_wrf_new_"+message, bbox_inches='tight', pad_inches=0.3,dpi=300)
 
 if __name__ == "__main__":
 
@@ -528,7 +580,7 @@ if __name__ == "__main__":
                        [149.5,151.5],
                        [146.5,151]    ]
 
-    message      = "HW_Tmax_Burn_Date"
+    message      = "HW_Tmax"
     time_ss      = [datetime(2019,12,1,0,0,0,0),
                     datetime(2020,1,1,0,0,0,0),
                     datetime(2020,2,1,0,0,0,0)]
@@ -537,8 +589,21 @@ if __name__ == "__main__":
                     datetime(2020,2,1,0,0,0,0),
                     datetime(2020,3,1,0,0,0,0)]
 
-    # plot_Tmax_Burn_Date(fire_path, file_name, land_ctl_path, land_sen_path, time_ss=time_ss, time_es=time_es, lat_names="lat",
-    #                     lon_names="lon", loc_lat=loc_lat, loc_lon=loc_lon, reg_lats=reg_lats, reg_lons=reg_lons,
-    #                     wrf_path=wrf_path, message=message, burn=burn)
+    plot_spatial_map_Tmax(fire_path, file_name, land_ctl_path, land_sen_path, time_ss=time_ss, time_es=time_es, lat_names="lat",
+                        lon_names="lon", loc_lat=loc_lat, loc_lon=loc_lon, reg_lats=reg_lats, reg_lons=reg_lons,
+                        wrf_path=wrf_path, message=message, burn=burn)
 
-    plot_Burn_Date(fire_path)
+
+    message        = "profile_transect"
+
+    file_outs = [ "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Dec_lat-30_houly.nc",
+                  "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Dec_lat-33_houly.nc",
+                  "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Dec_lat-375_houly.nc",
+                  "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Jan_lat-30_houly.nc",
+                  "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Jan_lat-33_houly.nc",
+                  "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Jan_lat-375_houly.nc",
+                  "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Feb_lat-30_houly.nc",
+                  "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Feb_lat-33_houly.nc",
+                  "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_201920_Feb_lat-375_houly.nc"]
+
+    plot_profile_wrf_wind(file_outs,message=message)

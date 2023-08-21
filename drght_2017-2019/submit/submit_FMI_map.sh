@@ -3,7 +3,7 @@
 #PBS -m ae
 #PBS -P w97
 #PBS -q normalsr
-#PBS -l walltime=3:30:00
+#PBS -l walltime=1:30:00
 #PBS -l mem=500GB
 #PBS -l ncpus=1
 #PBS -j oe
@@ -13,4 +13,5 @@
 module use /g/data/hh5/public/modules
 module load conda/analysis3-22.01
 cd /g/data/w97/mm3972/scripts/Drought/drght_2017-2019
-python Fig_output_time_series_burnt_reg_LAI.py
+python spatial_map_FMI.py
+#python spatial_map_single_plot.py

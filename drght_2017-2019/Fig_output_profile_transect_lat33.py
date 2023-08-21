@@ -1,3 +1,4 @@
+
 #!/usr/bin/python
 
 import os
@@ -574,12 +575,158 @@ def output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen, land_path_ct
     pbl_day_sen                 = f.createVariable('pbl_day_sen', 'f4', ('east_west'))
     pbl_day_sen.standard_name   = "PBL height in sen at daytime"
     pbl_day_sen.units           = "m"
-    pbl_day_sen[:]              = pbl1_day_crs
+    pbl_day_sen[:]              = pbl2_day_crs
 
     pbl_night_sen               = f.createVariable('pbl_night_sen', 'f4', ('east_west'))
     pbl_night_sen.standard_name = "PBL height in sen at night"
     pbl_night_sen.units         = "m"
-    pbl_night_sen[:]            = pbl1_night_crs
+    pbl_night_sen[:]            = pbl2_night_crs
+
+    f.close()
+
+
+def output_profile_pbl(file_out, atmo_path_ctl, atmo_path_sen, land_path_ctl, land_path_sen,
+                            wrf_path, land_path, file_name_wrf, file_name_lis, time_s, time_e,
+                            lat_slt=36, lon_min=130, lon_max=160):
+
+    '''
+    This function aims to fix the bug (put out PBL1 as PBL2) in previous script
+    '''
+    # ================ Get time coordiation ================
+    time_cood_all, time_cood_day, time_cood_night, doy_all, doy_day, doy_night = \
+                                        get_time_cood(atmo_path_ctl, file_name_wrf, time_s, time_e)
+
+    # ================ Get the WRF variables ================
+    Z1,Wa1,Ua1,T1,S1,PBL1 = read_wrf_variable(atmo_path_ctl,wrf_path,file_name_wrf)
+    print("Z1", Z1)
+
+    # ================ Get time masked ================
+    # Day time
+    z1_day, t1_day, s1_day, ua1_day, wa1_day, pbl1_day = \
+                       get_time_masked(Z1, T1, S1, Ua1, Wa1, PBL1, time_cood_day)
+
+    # Night time
+    z1_night, t1_night, s1_night, ua1_night, wa1_night, pbl1_night = \
+                       get_time_masked(Z1, T1, S1, Ua1, Wa1, PBL1, time_cood_night)
+
+    print("z1_day",z1_day)
+
+    # # ================ Vertcross, interpolate and mean ================
+    # seconds         = [6.*60.*60.,18.*60.*60.]
+    # t1_day_crs, s1_day_crs, ua1_day_crs, wa1_day_crs, xy_loc, vertical =\
+    #                   get_vertcross(wrf_path, z1_day, t1_day, s1_day, ua1_day,
+    #                   wa1_day, lat_slt, lon_min, lon_max, doy_day, seconds)
+    pbl1_day_crs    = get_PBL(wrf_path, land_path, z1_day, pbl1_day, lat_slt, lon_min, lon_max)
+
+    # seconds         = [18.*60.*60.,6.*60.*60.]
+    # t1_night_crs, s1_night_crs, ua1_night_crs, wa1_night_crs, xy_loc, vertical =\
+    #                   get_vertcross(wrf_path, z1_night, t1_night, s1_night, ua1_night,
+    #                   wa1_night, lat_slt, lon_min, lon_max, doy_night, seconds)
+    pbl1_night_crs  = get_PBL(wrf_path, land_path, z1_night, pbl1_night, lat_slt, lon_min, lon_max)
+
+
+    # ================ read second file ================
+    Z2,Wa2,Ua2,T2,S2,PBL2 = read_wrf_variable(atmo_path_sen,wrf_path,file_name_wrf)
+
+    z2_day, t2_day, s2_day, ua2_day, wa2_day, pbl2_day = \
+                    get_time_masked(Z2,T2,S2,Ua2,Wa2,PBL2, time_cood_day)
+
+    z2_night, t2_night, s2_night, ua2_night, wa2_night, pbl2_night = \
+                    get_time_masked(Z2, T2, S2, Ua2, Wa2, PBL2, time_cood_night)
+
+    # seconds         = [6.*60.*60.,18.*60.*60.]
+    # t2_day_crs, s2_day_crs, ua2_day_crs, wa2_day_crs, xy_loc, vertical =\
+    #     get_vertcross(wrf_path, z2_day, t2_day, s2_day, ua2_day, wa2_day,
+    #                   lat_slt, lon_min, lon_max, doy_day, seconds)
+
+    pbl2_day_crs = get_PBL(wrf_path, land_path, z2_day, pbl2_day, lat_slt, lon_min, lon_max)
+
+    # seconds         = [18.*60.*60.,6.*60.*60.]
+    # t2_night_crs, s2_night_crs, ua2_night_crs, wa2_night_crs, xy_loc, vertical =\
+    #     get_vertcross(wrf_path, z2_night, t2_night, s2_night, ua2_night,
+    #                   wa2_night, lat_slt, lon_min, lon_max, doy_night, seconds)
+
+    pbl2_night_crs = get_PBL(wrf_path, land_path, z2_night, pbl2_night, lat_slt, lon_min, lon_max)
+
+    # # ================== calc difference ==================
+    # # Sen - Ctl
+    # t_day_crs    = t2_day_crs  - t1_day_crs
+    # s_day_crs    = s2_day_crs  - s1_day_crs
+    # ua_day_crs   = ua2_day_crs - ua1_day_crs
+    # wa_day_crs   = wa2_day_crs - wa1_day_crs
+
+    # t_night_crs  = t2_night_crs  - t1_night_crs
+    # s_night_crs  = s2_night_crs  - s1_night_crs
+    # ua_night_crs = ua2_night_crs - ua1_night_crs
+    # wa_night_crs = wa2_night_crs - wa1_night_crs
+
+    # print("t_day_crs", t_day_crs)
+
+
+    # # ================ Get LAI and Albedo ================
+    # # Get coordiate info
+    # ncfile       = Dataset(wrf_path)
+    # template     = getvar(ncfile, 'th', timeidx=1)
+    # ncfile.close()
+
+    # # Extract the coordinate values from template
+    # coord_values = {'south_north': template['south_north'].values,
+    #                 'west_east': template['west_east'].values}
+
+    # # Read LAI and Albedo data
+    # lai_file     = Dataset(land_path_ctl + "LAI_inst/" + file_name_lis, mode='r')
+    # LAI_ctl      = lai_file.variables['LAI_inst'][:]
+
+    # time_tmp     = nc.num2date(lai_file.variables['time'][:],lai_file.variables['time'].units,
+    #                only_use_cftime_datetimes=False, only_use_python_datetimes=True)
+    # time         = UTC_to_AEST(time_tmp) - datetime(2000,1,1,0,0,0)
+    # time         = np.array(time)
+
+    # lai_file.close()
+
+    # lai_file     = Dataset(land_path_sen + "LAI_inst/" + file_name_lis, mode='r')
+    # LAI_sen      = lai_file.variables['LAI_inst'][:]
+    # lai_file.close()
+
+    # alb_file     = Dataset(land_path_ctl + "Albedo_inst/" + file_name_lis, mode='r')
+    # ALB_ctl      = alb_file.variables['Albedo_inst'][:]
+    # alb_file.close()
+
+    # alb_file     = Dataset(land_path_sen + "Albedo_inst/" + file_name_lis, mode='r')
+    # ALB_sen      = alb_file.variables['Albedo_inst'][:]
+    # alb_file.close()
+
+    # # Calculate difference
+    # LAI_diff     = LAI_sen - LAI_ctl
+    # ALB_diff     = ALB_sen - ALB_ctl
+
+    # # Change datetime to timedelta
+    # Time_s       = time_s - datetime(2000,1,1,0,0,0)
+    # Time_e       = time_e - datetime(2000,1,1,0,0,0)
+
+    # # ==================== add three time coordiation ====================
+    # # for all days
+    # time_lai_alb_mask = (time>=Time_s) & (time<Time_e)
+
+    # # Get time masked
+    # LAI          = np.nanmean(LAI_diff[time_lai_alb_mask,:,:],axis=0)
+    # ALB          = np.nanmean(ALB_diff[time_lai_alb_mask,:,:],axis=0)
+
+    # # Create the DataArray B with the same dimensions and coordinate information as A
+    # lai          = xr.DataArray(LAI, dims=('south_north', 'west_east'), coords=coord_values)
+    # albedo       = xr.DataArray(ALB, dims=('south_north', 'west_east'), coords=coord_values)
+
+    # # Get the transect
+    # lai_crs, alb_crs = get_LAI_ALBEDO(wrf_path, z1_day[0,:,:,:], lai, albedo, lat_slt, lon_min, lon_max) # z1_day can be replaced as others
+
+    # ================== make output file ==================
+
+    # create file and write global attributes
+    f = nc.Dataset(file_out, 'r+', format='NETCDF4')
+
+    ### edit nc file ###
+    f.variables['pbl_day_sen'][:]   = pbl2_day_crs
+    f.variables['pbl_night_sen'][:] = pbl2_night_crs
 
     f.close()
 
@@ -777,7 +924,6 @@ if __name__ == "__main__":
     file_name_lis  = "LIS.CABLE.201912-202002.nc"
     path           = '/g/data/w97/mm3972/model/wrf/NUWRF/LISWRF_configs/Tinderbox_drght_LAI_ALB/'
 
-
     wrf_path      = path+ 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/WRF_output/wrfout_d01_2019-12-01_01:00:00'
     land_path     = path+ 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/geo_em.d01.nc'
 
@@ -787,37 +933,49 @@ if __name__ == "__main__":
     land_path_ctl = path + 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2/LIS_output/'
     land_path_sen = path + 'drght_2017_2019_bl_pbl2_mp4_ra5_sf_sfclay2_obs_LAI_ALB/LIS_output/'
 
-    # message        = "201920_Dec_lat"+str(lat_slt)
-    # time_s         = datetime(2019,12,1,0,0,0,0)
-    # time_e         = datetime(2020,1,1,0,0,0,0)
-    # file_out       = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_"+message+"_houly.nc"
+    message        = "201920_Dec_lat"+str(lat_slt)
+    time_s         = datetime(2019,12,1,0,0,0,0)
+    time_e         = datetime(2020,1,1,0,0,0,0)
+    file_out       = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_"+message+"_houly_backup.nc"
 
     # output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen,
     #                         land_path_ctl, land_path_sen,
     #                         wrf_path, land_path,
     #                         file_name_wrf, file_name_lis,
     #                         time_s, time_e, lat_slt=lat_slt, lon_min=lon_min, lon_max=lon_max)
+
+    output_profile_pbl(file_out, atmo_path_ctl, atmo_path_sen, land_path_ctl, land_path_sen,
+                       wrf_path, land_path, file_name_wrf, file_name_lis, time_s, time_e,
+                       lat_slt=lat_slt, lon_min=lon_min, lon_max=lon_max)
 
     message        = "201920_Jan_lat"+str(lat_slt)
     time_s         = datetime(2020,1,1,0,0,0,0)
     time_e         = datetime(2020,2,1,0,0,0,0)
     file_out       = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_"+message+"_houly.nc"
 
-    output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen,
-                            land_path_ctl, land_path_sen,
-                            wrf_path, land_path,
-                            file_name_wrf, file_name_lis,
-                            time_s, time_e, lat_slt=lat_slt, lon_min=lon_min, lon_max=lon_max)
-
-    # message        = "201920_Feb_lat"+str(lat_slt)
-    # time_s         = datetime(2020,2,1,0,0,0,0)
-    # time_e         = datetime(2020,3,1,0,0,0,0)
-    # file_out       = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_"+message+"_houly.nc"
-
     # output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen,
     #                         land_path_ctl, land_path_sen,
     #                         wrf_path, land_path,
     #                         file_name_wrf, file_name_lis,
     #                         time_s, time_e, lat_slt=lat_slt, lon_min=lon_min, lon_max=lon_max)
+
+    output_profile_pbl(file_out, atmo_path_ctl, atmo_path_sen, land_path_ctl, land_path_sen,
+                       wrf_path, land_path, file_name_wrf, file_name_lis, time_s, time_e,
+                       lat_slt=lat_slt, lon_min=lon_min, lon_max=lon_max)
+
+    message        = "201920_Feb_lat"+str(lat_slt)
+    time_s         = datetime(2020,2,1,0,0,0,0)
+    time_e         = datetime(2020,3,1,0,0,0,0)
+    file_out       = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/transect_"+message+"_houly_backup.nc"
+
+    # # output_profile_wrf_wind(file_out, atmo_path_ctl, atmo_path_sen,
+    # #                         land_path_ctl, land_path_sen,
+    # #                         wrf_path, land_path,
+    # #                         file_name_wrf, file_name_lis,
+    # #                         time_s, time_e, lat_slt=lat_slt, lon_min=lon_min, lon_max=lon_max)
+
+    output_profile_pbl(file_out, atmo_path_ctl, atmo_path_sen, land_path_ctl, land_path_sen,
+                       wrf_path, land_path, file_name_wrf, file_name_lis, time_s, time_e,
+                       lat_slt=lat_slt, lon_min=lon_min, lon_max=lon_max)
 
     # plot_profile_wrf_wind(file_out,message=message)

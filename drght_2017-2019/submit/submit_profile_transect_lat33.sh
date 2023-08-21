@@ -13,5 +13,5 @@
 module use /g/data/hh5/public/modules
 module load conda/analysis3-22.01
 cd /g/data/w97/mm3972/scripts/Drought/drght_2017-2019/
-python profile_transect_lat33.py
+python Fig_output_profile_transect_lat33.py
 #spatial_map_T_R_metrics.py

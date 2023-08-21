@@ -13,4 +13,4 @@
 module use /g/data/hh5/public/modules
 module load conda/analysis3-22.01
 cd /g/data/w97/mm3972/scripts/Drought/drght_2017-2019
-python Fig_output_time_series_burnt_reg_LAI.py
+python Fig_output_time_series_burnt_reg_Qle.py

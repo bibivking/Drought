@@ -2,9 +2,9 @@
 
 #PBS -m ae
 #PBS -P w97
-#PBS -q megamem
-#PBS -l walltime=24:00:00
-#PBS -l mem=2990GB
+#PBS -q hugemem
+#PBS -l walltime=12:00:00
+#PBS -l mem=1024GB
 #PBS -l ncpus=1
 #PBS -j oe
 #PBS -l wd

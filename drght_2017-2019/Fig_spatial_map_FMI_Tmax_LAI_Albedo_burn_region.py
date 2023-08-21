@@ -273,7 +273,7 @@ def regrid_to_fire_map_resolution(fire_path, var_in, lat_in, lon_in, loc_lat=Non
 
     return var_regrid, lat_out, lon_out
 
-def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path, time_ss=None, time_es=None,
+def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, FMI_path, land_ctl_path, land_sen_path, time_ss=None, time_es=None,
                               lat_names="lat", lon_names="lon", loc_lat=None, loc_lon=None, reg_lats=None,
                               reg_lons=None, wrf_path=None, message=None, burn=0):
 
@@ -293,16 +293,12 @@ def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path
                                                           lat_names, lon_names, loc_lat, loc_lon, time_ss[0], time_es[0])
     ALB_diff_Dec,  clevs_ALB,  cmap_ALB  = read_LIS_diff("Albedo_inst", file_name, land_ctl_path, land_sen_path,
                                                           lat_names, lon_names, loc_lat, loc_lon, time_ss[0], time_es[0])
-    FW_diff_Dec,   clevs_FW,   cmap_FW   = read_LIS_diff("FWsoil_tavg", file_name, land_ctl_path, land_sen_path,
-                                                          lat_names, lon_names, loc_lat, loc_lon, time_ss[0], time_es[0])
 
     Tmax_diff_Jan, clevs_Tmax, cmap_Tmax = read_LIS_diff("Tmax", file_name, land_ctl_path, land_sen_path,
                                                           lat_names, lon_names, loc_lat, loc_lon, time_ss[1], time_es[1])
     LAI_diff_Jan,  clevs_LAI,  cmap_LAI  = read_LIS_diff("LAI_inst", file_name, land_ctl_path, land_sen_path,
                                                           lat_names, lon_names, loc_lat, loc_lon, time_ss[1], time_es[1])
     ALB_diff_Jan,  clevs_ALB,  cmap_ALB  = read_LIS_diff("Albedo_inst", file_name, land_ctl_path, land_sen_path,
-                                                          lat_names, lon_names, loc_lat, loc_lon, time_ss[1], time_es[1])
-    FW_diff_Jan,   clevs_FW,   cmap_FW   = read_LIS_diff("FWsoil_tavg", file_name, land_ctl_path, land_sen_path,
                                                           lat_names, lon_names, loc_lat, loc_lon, time_ss[1], time_es[1])
 
     Tmax_diff_Feb, clevs_Tmax, cmap_Tmax = read_LIS_diff("Tmax", file_name, land_ctl_path, land_sen_path,
@@ -311,30 +307,41 @@ def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path
                                                           lat_names, lon_names, loc_lat, loc_lon, time_ss[2], time_es[2])
     ALB_diff_Feb,  clevs_ALB,  cmap_ALB  = read_LIS_diff("Albedo_inst", file_name, land_ctl_path, land_sen_path,
                                                           lat_names, lon_names, loc_lat, loc_lon, time_ss[2], time_es[2])
-    FW_diff_Feb,   clevs_FW,   cmap_FW   = read_LIS_diff("FWsoil_tavg", file_name, land_ctl_path, land_sen_path,
-                                                          lat_names, lon_names, loc_lat, loc_lon, time_ss[2], time_es[2])
+
+    # Read in FMI
+    time, FMI_ctl = read_var_multi_file([FMI_path], "max_FMI_ctl", loc_lat, loc_lon, lat_names, lon_names)
+    time, FMI_sen = read_var_multi_file([FMI_path], "max_FMI_sen", loc_lat, loc_lon, lat_names, lon_names)
+    FMI_diff      = FMI_sen-FMI_ctl
+    FMI_diff_Dec  = np.nanmean(FMI_diff[:30,:,:],axis=0)
+    FMI_diff_Jan  = np.nanmean(FMI_diff[30:61,:,:],axis=0)
+    FMI_diff_Feb  = np.nanmean(FMI_diff[61:,:,:],axis=0)
+    clevs_FMI     = [-3,-2.5,-2.,-1.5,-1,-0.5,0.5,1.,1.5,2.,2.5,3]
+    # clevs_FMI     = [-4.,-3.5,-3,-2.5,-2.,-1.5,-1,-0.5,0.5,1.,1.5,2.,2.5,3,3.5,4]
+    cmap_FMI      = plt.cm.BrBG #cmap_ALB
+
 
     # regrid to burn map resolution ~ 400m
     Tmax_regrid_Dec, lats, lons = regrid_to_fire_map_resolution(fire_path, Tmax_diff_Dec, lat_in, lon_in, burn=burn)
     LAI_regrid_Dec,  lats, lons = regrid_to_fire_map_resolution(fire_path, LAI_diff_Dec, lat_in, lon_in, burn=burn)
     ALB_regrid_Dec,  lats, lons = regrid_to_fire_map_resolution(fire_path, ALB_diff_Dec, lat_in, lon_in, burn=burn)
-    FW_regrid_Dec,   lats, lons = regrid_to_fire_map_resolution(fire_path, FW_diff_Dec, lat_in, lon_in, burn=burn)
+    FMI_regrid_Dec,  lats, lons = regrid_to_fire_map_resolution(fire_path, FMI_diff_Dec, lat_in, lon_in, burn=burn)
 
     Tmax_regrid_Jan, lats, lons = regrid_to_fire_map_resolution(fire_path, Tmax_diff_Jan, lat_in, lon_in, burn=burn)
     LAI_regrid_Jan,  lats, lons = regrid_to_fire_map_resolution(fire_path, LAI_diff_Jan, lat_in, lon_in, burn=burn)
     ALB_regrid_Jan,  lats, lons = regrid_to_fire_map_resolution(fire_path, ALB_diff_Jan, lat_in, lon_in, burn=burn)
-    FW_regrid_Jan,   lats, lons = regrid_to_fire_map_resolution(fire_path, FW_diff_Jan, lat_in, lon_in, burn=burn)
+    FMI_regrid_Jan,  lats, lons = regrid_to_fire_map_resolution(fire_path, FMI_diff_Jan, lat_in, lon_in, burn=burn)
 
     Tmax_regrid_Feb, lats, lons = regrid_to_fire_map_resolution(fire_path, Tmax_diff_Feb, lat_in, lon_in, burn=burn)
     LAI_regrid_Feb,  lats, lons = regrid_to_fire_map_resolution(fire_path, LAI_diff_Feb, lat_in, lon_in, burn=burn)
     ALB_regrid_Feb,  lats, lons = regrid_to_fire_map_resolution(fire_path, ALB_diff_Feb, lat_in, lon_in, burn=burn)
-    FW_regrid_Feb,   lats, lons = regrid_to_fire_map_resolution(fire_path, FW_diff_Feb, lat_in, lon_in, burn=burn)
+    FMI_regrid_Feb,  lats, lons = regrid_to_fire_map_resolution(fire_path, FMI_diff_Feb, lat_in, lon_in, burn=burn)
 
     # ================== Start Plotting =================
-    fig, axs = plt.subplots(nrows=3, ncols=3, figsize=[7,9],sharex=False,
-                sharey=False, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()})
+    fig, axs = plt.subplots(nrows=3, ncols=4, figsize=[9,11],sharex=True,
+                sharey=False, squeeze=True, subplot_kw={'projection': ccrs.PlateCarree()},)
+                # gridspec_kw={'width_ratios': [1, 1, 1, 1]})  # Adjust the width ratios as needed
 
-    plt.subplots_adjust(wspace=-0.6, hspace=-0.15)
+    plt.subplots_adjust(wspace=0.05, hspace=0.05)
 
     plt.rcParams['text.usetex']     = False
     plt.rcParams['font.family']     = "sans-serif"
@@ -371,7 +378,7 @@ def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path
     y_ticks = [-38, -36, -34, -32, -30,-28]  # Example y-axis tick positions
 
     for i in np.arange(3):
-        for j in np.arange(3):
+        for j in np.arange(4):
             axs[i,j].set_facecolor('lightgray')
             axs[i,j].coastlines(resolution="50m",linewidth=1)
             axs[i,j].set_extent([146,154,-39,-27])
@@ -386,9 +393,9 @@ def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path
             axs[i,j].set_yticks(y_ticks)
 
             if i==2:
-                axs[i, j].set_xticklabels(['148$\mathregular{^{o}}$E','152$\mathregular{^{o}}$E'])
+                axs[i, j].set_xticklabels(['148$\mathregular{^{o}}$E','152$\mathregular{^{o}}$E'],color=almost_black,alpha=1.)
             else:
-                axs[i, j].set_xticklabels([])
+                axs[i, j].set_xticklabels(['148$\mathregular{^{o}}$E','152$\mathregular{^{o}}$E'],color='white',alpha=0)
 
             if j==0:
                 axs[i, j].set_yticklabels(['40$\mathregular{^{o}}$S','36$\mathregular{^{o}}$S',
@@ -396,50 +403,69 @@ def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path
             else:
                 axs[i, j].set_yticklabels([])
 
+    # FMI
+    plot1 = axs[0,3].contourf(lons, lats, FMI_regrid_Dec, clevs_FMI, transform=ccrs.PlateCarree(), cmap=cmap_FMI, extend='both')
+    plot1 = axs[1,3].contourf(lons, lats, FMI_regrid_Jan, clevs_FMI, transform=ccrs.PlateCarree(), cmap=cmap_FMI, extend='both')
+    plot1 = axs[2,3].contourf(lons, lats, FMI_regrid_Feb, clevs_FMI, transform=ccrs.PlateCarree(), cmap=cmap_FMI, extend='both')
+    axs[0,3].text(0.75, 0.12, "(d)", transform=axs[0,3].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+    axs[1,3].text(0.75, 0.12, "(h)", transform=axs[1,3].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+    axs[2,3].text(0.75, 0.12, "(l)", transform=axs[2,3].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+    # cbar = plt.colorbar(plot1, ax=axs[2,0], ticklocation="right", pad=0.05, orientation="horizontal",
+    #         aspect=30, shrink=0.5) # cax=cax,
+    # cbar.set_label('-', loc='center',size=12)# rotation=270,
+    # cbar.ax.tick_params(labelsize=12,labelrotation=45)
 
-    Tmax_regrid_Dec, lats, lons = regrid_to_fire_map_resolution(fire_path, Tmax_diff_Dec, lat_in, lon_in, burn=burn)
-    LAI_regrid_Dec,  lats, lons = regrid_to_fire_map_resolution(fire_path, LAI_diff_Dec, lat_in, lon_in, burn=burn)
-    ALB_regrid_Dec,  lats, lons = regrid_to_fire_map_resolution(fire_path, ALB_diff_Dec, lat_in, lon_in, burn=burn)
+    axs[0,3].add_feature(OCEAN,edgecolor='none', facecolor="white")
+    axs[1,3].add_feature(OCEAN,edgecolor='none', facecolor="white")
+    axs[2,3].add_feature(OCEAN,edgecolor='none', facecolor="white")
 
     # Tmax
-    plot1 = axs[0,0].contourf(lons, lats, Tmax_regrid_Dec, clevs_Tmax, transform=ccrs.PlateCarree(), cmap=cmap_Tmax, extend='both')
-    plot1 = axs[0,1].contourf(lons, lats, Tmax_regrid_Jan, clevs_Tmax, transform=ccrs.PlateCarree(), cmap=cmap_Tmax, extend='both')
-    plot1 = axs[0,2].contourf(lons, lats, Tmax_regrid_Feb, clevs_Tmax, transform=ccrs.PlateCarree(), cmap=cmap_Tmax, extend='both')
+    plot2 = axs[0,2].contourf(lons, lats, Tmax_regrid_Dec, clevs_Tmax, transform=ccrs.PlateCarree(), cmap=cmap_Tmax, extend='both')
+    plot2 = axs[1,2].contourf(lons, lats, Tmax_regrid_Jan, clevs_Tmax, transform=ccrs.PlateCarree(), cmap=cmap_Tmax, extend='both')
+    plot2 = axs[2,2].contourf(lons, lats, Tmax_regrid_Feb, clevs_Tmax, transform=ccrs.PlateCarree(), cmap=cmap_Tmax, extend='both')
+    axs[0,2].text(0.75, 0.12, "(c)", transform=axs[0,2].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+    axs[1,2].text(0.75, 0.12, "(g)", transform=axs[1,2].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+    axs[2,2].text(0.75, 0.12, "(k)", transform=axs[2,2].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+    # cbar = plt.colorbar(plot2, ax=axs[2,1], ticklocation="right", pad=0.05, orientation="horizontal",
+    #         aspect=30, shrink=0.5) # cax=cax,
+    # cbar.set_label('$\mathregular{^{o}}$C', loc='center',size=12)# rotation=270,
+    # cbar.ax.tick_params(labelsize=12,labelrotation=45)
 
-    cbar = plt.colorbar(plot1, ax=axs[0,2], ticklocation="right", pad=0.05, orientation="vertical",
-            aspect=30, shrink=0.9) # cax=cax,
-    cbar.set_label('$\mathregular{^{o}}$C', loc='center',size=12)# rotation=270,
-    cbar.ax.tick_params(labelsize=12)#,labelrotation=45)
-
-    axs[0,0].add_feature(OCEAN,edgecolor='none', facecolor="white")
-    axs[0,1].add_feature(OCEAN,edgecolor='none', facecolor="white")
     axs[0,2].add_feature(OCEAN,edgecolor='none', facecolor="white")
+    axs[1,2].add_feature(OCEAN,edgecolor='none', facecolor="white")
+    axs[2,2].add_feature(OCEAN,edgecolor='none', facecolor="white")
 
     # LAI
-    plot2 = axs[1,0].contourf(lons, lats, LAI_regrid_Dec, clevs_LAI, transform=ccrs.PlateCarree(), cmap=cmap_LAI, extend='both')
-    plot2 = axs[1,1].contourf(lons, lats, LAI_regrid_Jan, clevs_LAI, transform=ccrs.PlateCarree(), cmap=cmap_LAI, extend='both')
-    plot2 = axs[1,2].contourf(lons, lats, LAI_regrid_Feb, clevs_LAI, transform=ccrs.PlateCarree(), cmap=cmap_LAI, extend='both')
-    cbar  = plt.colorbar(plot2, ax=axs[1,2], ticklocation="right", pad=0.05, orientation="vertical",
-            aspect=30, shrink=0.9) # cax=cax,
-    cbar.set_label('m$\mathregular{^{2}}$ m$\mathregular{^{-2}}$', loc='center',size=12)# rotation=270,
-    cbar.ax.tick_params(labelsize=12)#,labelrotation=45)
+    plot3 = axs[0,0].contourf(lons, lats, LAI_regrid_Dec, clevs_LAI, transform=ccrs.PlateCarree(), cmap=cmap_LAI, extend='both')
+    plot3 = axs[1,0].contourf(lons, lats, LAI_regrid_Jan, clevs_LAI, transform=ccrs.PlateCarree(), cmap=cmap_LAI, extend='both')
+    plot3 = axs[2,0].contourf(lons, lats, LAI_regrid_Feb, clevs_LAI, transform=ccrs.PlateCarree(), cmap=cmap_LAI, extend='both')
+    axs[0,0].text(0.75, 0.12, "(a)", transform=axs[0,0].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+    axs[1,0].text(0.75, 0.12, "(e)", transform=axs[1,0].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+    axs[2,0].text(0.75, 0.12, "(i)", transform=axs[2,0].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+    # cbar  = plt.colorbar(plot3, ax=axs[2,2], ticklocation="right", pad=0.05, orientation="horizontal",
+    #         aspect=30, shrink=0.5) # cax=cax,
+    # cbar.set_label('m$\mathregular{^{2}}$ m$\mathregular{^{-2}}$', loc='center',size=12)# rotation=270,
+    # cbar.ax.tick_params(labelsize=12,labelrotation=45)
 
+    axs[0,0].add_feature(OCEAN,edgecolor='none', facecolor="white")
     axs[1,0].add_feature(OCEAN,edgecolor='none', facecolor="white")
-    axs[1,1].add_feature(OCEAN,edgecolor='none', facecolor="white")
-    axs[1,2].add_feature(OCEAN,edgecolor='none', facecolor="white")
+    axs[2,0].add_feature(OCEAN,edgecolor='none', facecolor="white")
 
     # Albedo
-    plot3 = axs[2,0].contourf(lons, lats, ALB_regrid_Dec, clevs_ALB, transform=ccrs.PlateCarree(), cmap=cmap_ALB, extend='both')
-    plot3 = axs[2,1].contourf(lons, lats, ALB_regrid_Jan, clevs_ALB, transform=ccrs.PlateCarree(), cmap=cmap_ALB, extend='both')
-    plot3 = axs[2,2].contourf(lons, lats, ALB_regrid_Feb, clevs_ALB, transform=ccrs.PlateCarree(), cmap=cmap_ALB, extend='both')
-    cbar  = plt.colorbar(plot3, ax=axs[2,2], ticklocation="right", pad=0.05, orientation="vertical",
-            aspect=30, shrink=0.9) # cax=cax,
-    cbar.set_label('(-)', loc='center',size=12)# rotation=270,
-    cbar.ax.tick_params(labelsize=12)#,labelrotation=45)
+    plot4 = axs[0,1].contourf(lons, lats, ALB_regrid_Dec, clevs_ALB, transform=ccrs.PlateCarree(), cmap=cmap_ALB, extend='both')
+    plot4 = axs[1,1].contourf(lons, lats, ALB_regrid_Jan, clevs_ALB, transform=ccrs.PlateCarree(), cmap=cmap_ALB, extend='both')
+    plot4 = axs[2,1].contourf(lons, lats, ALB_regrid_Feb, clevs_ALB, transform=ccrs.PlateCarree(), cmap=cmap_ALB, extend='both')
+    axs[0,1].text(0.75, 0.12, "(b)", transform=axs[0,1].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+    axs[1,1].text(0.75, 0.12, "(f)", transform=axs[1,1].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+    axs[2,1].text(0.75, 0.12, "(j)", transform=axs[2,1].transAxes, fontsize=14, verticalalignment='top', bbox=props)
+    # cbar  = plt.colorbar(plot4, ax=axs[2,3], ticklocation="right", pad=0.05, orientation="horizontal",
+    #         aspect=30, shrink=0.5) # cax=cax,
+    # cbar.set_label('-', loc='center',size=12)# rotation=270,
+    # cbar.ax.tick_params(labelsize=12,labelrotation=45)
 
-    axs[2,0].add_feature(OCEAN,edgecolor='none', facecolor="white")
+    axs[0,1].add_feature(OCEAN,edgecolor='none', facecolor="white")
+    axs[1,1].add_feature(OCEAN,edgecolor='none', facecolor="white")
     axs[2,1].add_feature(OCEAN,edgecolor='none', facecolor="white")
-    axs[2,2].add_feature(OCEAN,edgecolor='none', facecolor="white")
 
     # Add boxes, lines
     for i in np.arange(3):
@@ -447,27 +473,49 @@ def plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path
                                     [reg_lons[i][1], reg_lats[i][1]], [reg_lons[i][0], reg_lats[i][1]]],
                                     closed=True,color=almost_black, fill=False,linewidth=0.8))
 
-    axs[0,1].plot([ 149, 154], [-30, -30],    c=almost_black, lw=0.8, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
-    axs[0,1].plot([ 148, 153], [-33, -33],    c=almost_black, lw=0.8, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
-    axs[0,1].plot([ 146, 151], [-37.5, -37.5],c=almost_black, lw=0.8, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
+    # axs[0,1].plot([ 149, 154], [-30, -30],    c=almost_black, lw=0.8, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
+    # axs[0,1].plot([ 148, 153], [-33, -33],    c=almost_black, lw=0.8, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
+    # axs[0,1].plot([ 146, 151], [-37.5, -37.5],c=almost_black, lw=0.8, alpha = 1, linestyle="--", transform=ccrs.PlateCarree())
+
+    position_FMI  = fig.add_axes([0.715, 0.07, 0.18, 0.011]) # [left, bottom, width, height]
+    cb_lai        = fig.colorbar(plot1, ax=axs[:,3], pad=0.08, cax=position_FMI, orientation="horizontal", aspect=60, shrink=0.8)
+    cb_lai.set_label('-', loc='center',size=12)# rotation=270,
+    cb_lai.ax.tick_params(labelsize=12,rotation=45)
+
+    position_Tmax  = fig.add_axes([0.52, 0.07, 0.18, 0.011]) # [left, bottom, width, height]
+    cb_lai        = fig.colorbar(plot2, ax=axs[:,2], pad=0.08, cax=position_Tmax, orientation="horizontal", aspect=60, shrink=0.8)
+    cb_lai.set_label('$\mathregular{^{o}}$C', loc='center',size=12)# rotation=270,
+    cb_lai.ax.tick_params(labelsize=12,rotation=45)
+
+    position_LAI  = fig.add_axes([0.13, 0.07, 0.18, 0.011] ) # [left, bottom, width, height]
+    cb_lai        = fig.colorbar(plot3, ax=axs[:,0], pad=0.08, cax=position_LAI, orientation="horizontal", aspect=60, shrink=0.8)
+    cb_lai.set_label('m$\mathregular{^{2}}$ m$\mathregular{^{-2}}$', loc='center',size=12)# rotation=270,
+    cb_lai.ax.tick_params(labelsize=12,rotation=45)
+
+    position_ALB  = fig.add_axes([0.325, 0.07, 0.18, 0.011]) # [left, bottom, width, height]
+    cb_lai        = fig.colorbar(plot4, ax=axs[:,1], pad=0.08, cax=position_ALB, orientation="horizontal", aspect=60, shrink=0.8)
+    cb_lai.set_label('-', loc='center',size=12)# rotation=270,
+    cb_lai.ax.tick_params(labelsize=12,rotation=45)
+
 
     # Adding titles
-    axs[0,0].set_title("Dec 2019", fontsize=12)
-    axs[0,1].set_title("Jan 2020", fontsize=12)
-    axs[0,2].set_title("Feb 2020", fontsize=12)
+    axs[0,3].set_title("ΔFMI", fontsize=12)
+    axs[0,2].set_title("ΔT$\mathregular{_{max}}$", fontsize=12)
+    axs[0,0].set_title("ΔLAI", fontsize=12)
+    axs[0,1].set_title("Δ$α$ ", fontsize=12)
 
-    axs[0,0].text(-0.32, 0.53, 'ΔT$\mathregular{_{max}}$', va='bottom', ha='center',
+    axs[0,0].text(-0.32, 0.53, 'Dec 2019', va='bottom', ha='center',
               rotation='vertical', rotation_mode='anchor',
               transform=axs[0,0].transAxes, fontsize=12)
-    axs[1,0].text(-0.32, 0.50, "ΔLAI", va='bottom', ha='center',
+    axs[1,0].text(-0.32, 0.50, "Jan 2020", va='bottom', ha='center',
               rotation='vertical', rotation_mode='anchor',
               transform=axs[1,0].transAxes, fontsize=12)
-    axs[2,0].text(-0.32, 0.48, "Δ$α$", va='bottom', ha='center',
+    axs[2,0].text(-0.32, 0.48, "Feb 2020", va='bottom', ha='center',
               rotation='vertical', rotation_mode='anchor',
               transform=axs[2,0].transAxes, fontsize=12)
 
     # Apply tight layout
-    plt.tight_layout()
+    # plt.tight_layout()
     plt.savefig('./plots/spatial_map_' +message + '.png',dpi=300)
 
 
@@ -499,7 +547,7 @@ if __name__ == "__main__":
                            [146.5,151]    ]
 
         burn         = 1
-        message      = "HW_Tmax_LAI_Albedo_burnt"
+        message      = "HW_FMI_Tmax_LAI_Albedo_burnt"
         file_name    = 'LIS.CABLE.201912-202002.nc'
 
         time_ss      = [datetime(2019,12,1,0,0,0,0),
@@ -510,5 +558,8 @@ if __name__ == "__main__":
                         datetime(2020,2,1,0,0,0,0),
                         datetime(2020,3,1,0,0,0,0)]
 
-        plot_Tmax_LAI_Albedo_diff(fire_path, file_name, land_ctl_path, land_sen_path, time_ss=time_ss, time_es=time_es, lat_names="lat",
+        FMI_path    = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/max_FMI_201912_202002.nc"
+
+
+        plot_Tmax_LAI_Albedo_diff(fire_path, file_name, FMI_path, land_ctl_path, land_sen_path, time_ss=time_ss, time_es=time_es, lat_names="lat",
                       lon_names="lon", loc_lat=loc_lat, loc_lon=loc_lon,  reg_lats=reg_lats, reg_lons=reg_lons, wrf_path=wrf_path, message=message, burn=burn)
