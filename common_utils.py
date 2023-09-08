@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from netCDF4 import Dataset
+import xarray as xr
 import netCDF4 as nc
 import numpy as np
 import matplotlib.colors as colors
@@ -258,6 +259,7 @@ def read_var_multi_file(file_paths, var_name, loc_lat=None, loc_lon=None, lat_na
                 Var = np.where(Var_tmp == def_val, np.nan, Var_tmp)
             else:
                 Var = Var_tmp
+            # print('np.unique(Var)',np.unique(Var))
         else:
             # selected region
             # read var except lat or lat
@@ -702,7 +704,7 @@ def time_clip_to_day_dates(time, Var, time_s, time_e, seconds=None):
 
     return var_tmp,dates
 
-def spital_var(time, Var, time_s, time_e, seconds=None):
+def spatial_var(time, Var, time_s, time_e, seconds=None):
 
     # time should be AEST
 
@@ -713,7 +715,7 @@ def spital_var(time, Var, time_s, time_e, seconds=None):
     # np.savetxt("test_var.txt",var,delimiter=",")
     return var
 
-def spital_var_mean(time, Var, time_s, time_e, seconds=None):
+def spatial_var_mean(time, Var, time_s, time_e, seconds=None):
 
     # time should be AEST
 
@@ -723,7 +725,7 @@ def spital_var_mean(time, Var, time_s, time_e, seconds=None):
     # np.savetxt("test_var.txt",var,delimiter=",")
     return var
 
-def spital_var_sum(time, Var, time_s, time_e, seconds=None):
+def spatial_var_sum(time, Var, time_s, time_e, seconds=None):
 
     # time should be AEST
     # ATTENTION np.nansum has problems - it produces odd values
@@ -759,7 +761,7 @@ def time_clip_to_day_max(time, Var, time_s, time_e, seconds=None):
 
     return var_tmp
 
-def spital_var_max(time, Var, time_s, time_e, seconds=None):
+def spatial_var_max(time, Var, time_s, time_e, seconds=None):
 
     # time should be AEST
 
@@ -791,7 +793,7 @@ def time_clip_to_day_min(time, Var, time_s, time_e, seconds=None):
 
     return var_tmp
 
-def spital_var_min(time, Var, time_s, time_e, seconds=None):
+def spatial_var_min(time, Var, time_s, time_e, seconds=None):
 
     # time should be AEST
 

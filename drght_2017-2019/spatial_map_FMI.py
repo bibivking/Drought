@@ -913,7 +913,10 @@ def output_FMI_burnt_region(FMI_out, FMI_time_series_out, wrf_path, fire_path, l
     ### Create nc file ###
     f.history           = "Created by: %s" % (os.path.basename(__file__))
     f.creation_date     = "%s" % (datetime.now())
-    f.description       = '201912-202002 FMI in three burnt regions, made by MU Mengyuan'
+    if burn == -1:
+        f.description       = '201912-202002 FMI in three unburnt regions, made by MU Mengyuan'
+    elif burn == 1:
+        f.description       = '201912-202002 FMI in three burnt regions, made by MU Mengyuan'
     f.Conventions       = "CF-1.0"
 
     # set dimensions
@@ -922,7 +925,10 @@ def output_FMI_burnt_region(FMI_out, FMI_time_series_out, wrf_path, fire_path, l
 
     # Set cooridiates
     region               = f.createVariable('region', 'S7', ('region'))
-    region.standard_name = "Burnt regions"
+    if burn == -1:
+        region.standard_name = "Unburnt regions"
+    elif burn == 1:
+        region.standard_name = "Burnt regions"
     region.long_name     = "Name of the burnt regions"
     region[:]            = np.array(['North  ', 'Central', 'South  '], dtype='S7')
 
@@ -1154,7 +1160,7 @@ if __name__ == "__main__":
         FFDI_out       = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/FFDI_Dec2019_Feb2020.nc"
         FMI_out        = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/FMI_201909_202002.nc"
         FFDI_time_series_out = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/FFDI_time_series_Dec2019_Feb2020.nc"
-        FMI_time_series_out  = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/FMI_time_series_201909_202002_unburnt.nc"
+        FMI_time_series_out  = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/FMI_time_series_201909_202002.nc"
 
         if 0:
             message        = "201920_summer"
@@ -1187,12 +1193,12 @@ if __name__ == "__main__":
             #          lat_names="lat", lon_names="lon",loc_lat=loc_lat,loc_lon=loc_lon, wrf_path=wrf_path)
 
             # Step 2 calculate FMI in burnt region
-            max_FMI_time_series_out    = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/max_FMI_time_series_201912_202002_unburnt.nc"
-            output_FMI_burnt_region(max_FMI_out, max_FMI_time_series_out, wrf_path, fire_path, loc_lats=loc_lats, loc_lons=loc_lons, time_s=time_s, time_e=time_e, burn=-1)
+            max_FMI_time_series_out    = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/max_FMI_time_series_201912_202002.nc"
+            output_FMI_burnt_region(max_FMI_out, max_FMI_time_series_out, wrf_path, fire_path, loc_lats=loc_lats, loc_lons=loc_lons, time_s=time_s, time_e=time_e, burn=1)
 
             # Step 3 plot max FMI time series in burnt region
-            max_FMI_time_series_out    = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/max_FMI_time_series_201912_202002_unburnt.nc"
-            plot_time_series_FMI_burn_region(max_FMI_time_series_out, wrf_path, fire_path, loc_lats=loc_lats, loc_lons=loc_lons, time_s=time_s, time_e=time_e, burn=-1)
+            max_FMI_time_series_out    = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/max_FMI_time_series_201912_202002.nc"
+            plot_time_series_FMI_burn_region(max_FMI_time_series_out, wrf_path, fire_path, loc_lats=loc_lats, loc_lons=loc_lons, time_s=time_s, time_e=time_e, burn=1)
 
         if 0:
             #                   North ,        Central,       South

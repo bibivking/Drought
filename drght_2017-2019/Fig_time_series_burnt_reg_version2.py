@@ -215,17 +215,9 @@ def plot_time_series_burn_unburn_region(FMI_file, Tmax_file, LAI_file, ALB_file,
         FMI_sen_std  = FMI_file.variables['FMI_sen_std'][:]
         FMI_file.close()
 
-        df_reg1['FMI_ctl_mean']  = FMI_ctl_mean[0,:]
-        df_reg1['FMI_sen_mean']  = FMI_sen_mean[0,:]
-        df_reg1['FMI_diff']      = FMI_sen_mean[0,:] - FMI_ctl_mean[0,:]
-
-        df_reg2['FMI_ctl_mean']  = FMI_ctl_mean[1,:]
-        df_reg2['FMI_sen_mean']  = FMI_sen_mean[1,:]
-        df_reg2['FMI_diff']      = FMI_sen_mean[1,:] - FMI_ctl_mean[1,:]
-
-        df_reg3['FMI_ctl_mean']  = FMI_ctl_mean[2,:]
-        df_reg3['FMI_sen_mean']  = FMI_sen_mean[2,:]
-        df_reg3['FMI_diff']      = FMI_sen_mean[2,:] - FMI_ctl_mean[2,:]
+        FMI_reg                  = pd.DataFrame({'FMI_diff_reg1': FMI_sen_mean[0,:] - FMI_ctl_mean[0,:]})
+        FMI_reg['FMI_diff_reg2'] = FMI_sen_mean[1,:] - FMI_ctl_mean[1,:]
+        FMI_reg['FMI_diff_reg3'] = FMI_sen_mean[2,:] - FMI_ctl_mean[2,:]
 
 
         # =================== Read unburnt FFDI index ===================
@@ -237,19 +229,10 @@ def plot_time_series_burn_unburn_region(FMI_file, Tmax_file, LAI_file, ALB_file,
         FMI_sen_std_unburnt  = FMI_file_unburnt.variables['FMI_sen_std'][:]
         FMI_file_unburnt.close()
 
-        df_reg1_unburnt['FMI_ctl_mean']  = FMI_ctl_mean_unburnt[0,:]
-        df_reg1_unburnt['FMI_sen_mean']  = FMI_sen_mean_unburnt[0,:]
-        df_reg1_unburnt['FMI_diff']      = FMI_sen_mean_unburnt[0,:] - FMI_ctl_mean_unburnt[0,:]
 
-        print("df_reg1_unburnt", df_reg1_unburnt)
-
-        df_reg2_unburnt['FMI_ctl_mean']  = FMI_ctl_mean_unburnt[1,:]
-        df_reg2_unburnt['FMI_sen_mean']  = FMI_sen_mean_unburnt[1,:]
-        df_reg2_unburnt['FMI_diff']      = FMI_sen_mean_unburnt[1,:] - FMI_ctl_mean_unburnt[1,:]
-
-        df_reg3_unburnt['FMI_ctl_mean']  = FMI_ctl_mean_unburnt[2,:]
-        df_reg3_unburnt['FMI_sen_mean']  = FMI_sen_mean_unburnt[2,:]
-        df_reg3_unburnt['FMI_diff']      = FMI_sen_mean_unburnt[2,:] - FMI_ctl_mean_unburnt[2,:]
+        FMI_reg_unburnt                  = pd.DataFrame({'FMI_diff_reg1': FMI_sen_mean_unburnt[0,:] - FMI_ctl_mean_unburnt[0,:]})
+        FMI_reg_unburnt['FMI_diff_reg2'] = FMI_sen_mean_unburnt[1,:] - FMI_ctl_mean_unburnt[1,:]
+        FMI_reg_unburnt['FMI_diff_reg3'] = FMI_sen_mean_unburnt[2,:] - FMI_ctl_mean_unburnt[2,:]
 
         ntime_FMI      = np.shape(FMI_ctl_mean)[0]
         time_steps_FMI = np.arange(92,92+len(Time),1)
@@ -360,13 +343,13 @@ def plot_time_series_burn_unburn_region(FMI_file, Tmax_file, LAI_file, ALB_file,
     axs[row,2].plot(df_reg3_unburnt['Tmax_diff'].rolling(window=5).mean(), c = almost_black, ls=':', lw=1., alpha=1)
 
     if 1:
-        axs[row,0].plot(time_steps_FMI, df_reg1['FMI_diff'].rolling(window=5).mean(), c = 'red', ls='-', lw=1., alpha=1)
-        axs[row,1].plot(time_steps_FMI, df_reg2['FMI_diff'].rolling(window=5).mean(), c = 'red', ls='-', lw=1., alpha=1)
-        axs[row,2].plot(time_steps_FMI, df_reg3['FMI_diff'].rolling(window=5).mean(), c = 'red', ls='-', lw=1., alpha=1)
+        axs[row,0].plot(time_steps_FMI, FMI_reg['FMI_diff_reg1'].rolling(window=5).mean(), c = 'red', ls='-', lw=1., alpha=1)
+        axs[row,1].plot(time_steps_FMI, FMI_reg['FMI_diff_reg2'].rolling(window=5).mean(), c = 'red', ls='-', lw=1., alpha=1)
+        axs[row,2].plot(time_steps_FMI, FMI_reg['FMI_diff_reg3'].rolling(window=5).mean(), c = 'red', ls='-', lw=1., alpha=1)
 
-        axs[row,0].plot(time_steps_FMI, df_reg1_unburnt['FMI_diff'].rolling(window=5).mean(), c = 'red', ls=':', lw=1., alpha=1)
-        axs[row,1].plot(time_steps_FMI, df_reg2_unburnt['FMI_diff'].rolling(window=5).mean(), c = 'red', ls=':', lw=1., alpha=1)
-        axs[row,2].plot(time_steps_FMI, df_reg3_unburnt['FMI_diff'].rolling(window=5).mean(), c = 'red', ls=':', lw=1., alpha=1)
+        axs[row,0].plot(time_steps_FMI, FMI_reg_unburnt['FMI_diff_reg1'].rolling(window=5).mean(), c = 'red', ls=':', lw=1., alpha=1)
+        axs[row,1].plot(time_steps_FMI, FMI_reg_unburnt['FMI_diff_reg2'].rolling(window=5).mean(), c = 'red', ls=':', lw=1., alpha=1)
+        axs[row,2].plot(time_steps_FMI, FMI_reg_unburnt['FMI_diff_reg3'].rolling(window=5).mean(), c = 'red', ls=':', lw=1., alpha=1)
 
     # LAI
     row = 1
@@ -487,10 +470,10 @@ def plot_time_series_burn_unburn_region(FMI_file, Tmax_file, LAI_file, ALB_file,
         axs[i,2].axvline(x=Burn_reg3_50th, color='red', linestyle='-',linewidth=1.5, alpha=0.8)
         axs[i,2].axvline(x=Burn_reg3_90th, color='brown', linestyle='-',linewidth=1.5, alpha=0.8)
 
-    Tmax_bot_val   = -0.6
+    Tmax_bot_val   = -2.6
     Tmax_up_val    = 1.
-    Tmax_levels    = [-0.5,0,0.5,1]
-    Tmax_labels    = ['-0.5','0.0','0.5','1.0']
+    Tmax_levels    = [-2,-1,0,1]
+    Tmax_labels    = ['-2','-1','0','1']
 
     LAI_bot_val    = 0
     LAI_up_val     = 6
@@ -1031,7 +1014,7 @@ if __name__ == "__main__":
         ALB_file_unburnt   = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/times_series_201909-202002_Albedo_unburnt.nc"
         Qle_file_unburnt   = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/times_series_201909-202002_Qle_unburnt.nc"
         FMI_file_unburnt   = "/g/data/w97/mm3972/scripts/Drought/drght_2017-2019/nc_files/max_FMI_time_series_201912_202002_unburnt.nc"
-        plot_time_series_burn_region(FMI_file, Tmax_file, LAI_file, ALB_file, Qle_file, loc_lats=loc_lats, loc_lons=loc_lons, time_s=time_s, time_e=time_e)
+        # plot_time_series_burn_region(FMI_file, Tmax_file, LAI_file, ALB_file, Qle_file, loc_lats=loc_lats, loc_lons=loc_lons, time_s=time_s, time_e=time_e)
 
         plot_time_series_burn_unburn_region(FMI_file, Tmax_file, LAI_file, ALB_file, Qle_file,
                                             FMI_file_unburnt, Tmax_file_unburnt, LAI_file_unburnt, ALB_file_unburnt, Qle_file_unburnt,
